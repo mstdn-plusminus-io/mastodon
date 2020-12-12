@@ -7,8 +7,7 @@ steps:
     image: plugins/docker
     settings:
       repo: mohemohe/mastodon
-      auto_tag: true
-      auto_tag_suffix: plusminus
+      tag: staging-plusminus
       username: mohemohe
       password:
         from_secret: dockerhub_password
