@@ -3,14 +3,25 @@ kind: pipeline
 name: default
 
 steps:
-  - name: docker
+  - name: build staging image
     image: plugins/docker
     settings:
       repo: mohemohe/mastodon
-      tag: staging-plusminus
+      tag: staging
       username: mohemohe
       password:
         from_secret: dockerhub_password
     when:
       branch:
-        - mstdn.plusminus.io
+        - staging
+  - name: build latest image
+    image: plugins/docker
+    settings:
+      repo: mohemohe/mastodon
+      tag: latest
+      username: mohemohe
+      password:
+        from_secret: dockerhub_password
+    when:
+      branch:
+        - master
