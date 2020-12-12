@@ -1,0 +1,27 @@
+---
+kind: pipeline
+name: default
+
+steps:
+  - name: build staging image
+    image: plugins/docker
+    settings:
+      repo: mohemohe/mastodon
+      tag: staging
+      username: mohemohe
+      password:
+        from_secret: dockerhub_password
+    when:
+      branch:
+        - staging
+  - name: build latest image
+    image: plugins/docker
+    settings:
+      repo: mohemohe/mastodon
+      tag: latest
+      username: mohemohe
+      password:
+        from_secret: dockerhub_password
+    when:
+      branch:
+        - master
