@@ -3,6 +3,18 @@ kind: pipeline
 name: default
 
 steps:
+  - name: slack notification on start
+    image: plugins/slack
+    settings:
+      webhook:
+        from_secret: slack_webhook_url
+      template: >
+        {{repo.owner}}/{{repo.name}} ({{build.branch}}) build #{{build.number}} start: {{build.link}}
+    when:
+      branch:
+        - master
+        - staging
+
   - name: build staging image
     image: plugins/docker
     settings:
@@ -14,6 +26,7 @@ steps:
     when:
       branch:
         - staging
+
   - name: build latest image
     image: plugins/docker
     settings:
@@ -25,3 +38,34 @@ steps:
     when:
       branch:
         - master
+
+  - name: build tagged image
+    image: plugins/docker
+    settings:
+      repo: mohemohe/mastodon
+      auto_tag: true
+      username: mohemohe
+      password:
+        from_secret: dockerhub_password
+    when:
+      event:
+        - tag
+
+  - name: slack notification on complete
+    image: plugins/slack
+    settings:
+      webhook:
+        from_secret: slack_webhook_url
+      template: >
+        {{#success build.status}}
+          {{repo.owner}}/{{repo.name}} ({{build.branch}}) build #{{build.number}} succeeded: {{build.link}}
+        {{else}}
+          {{repo.owner}}/{{repo.name}} ({{build.branch}}) build #{{build.number}} failed: {{build.link}}
+        {{/success}}
+    when:
+      branch:
+        - master
+        - staging
+      status:
+        - success
+        - failure
