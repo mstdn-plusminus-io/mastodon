@@ -71,7 +71,8 @@ USER mastodon
 # Precompile assets
 RUN cd ~ && \
 	OTP_SECRET=precompile_placeholder SECRET_KEY_BASE=precompile_placeholder rails assets:precompile && \
-	yarn cache clean
+	yarn cache clean && \
+	rm -rf /opt/mastodon/node_modules/.cache
 
 # Set the work dir and the container entry point
 WORKDIR /opt/mastodon
