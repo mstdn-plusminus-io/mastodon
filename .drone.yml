@@ -14,6 +14,9 @@ steps:
       branch:
         - master
         - staging
+      event:
+        - push
+        - tag
 
   - name: build staging image
     image: plugins/docker
@@ -26,6 +29,8 @@ steps:
     when:
       branch:
         - staging
+      event:
+        - push
 
   - name: build latest image
     image: plugins/docker
@@ -38,6 +43,8 @@ steps:
     when:
       branch:
         - master
+      event:
+        - push
 
   - name: build tagged image
     image: plugins/docker
@@ -48,6 +55,8 @@ steps:
       password:
         from_secret: dockerhub_password
     when:
+      branch:
+        - master
       event:
         - tag
 
@@ -66,6 +75,9 @@ steps:
       branch:
         - master
         - staging
+      event:
+        - push
+        - tag
       status:
         - success
         - failure
