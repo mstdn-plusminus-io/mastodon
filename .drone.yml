@@ -18,7 +18,7 @@ steps:
   - name: build staging image
     image: plugins/docker
     settings:
-      repo: mohemohe/mastodon
+      repo: plusminusio/mastodon
       tag: staging
       username: mohemohe
       password:
@@ -30,7 +30,7 @@ steps:
   - name: build latest image
     image: plugins/docker
     settings:
-      repo: mohemohe/mastodon
+      repo: plusminusio/mastodon
       tag: latest
       username: mohemohe
       password:
@@ -42,7 +42,7 @@ steps:
   - name: build tagged image
     image: plugins/docker
     settings:
-      repo: mohemohe/mastodon
+      repo: plusminusio/mastodon
       auto_tag: true
       username: mohemohe
       password:
