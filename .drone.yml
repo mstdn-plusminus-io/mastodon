@@ -14,11 +14,14 @@ steps:
       branch:
         - master
         - staging
+      event:
+        - push
+        - tag
 
   - name: build staging image
     image: plugins/docker
     settings:
-      repo: mohemohe/mastodon
+      repo: plusminusio/mastodon
       tag: staging
       username: mohemohe
       password:
@@ -26,11 +29,13 @@ steps:
     when:
       branch:
         - staging
+      event:
+        - push
 
   - name: build latest image
     image: plugins/docker
     settings:
-      repo: mohemohe/mastodon
+      repo: plusminusio/mastodon
       tag: latest
       username: mohemohe
       password:
@@ -38,16 +43,20 @@ steps:
     when:
       branch:
         - master
+      event:
+        - push
 
   - name: build tagged image
     image: plugins/docker
     settings:
-      repo: mohemohe/mastodon
+      repo: plusminusio/mastodon
       auto_tag: true
       username: mohemohe
       password:
         from_secret: dockerhub_password
     when:
+      branch:
+        - master
       event:
         - tag
 
@@ -66,6 +75,9 @@ steps:
       branch:
         - master
         - staging
+      event:
+        - push
+        - tag
       status:
         - success
         - failure
