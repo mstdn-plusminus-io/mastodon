@@ -77,7 +77,7 @@ module Mastodon
     def create(username)
       account  = Account.new(username: username)
       password = SecureRandom.hex
-      user     = User.new(email: options[:email], password: password, agreement: true, approved: true, admin: options[:role] == 'admin', moderator: options[:role] == 'moderator', confirmed_at: options[:confirmed] ? Time.now.utc : nil)
+      user     = User.new(email: options[:email], password: password, agreement: true, approved: true, admin: options[:role] == 'admin', moderator: options[:role] == 'moderator', confirmed_at: options[:confirmed] ? Time.now.utc : nil, bypass_invite_request_check: true)
 
       if options[:reattach]
         account = Account.find_local(username) || Account.new(username: username)
@@ -384,7 +384,7 @@ module Mastodon
       end
 
       processed, = parallelize_with_progress(Account.local.without_suspended) do |account|
-        FollowService.new.call(account, target_account)
+        FollowService.new.call(account, target_account, bypass_limit: true)
       end
 
       say("OK, followed target from #{processed} accounts", :green)
