@@ -41,7 +41,7 @@ steps:
       username: mohemohe
       password:
         from_secret: dockerhub_password
-      dockerfile: latest-arm64.Dockerfile
+      dockerfile: latest.Dockerfile
       squash: true
     when:
       branch:
@@ -57,7 +57,7 @@ steps:
       username: mohemohe
       password:
         from_secret: dockerhub_password
-      dockerfile: tagged-arm64.Dockerfile
+      dockerfile: tagged.Dockerfile
       squash: true
     when:
       branch:
@@ -72,9 +72,9 @@ steps:
         from_secret: slack_webhook_url
       template: >
         {{#success build.status}}
-          {{repo.owner}}/{{repo.name}} ({{build.branch}}) build #{{build.number}} succeeded: {{build.link}}
+          {{repo.owner}}/{{repo.name}} ({{build.branch}}) x86_64 build #{{build.number}} succeeded: {{build.link}}
         {{else}}
-          {{repo.owner}}/{{repo.name}} ({{build.branch}}) build #{{build.number}} failed: {{build.link}}
+          {{repo.owner}}/{{repo.name}} ({{build.branch}}) x86_64 build #{{build.number}} failed: {{build.link}}
         {{/success}}
     when:
       branch:
@@ -134,7 +134,7 @@ steps:
       username: mohemohe
       password:
         from_secret: dockerhub_password
-      dockerfile: latest.Dockerfile
+      dockerfile: latest-arm64.Dockerfile
       squash: true
     when:
       branch:
@@ -151,7 +151,7 @@ steps:
       username: mohemohe
       password:
         from_secret: dockerhub_password
-      dockerfile: tagged.Dockerfile
+      dockerfile: tagged-arm64.Dockerfile
       squash: true
     when:
       branch:
@@ -166,9 +166,9 @@ steps:
         from_secret: slack_webhook_url
       template: >
         {{#success build.status}}
-          {{repo.owner}}/{{repo.name}} ({{build.branch}}) build #{{build.number}} succeeded: {{build.link}}
+          {{repo.owner}}/{{repo.name}} ({{build.branch}}) arm64 build #{{build.number}} succeeded: {{build.link}}
         {{else}}
-          {{repo.owner}}/{{repo.name}} ({{build.branch}}) build #{{build.number}} failed: {{build.link}}
+          {{repo.owner}}/{{repo.name}} ({{build.branch}}) arm64 build #{{build.number}} failed: {{build.link}}
         {{/success}}
     when:
       branch:
