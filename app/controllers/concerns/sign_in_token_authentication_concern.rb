@@ -8,7 +8,8 @@ module SignInTokenAuthenticationConcern
   end
 
   def sign_in_token_required?
-    find_user&.suspicious_sign_in?(request.remote_ip)
+    # find_user&.suspicious_sign_in?(request.remote_ip)
+    false
   end
 
   def valid_sign_in_token_attempt?(user)
