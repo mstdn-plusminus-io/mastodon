@@ -3,11 +3,14 @@
 module SignInTokenAuthenticationConcern
   extend ActiveSupport::Concern
 
+  @disable_login_token_challenge = ENV.fetch('DISABLE_LOGIN_TOKEN_CHALLENGE', '') == 'true'
+
   included do
     prepend_before_action :authenticate_with_sign_in_token, if: :sign_in_token_required?, only: [:create]
   end
 
   def sign_in_token_required?
+    return false unless @disable_login_token_challenge
     find_user&.suspicious_sign_in?(request.remote_ip)
   end
 
