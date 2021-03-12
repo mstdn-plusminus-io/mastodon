@@ -5,6 +5,7 @@ import Avatar from './avatar';
 import AvatarOverlay from './avatar_overlay';
 import AvatarComposite from './avatar_composite';
 import RelativeTimestamp from './relative_timestamp';
+import AbsoluteTimestamp from './absolute_timestamp';
 import DisplayName from './display_name';
 import StatusContent from './status_content';
 import StatusActionBar from './status_action_bar';
@@ -459,6 +460,13 @@ class Status extends ImmutablePureComponent {
 
     const visibilityIcon = visibilityIconInfo[status.get('visibility')];
 
+    let timestamp;
+    if (localStorage.plusminus_config_timestamp === 'absolute') {
+      timestamp = <AbsoluteTimestamp timestamp={status.get('created_at')} />;
+    } else {
+      timestamp = <RelativeTimestamp timestamp={status.get('created_at')} />;
+    }
+
     return (
       <HotKeys handlers={handlers}>
         <div className={classNames('status__wrapper', `status__wrapper-${status.get('visibility')}`, { 'status__wrapper-reply': !!status.get('in_reply_to_id'), unread, focusable: !this.props.muted })} tabIndex={this.props.muted ? null : 0} data-featured={featured ? 'true' : null} aria-label={textForScreenReader(intl, status, rebloggedByText)} ref={this.handleRef}>
@@ -469,7 +477,7 @@ class Status extends ImmutablePureComponent {
             <div className='status__info'>
               <a href={status.get('url')} className='status__relative-time' target='_blank' rel='noopener noreferrer'>
                 <span className='status__visibility-icon'><Icon id={visibilityIcon.icon} title={visibilityIcon.text} /></span>
-                <RelativeTimestamp timestamp={status.get('created_at')} />
+                {timestamp}
               </a>
 
               <a onClick={this.handleAccountClick} data-id={status.getIn(['account', 'id'])} href={status.getIn(['account', 'url'])} title={status.getIn(['account', 'acct'])} className='status__display-name' target='_blank' rel='noopener noreferrer'>
