@@ -105,8 +105,11 @@
     /* 投稿欄を下部に移動 */
     .columns-area__panels__pane--compositional {
         position: absolute;
-        width: 100vw;
         min-height: 40px !important;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
         
         /* 検索欄を表示 */
         z-index: 3;
@@ -454,8 +457,8 @@
 
     /* サイドバーのアクティブな項目の背景色を変える */
     .columns-area__panels__pane--navigational .columns-area__panels__pane__inner .navigation-panel .column-link.active {
-        background: activeItem;
-        color: activeItemText;
+        background:  $highlight-text-color;
+        color: $ui-secondary-color;
     }
 
     /* ふぁぼとかをオーバーレイにする */
