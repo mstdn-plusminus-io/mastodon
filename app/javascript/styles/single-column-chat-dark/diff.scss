@@ -1,517 +1,521 @@
-/* 2019/07/28 master追従の仕様変更 */
-.layout-single-column {
+@media screen and (min-width: 600px + (285px * 1) + (10px * 1)) {
+  /* 2019/07/28 master追従の仕様変更 */
+  .layout-single-column {
     overflow-x: hidden !important;
 
     .columns-area__panels__main .react-swipeable-view-container > *[aria-hidden="true"] {
-        display: none !important;
+      display: none !important;
     }
 
     .columns-area__panels__main .react-swipeable-view-container {
-        transform: none !important;
+      transform: none !important;
     }
+
     /* 2019/07/28 master追従の仕様変更 ここまで */
 
     /* スクロール読み込み修正ここから */
     .columns-area__panels__pane {
-        position: fixed;
-        left: 0;
-        top: 0;
-        bottom: 0;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
     }
-    
+
     .columns-area__panels__pane__inner {
-        left: 0;
+      left: 0;
     }
-    
+
     .columns-area__panels__main {
-        margin-left: 220px;
-        margin-bottom: 55px;
+      margin-left: 220px;
+      margin-bottom: 55px;
     }
+
     /* スクロール読み込み修正ここまで */
 
     /* Slackっぽい左右分割レイアウトにする */
     .columns-area__panels {
-        flex-direction: row-reverse;
+      flex-direction: row-reverse;
     }
 
     /* タブバー常時非表示 */
     .tabs-bar {
-        display: none;
+      display: none;
     }
 
     /* サイドバー常時表示 */
     .columns-area__panels__pane--navigational {
-        display: block !important;
-        width: 220px !important;
-        min-width: 220px !important;
-        max-width: 220px !important;
-        /* from slack sidebar width */
-        flex-shrink: 0;
+      display: block !important;
+      width: 220px !important;
+      min-width: 220px !important;
+      max-width: 220px !important;
+      /* from slack sidebar width */
+      flex-shrink: 0;
     }
 
     /* サイドバーがスクロールできるようにする */
     .columns-area__panels__pane--navigational .columns-area__panels__pane__inner {
-        position: static !important;
-        height: calc(100% - 68px);
-        overflow: auto;
-        box-sizing: border-box;
+      position: static !important;
+      height: calc(100% - 68px);
+      overflow: auto;
+      box-sizing: border-box;
     }
 
     /* サイドバーのリンクを1行表示にする */
     .columns-area__panels__pane__inner {
-        width: 100%;
+      width: 100%;
     }
 
     .columns-area__panels__pane__inner .column-link {
-        display: flex;
+      display: flex;
     }
 
     .columns-area__panels__pane--navigational .column-link span {
-        word-break: keep-all;
-        width: 100%;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
+      word-break: keep-all;
+      width: 100%;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
     }
 
     .columns-area__panels__main {
-        width: calc(100% - 220px) !important;
-        max-width: calc(100% - 220px) !important;
-        // height: calc(100vh - 50px);
+      width: calc(100% - 220px) !important;
+      max-width: calc(100% - 220px) !important;
+      // height: calc(100vh - 50px);
     }
 
     .columns-area .search-page {
-        top: 0;
-        position: absolute;
-        padding-top: 48px !important;
-        padding-bottom: 15px !important;
-        box-sizing: border-box;
+      top: 0;
+      position: absolute;
+      padding-top: 48px !important;
+      padding-bottom: 15px !important;
+      box-sizing: border-box;
     }
 
     .compose-panel .search .fa {
-        top: 9px !important;
+      top: 9px !important;
     }
 
     .columns-area .search-page .search-results {
-        width: 100%;
+      width: 100%;
     }
 
     .columns-area .search-page .drawer__inner {
-        display: block;
-        position: static;
-        overflow: auto !important;
+      display: block;
+      position: static;
+      overflow: auto !important;
     }
 
     /* 投稿欄を下部に移動 */
     .columns-area__panels__pane--compositional {
-        position: absolute;
-        min-height: 40px !important;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        
-        /* 検索欄を表示 */
-        z-index: 3;
+      position: absolute;
+      min-height: 40px !important;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+
+      /* 検索欄を表示 */
+      z-index: 3;
     }
 
     /* 投稿欄レイヤーのマウスイベントを透過させる */
     .ui > .columns-area__panels > .columns-area__panels__pane--compositional,
     .ui > .columns-area__panels > .columns-area__panels__pane--compositional > .columns-area__panels__pane__inner,
     .ui > .columns-area__panels > .columns-area__panels__pane--compositional > .columns-area__panels__pane__inner > .compose-panel {
-        pointer-events: none;
+      pointer-events: none;
     }
 
-    .columns-area__panels__main .tabs-bar__wrapper, 
+    .columns-area__panels__main .tabs-bar__wrapper,
     .columns-area__panels__pane--compositional .columns-area__panels__pane__inner .compose-panel * {
-        pointer-events: all;
+      pointer-events: all;
     }
 
     /* ここにコメントを書こうとしたけど何を書こうとしたか忘れた */
     .columns-area__panels__pane--compositional .columns-area__panels__pane__inner .compose-panel {
-        display: flex;
-        flex-direction: row;
-        align-items: flex-end;
-        margin-top: 0;
-        padding-bottom: inherit !important;
-        margin-bottom: inherit !important;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      margin-top: 0;
+      padding-bottom: inherit !important;
+      margin-bottom: inherit !important;
     }
 
     /* 投稿欄を横いっぱいに広げる */
     .columns-area__panels__pane--compositional .columns-area__panels__pane__inner .compose-panel {
-        position: relative;
-        width: 100%;
+      position: relative;
+      width: 100%;
     }
 
     /* 投稿欄の不要な要素を非表示 */
     /* .columns-area__panels__pane--compositional .columns-area__panels__pane__inner .compose-panel .search,*/
     .columns-area__panels__pane--compositional .columns-area__panels__pane__inner .compose-panel .flex-spacer,
     .columns-area__panels__pane--compositional .columns-area__panels__pane__inner .compose-panel .getting-started__footer {
-        display: none;
+      display: none;
     }
-    
+
     /* 検索窓調整 */
     .columns-area__panels__pane columns-area__panels__pane--compositional {
-        z-index: 10;
+      z-index: 10;
     }
-    
+
     .columns-area__panels__pane--compositional .columns-area__panels__pane__inner .compose-panel .search {
-        position: fixed;
-        top: 10px;
-        right: 55px !important;
-        z-index: 1;
+      position: fixed;
+      top: 10px;
+      right: 55px !important;
+      z-index: 1;
     }
-    
+
     .columns-area__panels__pane--compositional .columns-area__panels__pane__inner .compose-panel .search__input {
-        background: transparent !important;
+      background: transparent !important;
     }
-    
+
     .columns-area__panels__pane--compositional .columns-area__panels__pane__inner .compose-panel .search:hover,
-    .columns-area__panels__pane--compositional .columns-area__panels__pane__inner .compose-panel .search__input:hover, 
+    .columns-area__panels__pane--compositional .columns-area__panels__pane__inner .compose-panel .search__input:hover,
     .columns-area__panels__pane--compositional .columns-area__panels__pane__inner .compose-panel .search__input:active {
-        background: #282c37 !important;
+      background: #282c37 !important;
     }
 
     /* アイコンとか名前の部分の調整 */
     .columns-area__panels__pane--compositional .columns-area__panels__pane__inner .compose-panel .navigation-bar {
-        width: 220px !important;
-        min-width: 220px !important;
-        max-width: 220px !important;
-        box-sizing: border-box !important;
-        padding: 10px 10px 0 10px !important;
-        flex-shrink: 0 !important;
+      width: 220px !important;
+      min-width: 220px !important;
+      max-width: 220px !important;
+      box-sizing: border-box !important;
+      padding: 10px 10px 0 10px !important;
+      flex-shrink: 0 !important;
     }
 
     .columns-area__panels__pane--compositional .columns-area__panels__pane__inner .compose-panel .navigation-bar .navigation-bar__actions {
-        transform: rotate(180deg);
+      transform: rotate(180deg);
     }
 
     /* 下部投稿欄の横方向配置 */
     /* 投稿欄が微妙に上にずれるのを修正 */
     .compose-panel {
-        height: 100vh !important;
+      height: 100vh !important;
     }
 
     .compose-panel .navigation-bar {
-        margin-bottom: 10px !important;
+      margin-bottom: 10px !important;
     }
 
     /* 自分の名前とかプロフィール編集とか右側入力メイン部分のコンテナーを幅いっぱいまで伸ばす コンテナー内は下寄せ */
     .compose-form {
-        flex: 1 !important;
-        display: flex !important;
-        flex-direction: row !important;
-        align-items: flex-end !important;
-        background: #17191f !important;
-        min-height: 40px !important;
-        box-sizing: content-box !important;
-        padding: 10px !important;
-        margin: 0 !important;
-        overflow-y: visible !important;
-        position: relative !important;
+      flex: 1 !important;
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: flex-end !important;
+      background: #17191f !important;
+      min-height: 40px !important;
+      box-sizing: content-box !important;
+      padding: 10px !important;
+      margin: 0 !important;
+      overflow-y: visible !important;
+      position: relative !important;
     }
 
     /* 非公開とかDMとかの表示をサイドバーに押し込む */
     .compose-form__warning {
-        position: fixed !important;
-        left: 10px !important;
-        max-width: 210px !important;
-        box-sizing: border-box !important;
+      position: fixed !important;
+      left: 10px !important;
+      max-width: 210px !important;
+      box-sizing: border-box !important;
     }
 
     /* リプライ表示を上に持っていく */
     .reply-indicator {
-        position: absolute !important;
-        left: calc(10px - 2px) !important;
-        bottom: 100%;
-        z-index: -1;
-        min-width: calc(100% - 10px * 2);
-        box-sizing: border-box;
+      position: absolute !important;
+      left: calc(10px - 2px) !important;
+      bottom: 100%;
+      z-index: -1;
+      min-width: calc(100% - 10px * 2);
+      box-sizing: border-box;
     }
 
     /* CW入力部分がふわって出て来るのをやめる */
     .spoiler-input {
-        opacity: 1 !important;
-        width: 0px !important;
-        display: none;
+      opacity: 1 !important;
+      width: 0px !important;
+      display: none;
     }
 
     .spoiler-input.spoiler-input--visible {
-        display: block;
+      display: block;
     }
 
     /* CW入力部分とか画像投稿ボタンとかの高さを固定する */
     .spoiler-input,
     .spoiler-input *,
     .compose-form__buttons-wrapper {
-        height: 40px !important;
+      height: 40px !important;
     }
 
     /* CW入力部分が詰まるのを直す */
     .spoiler-input {
-        margin-right: 10px !important;
+      margin-right: 10px !important;
     }
 
     /* リプライ元表示・公開垢の鍵トゥート警告とかの水色のアレを固定幅にする */
     .reply-indicator,
     .compose-form__warning,
     .spoiler-input.spoiler-input--visible {
-        width: 210px !important;
-        margin-bottom: 0 !important;
+      width: 210px !important;
+      margin-bottom: 0 !important;
     }
 
     /* 入力欄を初期単行表示にする */
     .compose-form__autosuggest-wrapper,
     .compose-form__autosuggest-wrapper .autosuggest-textarea,
     .compose-form__autosuggest-wrapper .autosuggest-textarea * {
-        min-height: 40px !important;
-        flex: 1 !important;
-        border-radius: 4px !important;
+      min-height: 40px !important;
+      flex: 1 !important;
+      border-radius: 4px !important;
     }
 
     /* 入力欄の右マージンを追加 */
     .compose-form__autosuggest-wrapper {
-        margin-right: 10px !important;
+      margin-right: 10px !important;
     }
 
     /* emojiサジェストを上に表示する */
     .compose-form__autosuggest-wrapper .autosuggest-textarea {
-        display: flex !important;
-        flex-direction: column-reverse !important;
+      display: flex !important;
+      flex-direction: column-reverse !important;
     }
 
     .autosuggest-textarea__suggestions-wrapper {
-        position: absolute !important;
-        left: 10px !important;
-        top: 0 !important;
-        width: calc(100% - 10px * 3) !important;
-        box-sizing: border-box !important;
+      position: absolute !important;
+      left: 10px !important;
+      top: 0 !important;
+      width: calc(100% - 10px * 3) !important;
+      box-sizing: border-box !important;
     }
 
     .autosuggest-textarea__suggestions-wrapper .autosuggest-textarea__suggestions {
-        position: absolute !important;
-        top: auto !important;
-        bottom: 0 !important;
+      position: absolute !important;
+      top: auto !important;
+      bottom: 0 !important;
     }
 
     .compose-form__autosuggest-wrapper .autosuggest-textarea .autosuggest-textarea__suggestions {
-        position: relative !important;
+      position: relative !important;
     }
 
     .compose-form__autosuggest-wrapper .autosuggest-textarea .autosuggest-textarea__suggestions .autosuggest-textarea__suggestions__item,
     .compose-form__autosuggest-wrapper .autosuggest-textarea .autosuggest-textarea__suggestions .autosuggest-textarea__suggestions__item * {
-        max-height: 1em !important;
-        min-height: 1em !important;
+      max-height: 1em !important;
+      min-height: 1em !important;
     }
 
     /* 絵文字サジェストが謎の表示バランスになるから左寄せにする */
     .compose-form__autosuggest-wrapper .autosuggest-textarea .autosuggest-textarea__suggestions .autosuggest-textarea__suggestions__item .autosuggest-emoji {
-        display: inline-flex !important;
+      display: inline-flex !important;
     }
 
     /* 投稿画像プレビューの余白を打ち消す */
     .compose-form__uploads-wrapper {
-        padding: 0 !important;
+      padding: 0 !important;
     }
 
     /* 投稿画像プレビューがなんか白いのを直す */
     .compose-form__modifiers,
     .compose-form__upload-wrapper,
     .compose-form__uploads-wrapper {
-        background: transparent !important;
+      background: transparent !important;
     }
 
     /* 投稿画像プレビューを入力欄上部に移動 */
     .compose-form__autosuggest-wrapper {
-        display: flex !important;
-        flex-direction: column-reverse !important;
+      display: flex !important;
+      flex-direction: column-reverse !important;
     }
 
     /* 投稿画像プレビューを横にスタックする */
     .compose-form__modifiers .compose-form__uploads-wrapper {
-        display: flex !important;
-        flex-direction: row !important;
+      display: flex !important;
+      flex-direction: row !important;
     }
 
     /* 画像投稿ボタンの高さが伸びるのを直す */
     .compose-form__buttons-wrapper {
-        display: flex !important;
-        flex-direction: row !important;
-        align-items: center !important;
-        box-sizing: border-box !important;
-        border-radius: 4px !important;
-        height: 40px !important;
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      box-sizing: border-box !important;
+      border-radius: 4px !important;
+      height: 40px !important;
     }
 
     /* トゥートボタンに余白がないので足す */
     .compose-form__publish {
-        margin-left: 10px !important;
+      margin-left: 10px !important;
     }
 
     /* トゥートボタンの文字を消してFontAwesomeに置き換える */
     .compose-form__publish-button-wrapper {
-        position: relative !important;
-        padding: 0 !important;
+      position: relative !important;
+      padding: 0 !important;
     }
 
     .compose-form__publish-button-wrapper:after {
-        content: "\f1d8" !important;
-        font-family: FontAwesome !important;
-        position: absolute !important;
-        top: calc(50% - (18px / 2)) !important;
-        left: calc(50% - (18px / 2)) !important;
-        font-size: 18px !important;
-        pointer-events: none !important;
+      content: "\f1d8" !important;
+      font-family: FontAwesome !important;
+      position: absolute !important;
+      top: calc(50% - (18px / 2)) !important;
+      left: calc(50% - (18px / 2)) !important;
+      font-size: 18px !important;
+      pointer-events: none !important;
     }
 
     .compose-form__publish button {
-        font-size: 0 !important;
-        width: 40px !important;
-        height: 40px !important;
-        display: block !important;
+      font-size: 0 !important;
+      width: 40px !important;
+      height: 40px !important;
+      display: block !important;
     }
 
     /* 公開範囲のポップアップが隠れるのを直す */
     .emoji-picker-dropdown__menu,
     .privacy-dropdown__dropdown {
-        z-index: 5 !important;
+      z-index: 5 !important;
     }
-    
+
     .privacy-dropdown__dropdown {
-        position: fixed !important;
-        bottom: 28px !important;
-        top: unset !important;
+      position: fixed !important;
+      bottom: 28px !important;
+      top: unset !important;
     }
 
     /* TL内の画像が異様に伸びないように固定する */
     .media-gallery {
-        display: flex !important;
-        height: fit-content !important;
+      display: flex !important;
+      height: fit-content !important;
     }
 
     .spoiler-button {
-        max-width: 25% !important;
-        height: 120px !important;
-        min-width: 25% !important;
+      max-width: 25% !important;
+      height: 120px !important;
+      min-width: 25% !important;
     }
 
     .spoiler-button.spoiler-button--minified {
-        position: absolute !important;
-        height: 0 !important;
+      position: absolute !important;
+      height: 0 !important;
     }
 
     .media-gallery__item {
-        display: flex !important;
-        align-items: center !important;
-        max-width: 25% !important;
-        min-width: 25% !important;
-        height: 120px !important;
+      display: flex !important;
+      align-items: center !important;
+      max-width: 25% !important;
+      min-width: 25% !important;
+      height: 120px !important;
     }
-    
+
     /* 絵文字ピッカーのボタンが画像アップロードなどで隠れるやつの修正 */
     .emoji-picker-dropdown {
-        top: unset !important;
-        bottom: 0.75em !important;
+      top: unset !important;
+      bottom: 0.75em !important;
     }
-    
+
     /* 絵文字ピッカーが初回のみ吹き飛ぶやつの修正 */
     .emoji-picker-dropdown__menu {
-        position: fixed !important;
-        bottom: 28px !important;
-        top: unset !important;
+      position: fixed !important;
+      bottom: 28px !important;
+      top: unset !important;
     }
 
     /* 自分の情報を移動 */
     .columns-area__panels__pane--navigational .columns-area__panels__pane__inner {
-        transform: translate3d(0, 68px, 0);
+      transform: translate3d(0, 68px, 0);
     }
 
     .columns-area__panels__pane--compositional .columns-area__panels__pane__inner .compose-panel .navigation-bar {
-        position: fixed;
-        top: 0;
+      position: fixed;
+      top: 0;
     }
 
     .columns-area__panels__pane--compositional .columns-area__panels__pane__inner .compose-panel .navigation-bar .navigation-bar__actions {
-        transform: none;
+      transform: none;
     }
 
     .compose-form {
-        margin-left: 220px !important;
+      margin-left: 220px !important;
     }
 
     /* 自分のアイコンを消す */
     .columns-area__panels__pane--compositional .columns-area__panels__pane__inner .compose-panel .navigation-bar .account__avatar {
-        display: none;
+      display: none;
     }
 
     .columns-area__panels__pane--navigational .columns-area__panels__pane__inner {
-        transform: translate3d(0, 59px, 0);
-        height: calc(100% - 59px);
+      transform: translate3d(0, 59px, 0);
+      height: calc(100% - 59px);
     }
 
     /* サイドバーの余白を狭くする */
     .columns-area__panels__pane--navigational .columns-area__panels__pane__inner .navigation-panel .column-link {
-        padding-top: 6px;
-        padding-bottom: 6px;
+      padding-top: 6px;
+      padding-bottom: 6px;
     }
 
     /* サイドバーのアクティブな項目の背景色を変える */
     .columns-area__panels__pane--navigational .columns-area__panels__pane__inner .navigation-panel .column-link.active {
-        background:  $highlight-text-color;
-        color: $ui-secondary-color;
+      background: $highlight-text-color;
+      color: $ui-secondary-color;
     }
 
     /* ふぁぼとかをオーバーレイにする */
     .status__action-bar {
-        position: absolute;
-        z-index: 1;
-        right: 10px;
-        bottom: -32px;
-        padding: 10px;
-        background: #313543;
-        border: 1px solid #393f4f;
-        border-radius: 4px;
-        opacity: 0;
-        transition: opacity ease 0.3s;
+      position: absolute;
+      z-index: 1;
+      right: 10px;
+      bottom: -32px;
+      padding: 10px;
+      background: #313543;
+      border: 1px solid #393f4f;
+      border-radius: 4px;
+      opacity: 0;
+      transition: opacity ease 0.3s;
     }
 
     .status__wrapper.focusable:hover .status__action-bar,
     .status__action-bar:hover {
-        opacity: 1;
+      opacity: 1;
     }
 
     /* タイムラインの余白を消す */
     .tabs-bar__wrapper,
     .columns-area__panels__main {
-        padding: 0 !important;
+      padding: 0 !important;
     }
 
     .columns-area__panels__main .react-swipeable-view-container > div {
-        overflow: hidden !important;
+      overflow: hidden !important;
     }
 
     .columns-area__panels__main .columns-area--mobile {
-        height: 100% !important;
-        padding-top: 0 !important;
+      height: 100% !important;
+      padding-top: 0 !important;
     }
 
     .compose-form {
-        padding-left: 0 !important;
+      padding-left: 0 !important;
     }
 
     .compose-form__warning {
-        max-width: 200px !important;
+      max-width: 200px !important;
     }
 
     .columns-area__panels__pane--compositional .columns-area__panels__pane__inner .compose-panel .search {
-        position: fixed;
-        top: 0 !important;
-        right: 45px !important;
-        z-index: 1;
+      position: fixed;
+      top: 0 !important;
+      right: 45px !important;
+      z-index: 1;
     }
 
     /* タイムラインのボーダーを消す */
     .status {
-        border: none !important;
+      border: none !important;
     }
+  }
 }
