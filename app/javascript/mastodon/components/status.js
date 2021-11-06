@@ -292,6 +292,8 @@ class Status extends ImmutablePureComponent {
       return null;
     }
 
+    const isChatLayout = document.body.classList.contains('layout-single-column') && document.body.classList.contains('theme-single-column-chat-dark');
+
     const handlers = this.props.muted ? {} : {
       reply: this.handleHotkeyReply,
       favourite: this.handleHotkeyFavourite,
@@ -461,7 +463,7 @@ class Status extends ImmutablePureComponent {
     const visibilityIcon = visibilityIconInfo[status.get('visibility')];
 
     let timestamp;
-    if (localStorage.plusminus_config_timestamp === 'absolute') {
+    if (isChatLayout || localStorage.plusminus_config_timestamp === 'absolute') {
       timestamp = <AbsoluteTimestamp timestamp={status.get('created_at')} />;
     } else {
       timestamp = <RelativeTimestamp timestamp={status.get('created_at')} />;
