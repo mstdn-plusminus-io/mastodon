@@ -556,5 +556,13 @@
     .upload-area {
       position: absolute !important;
     }
+
+    .media-gallery .media-gallery__item {
+      inset: auto !important;
+    }
+
+    .status .video-player {
+      max-height: 66vh !important;
+    }
   }
 }
