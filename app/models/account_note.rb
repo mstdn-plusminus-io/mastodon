@@ -17,5 +17,5 @@ class AccountNote < ApplicationRecord
   belongs_to :target_account, class_name: 'Account'
 
   validates :account_id, uniqueness: { scope: :target_account_id }
-  validates :comment, length: { maximum: 2_000 }
+  validates :comment, length: { maximum: 20_000 }
 end
