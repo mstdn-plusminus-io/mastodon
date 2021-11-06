@@ -91,10 +91,6 @@
       box-sizing: border-box;
     }
 
-    .compose-panel .search .fa {
-      top: 9px !important;
-    }
-
     .columns-area .search-page .search-results {
       width: 100%;
     }
@@ -506,16 +502,59 @@
       max-width: 200px !important;
     }
 
+    /* パネルヘッダーの調整 */
+    .column-header__wrapper .column-header {
+      display: flex !important;
+      flex-direction: row-reverse !important;
+    }
+
+    .column-header__wrapper .column-header .column-header__buttons .column-header__back-button {
+      padding-left: 8px !important;
+      padding-right: 8px !important;
+    }
+
+    .column-header__wrapper .column-header > button {
+      padding-left: 0 !important;
+    }
+
+    .column-header__wrapper .column-header .column-header__buttons:empty {
+      padding-left: 15px !important;
+    }
+
     .columns-area__panels__pane--compositional .columns-area__panels__pane__inner .compose-panel .search {
       position: fixed;
       top: 0 !important;
-      right: 45px !important;
+      right: 0 !important;
       z-index: 1;
+    }
+
+    .search-popout {
+      transform: translateX(-20px) !important;
     }
 
     /* タイムラインのボーダーを消す */
     .status {
       border: none !important;
+    }
+
+    /* 投稿日時を右寄せにしない */
+    .status__info {
+      display: flex !important;
+      flex-direction: row-reverse !important;
+      justify-content: flex-end !important;
+    }
+
+    .status__relative-time {
+      float: none !important;
+    }
+
+    .status__display-name {
+      padding-right: 0.666em !important;
+    }
+
+    /* D&Dのメディアアップロードのオーバーレイがズレないようにする */
+    .upload-area {
+      position: absolute !important;
     }
   }
 }
