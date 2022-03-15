@@ -10,9 +10,9 @@ import { fetchDirectory, expandDirectory } from 'mastodon/actions/directory';
 import { List as ImmutableList } from 'immutable';
 import AccountCard from './components/account_card';
 import RadioButton from 'mastodon/components/radio_button';
-import classNames from 'classnames';
 import LoadMore from 'mastodon/components/load_more';
 import ScrollContainer from 'mastodon/containers/scroll_container';
+import LoadingIndicator from 'mastodon/components/loading_indicator';
 
 const messages = defineMessages({
   title: { id: 'column.directory', defaultMessage: 'Browse profiles' },
@@ -79,12 +79,12 @@ class Directory extends React.PureComponent {
     this.column.scrollTop();
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const { dispatch } = this.props;
     dispatch(fetchDirectory(this.getParams(this.props, this.state)));
   }
 
-  componentDidUpdate (prevProps, prevState) {
+  componentDidUpdate(prevProps, prevState) {
     const { dispatch } = this.props;
     const paramsOld = this.getParams(prevProps, prevState);
     const paramsNew = this.getParams(this.props, this.state);
@@ -123,13 +123,13 @@ class Directory extends React.PureComponent {
     dispatch(expandDirectory(this.getParams(this.props, this.state)));
   }
 
-  render () {
+  render() {
     const { isLoading, accountIds, intl, columnId, multiColumn, domain } = this.props;
-    const { order, local }  = this.getParams(this.props, this.state);
+    const { order, local } = this.getParams(this.props, this.state);
     const pinned = !!columnId;
 
     const scrollableArea = (
-      <div className='scrollable' style={{ background: 'transparent' }}>
+      <div className='scrollable'>
         <div className='filter-form'>
           <div className='filter-form__column' role='group'>
             <RadioButton name='order' value='active' label={intl.formatMessage(messages.recentlyActive)} checked={order === 'active'} onChange={this.handleChangeOrder} />
@@ -142,8 +142,10 @@ class Directory extends React.PureComponent {
           </div>
         </div>
 
-        <div className={classNames('directory__list', { loading: isLoading })}>
-          {accountIds.map(accountId => <AccountCard id={accountId} key={accountId} />)}
+        <div className='directory__list'>
+          {isLoading ? <LoadingIndicator /> : accountIds.map(accountId => (
+            <AccountCard id={accountId} key={accountId} />
+          ))}
         </div>
 
         <LoadMore onClick={this.handleLoadMore} visible={!isLoading} />
