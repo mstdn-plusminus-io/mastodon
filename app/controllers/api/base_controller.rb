@@ -5,6 +5,7 @@ class Api::BaseController < ApplicationController
   DEFAULT_ACCOUNTS_LIMIT = 40
 
   include RateLimitHeaders
+  include AccessTokenTrackingConcern
 
   skip_before_action :store_current_location
   skip_before_action :require_functional!, unless: :whitelist_mode?
@@ -40,7 +41,12 @@ class Api::BaseController < ApplicationController
     render json: { error: 'This action is not allowed' }, status: 403
   end
 
-  rescue_from Mastodon::RaceConditionError, Seahorse::Client::NetworkingError, Stoplight::Error::RedLight do
+  rescue_from Seahorse::Client::NetworkingError do |e|
+    Rails.logger.warn "Storage server error: #{e}"
+    render json: { error: 'There was a temporary problem serving your request, please try again' }, status: 503
+  end
+
+  rescue_from Mastodon::RaceConditionError, Stoplight::Error::RedLight do
     render json: { error: 'There was a temporary problem serving your request, please try again' }, status: 503
   end
 
