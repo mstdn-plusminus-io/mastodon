@@ -35,7 +35,7 @@ da:
         current_password: Angiv af sikkerhedsårsager adgangskoden til den aktuelle konto
         current_username: For at bekræfte, angiv brugernavnet for den aktuelle konto
         digest: Sendes kun efter en lang inaktivitetsperiode, og kun hvis du har modtaget personlige beskeder i dit fravær
-        discoverable: Tillad din konto at blive fundet af fremmede via anbefalinger og øvrige funktioner
+        discoverable: Tillad kontoen at blive fundet af fremmede via anbefalinger og øvrige funktioner
         email: Du tilsendes en bekræftelsese-mail
         fields: Du kan have op til 4 elementer vist som en tabel på din profil
         header: PNG, GIF eller JPG. Maks. %{size}. Auto-nedskaleres til %{dimensions}px
@@ -61,7 +61,7 @@ da:
       domain_allow:
         domain: Dette domæne vil kunne hente data, og dermed behandle og gemme indgående data, fra denne server
       email_domain_block:
-        domain: Dette kan være det domænenavn, der vises i e-mailadressen, MX-posten domænet opløser til eller IP'en på den server, som MX-posten opløser til. Disse tjekkes ved brugertilmelding, og tilmeldingen afvises.
+        domain: Dette kan være domænenavnet i e-mailadressen eller MX-posten, den bruger. Begge tjekkes ved tilmelding.
         with_dns_records: Et forsøg på at løse det givne domænes DNS-poster foretages og resultaterne blokeres ligeledes
       featured_tag:
         name: 'Du vil formentlig ønske at bruge en af flg.:'
@@ -118,6 +118,8 @@ da:
         scheduled_at: Planlæg offentliggørelse
         starts_at: Start af begivenhed
         text: Bekendtgørelse
+      appeal:
+        text: Forklar, hvorfor denne beslutning bør omgøres
       defaults:
         autofollow: Invitér til at følge din konto
         avatar: Profilbillede
@@ -196,15 +198,16 @@ da:
           sign_up_requires_approval: Begræns tilmeldinger
         severity: Regel
       notification_emails:
+        appeal: En moderatorafgørelse er appelleret
         digest: Send resumé e-mails
-        favourite: Nogen gav dig favoritstatus
+        favourite: Nogen favoritmarkerede dit indlæg
         follow: Nogen begyndte at følge dig
         follow_request: Nogen anmodede om at følge dig
         mention: Nogen nævnte dig
         pending_account: Ny konto kræver gennemgang
         reblog: Nogen boostede din status
         report: Ny anmeldelse er indsendt
-        trending_tag: Et ikke-gennemgået hashtag trender
+        trending_tag: Ny tendens kræver revidering
       rule:
         text: Regel
       tag:
