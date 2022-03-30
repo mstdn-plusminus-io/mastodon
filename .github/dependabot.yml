@@ -6,17 +6,17 @@
 version: 2
 updates:
   - package-ecosystem: npm
-    directory: "/.github"
+    directory: '/'
     schedule:
       interval: weekly
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 99
     allow:
       - dependency-type: direct
 
   - package-ecosystem: bundler
-    directory: "/.github"
+    directory: '/'
     schedule:
       interval: weekly
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 99
     allow:
       - dependency-type: direct
