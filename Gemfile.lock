@@ -149,7 +149,7 @@ GEM
       activesupport
     cbor (0.5.9.6)
     charlock_holmes (0.7.7)
-    chewy (7.2.4)
+    chewy (7.2.5)
       activesupport (>= 5.2)
       elasticsearch (>= 7.12.0, < 7.14.0)
       elasticsearch-dsl
@@ -214,7 +214,7 @@ GEM
     fabrication (2.27.0)
     faker (2.20.0)
       i18n (>= 1.8.11, < 2)
-    faraday (1.9.3)
+    faraday (1.10.0)
       faraday-em_http (~> 1.0)
       faraday-em_synchrony (~> 1.0)
       faraday-excon (~> 1.1)
