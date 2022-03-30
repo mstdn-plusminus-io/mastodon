@@ -210,7 +210,7 @@ GEM
     erubi (1.10.0)
     et-orbi (1.2.6)
       tzinfo
-    excon (0.76.0)
+    excon (0.92.1)
     fabrication (2.27.0)
     faker (2.20.0)
       i18n (>= 1.8.11, < 2)
@@ -251,11 +251,11 @@ GEM
     fog-json (1.2.0)
       fog-core
       multi_json (~> 1.10)
-    fog-openstack (0.3.10)
-      fog-core (>= 1.45, <= 2.1.0)
+    fog-openstack (1.0.11)
+      fog-core (~> 2.1)
       fog-json (>= 1.0)
       ipaddress (>= 0.8)
-    formatador (0.2.5)
+    formatador (0.3.0)
     fugit (1.5.2)
       et-orbi (~> 1.1, >= 1.1.8)
       raabro (~> 1.4)
@@ -755,7 +755,7 @@ DEPENDENCIES
   fast_blank (~> 1.0)
   fastimage
   fog-core (<= 2.1.0)
-  fog-openstack (~> 0.3)
+  fog-openstack (~> 1.0)
   fuubar (~> 2.5)
   gitlab-omniauth-openid-connect (~> 0.5.0)
   hamlit-rails (~> 0.2)
