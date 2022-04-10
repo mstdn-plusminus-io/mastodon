@@ -142,7 +142,8 @@ class Auth::SessionsController < Devise::SessionsController
       user_agent: request.user_agent
     )
 
-    UserMailer.suspicious_sign_in(user, request.remote_ip, request.user_agent, Time.now.utc).deliver_later! if suspicious_sign_in?(user)
+    disable_suspicious_sign_in = ENV.fetch('DISABLE_LOGIN_TOKEN_CHALLENGE', ENV.fetch('DISABLE_SUSPICIOUS_SIGN_IN', '')) == 'true'
+    UserMailer.suspicious_sign_in(user, request.remote_ip, request.user_agent, Time.now.utc).deliver_later! if !disable_suspicious_sign_in && suspicious_sign_in?(user)
   end
 
   def suspicious_sign_in?(user)
