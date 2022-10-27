@@ -7,10 +7,17 @@ class Auth::SessionsController < Devise::SessionsController
   skip_before_action :require_functional!
   skip_before_action :update_user_sign_in
 
+  prepend_before_action :check_suspicious!, only: [:create]
+
   include TwoFactorAuthenticationConcern
 
   before_action :set_instance_presenter, only: [:new]
   before_action :set_body_classes
+
+  def check_suspicious!
+    user = find_user
+    @login_is_suspicious = suspicious_sign_in?(user) unless user.nil?
+  end
 
   def create
     super do |resource|
@@ -143,7 +150,8 @@ class Auth::SessionsController < Devise::SessionsController
     )
 
     disable_suspicious_sign_in = ENV.fetch('DISABLE_LOGIN_TOKEN_CHALLENGE', ENV.fetch('DISABLE_SUSPICIOUS_SIGN_IN', '')) == 'true'
-    UserMailer.suspicious_sign_in(user, request.remote_ip, request.user_agent, Time.now.utc).deliver_later! if !disable_suspicious_sign_in && suspicious_sign_in?(user)
+    UserMailer.suspicious_sign_in(user, request.remote_ip, request.user_agent, Time.now.utc).deliver_later! if !disable_suspicious_sign_in && @login_is_suspicious
+    
   end
 
   def suspicious_sign_in?(user)
