@@ -59,10 +59,6 @@ RSpec.describe ActivityPub::OutboxesController, type: :controller do
           expect(response.headers['Vary']).to be_nil
         end
 
-        it 'does not have a Vary header' do
-          expect(response.headers['Vary']).to be_nil
-        end
-
         context 'when account is permanently suspended' do
           before do
             account.suspend!
@@ -103,10 +99,6 @@ RSpec.describe ActivityPub::OutboxesController, type: :controller do
         end
 
         it_behaves_like 'cacheable response'
-
-        it 'returns Vary header with Signature' do
-          expect(response.headers['Vary']).to include 'Signature'
-        end
 
         it 'returns Vary header with Signature' do
           expect(response.headers['Vary']).to include 'Signature'
