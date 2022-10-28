@@ -21,7 +21,11 @@ module Mastodon
     end
 
     def suffix
-      'plusminus'
+      '_plusminus-'
+    end
+
+    def revision
+      1
     end
 
     def to_a
@@ -29,7 +33,7 @@ module Mastodon
     end
 
     def to_s
-      [to_a.join('.'), flags, suffix].join
+      [to_a.join('.'), flags, suffix, revision].join
     end
 
     def repository
