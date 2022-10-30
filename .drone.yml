@@ -1,0 +1,182 @@
+---
+kind: pipeline
+name: x86_64
+
+steps:
+  - name: slack notification on start
+    image: plugins/slack
+    settings:
+      webhook:
+        from_secret: slack_webhook_url
+      template: >
+        {{repo.owner}}/{{repo.name}} ({{build.branch}}) x86_64 build #{{build.number}} start: {{build.link}}
+    when:
+      branch:
+        - master
+        - staging
+      event:
+        - push
+        - tag
+
+  - name: build staging image
+    image: plugins/docker
+    settings:
+      repo: plusminusio/mastodon
+      tag: staging
+      username: mohemohe
+      password:
+        from_secret: dockerhub_password
+      squash: true
+    when:
+      branch:
+        - staging
+      event:
+        - push
+
+  - name: build latest image
+    image: plugins/docker
+    settings:
+      repo: plusminusio/mastodon
+      tag: latest
+      username: mohemohe
+      password:
+        from_secret: dockerhub_password
+      dockerfile: latest.Dockerfile
+      squash: true
+    when:
+      branch:
+        - master
+      event:
+        - push
+
+  - name: build tagged image
+    image: plugins/docker
+    settings:
+      repo: plusminusio/mastodon
+      auto_tag: true
+      username: mohemohe
+      password:
+        from_secret: dockerhub_password
+      dockerfile: tagged.Dockerfile
+      squash: true
+    when:
+      branch:
+        - master
+      event:
+        - tag
+
+  - name: slack notification on complete
+    image: plugins/slack
+    settings:
+      webhook:
+        from_secret: slack_webhook_url
+      template: >
+        {{#success build.status}}
+          {{repo.owner}}/{{repo.name}} ({{build.branch}}) x86_64 build #{{build.number}} succeeded: {{build.link}}
+        {{else}}
+          {{repo.owner}}/{{repo.name}} ({{build.branch}}) x86_64 build #{{build.number}} failed: {{build.link}}
+        {{/success}}
+    when:
+      branch:
+        - master
+        - staging
+      event:
+        - push
+        - tag
+      status:
+        - success
+        - failure
+
+---
+kind: pipeline
+name: arm64
+
+platform:
+  os: linux
+  arch: arm64
+
+steps:
+  - name: slack notification on start
+    image: plugins/slack
+    settings:
+      webhook:
+        from_secret: slack_webhook_url
+      template: >
+        {{repo.owner}}/{{repo.name}} ({{build.branch}}) arm64 build #{{build.number}} start: {{build.link}}
+    when:
+      branch:
+        - master
+        - staging
+      event:
+        - push
+        - tag
+
+  - name: build staging image
+    image: plugins/docker
+    settings:
+      repo: plusminusio/mastodon
+      tag: staging-arm64
+      username: mohemohe
+      password:
+        from_secret: dockerhub_password
+      squash: true
+    when:
+      branch:
+        - staging
+      event:
+        - push
+
+  - name: build latest image
+    image: plugins/docker
+    settings:
+      repo: plusminusio/mastodon
+      tag: latest-arm64
+      username: mohemohe
+      password:
+        from_secret: dockerhub_password
+      dockerfile: latest-arm64.Dockerfile
+      squash: true
+    when:
+      branch:
+        - master
+      event:
+        - push
+
+  - name: build tagged image
+    image: plugins/docker
+    settings:
+      repo: plusminusio/mastodon
+      auto_tag: true
+      auto_tag_suffix: arm64
+      username: mohemohe
+      password:
+        from_secret: dockerhub_password
+      dockerfile: tagged-arm64.Dockerfile
+      squash: true
+    when:
+      branch:
+        - master
+      event:
+        - tag
+
+  - name: slack notification on complete
+    image: plugins/slack
+    settings:
+      webhook:
+        from_secret: slack_webhook_url
+      template: >
+        {{#success build.status}}
+          {{repo.owner}}/{{repo.name}} ({{build.branch}}) arm64 build #{{build.number}} succeeded: {{build.link}}
+        {{else}}
+          {{repo.owner}}/{{repo.name}} ({{build.branch}}) arm64 build #{{build.number}} failed: {{build.link}}
+        {{/success}}
+    when:
+      branch:
+        - master
+        - staging
+      event:
+        - push
+        - tag
+      status:
+        - success
+        - failure
