@@ -1,9 +1,9 @@
-name: build
+name: build latest image
 
 on:
   push:
     branches:
-      - edge
+      - master
 
 concurrency: 
   group: build-${{ github.ref }}
