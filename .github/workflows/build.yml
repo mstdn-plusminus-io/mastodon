@@ -1,0 +1,77 @@
+name: build
+
+on:
+  push:
+    branches:
+      - master
+      - edge
+    tags:
+      - v*.*.*
+
+concurrency: 
+  group: build-${{ github.ref }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - run: |-
+          apt-get update
+          apt-get -y --no-install-recommends install build-essential libidn11-dev
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.0'
+          bundler-cache: false
+
+      - run: gem install bundler
+
+      - run: |-
+          bundle config set --local deployment 'true'
+          bundle config set --local without 'development test'
+          bundle config set silence_root_warning true
+          bundle install -j10
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: yarn
+          cache-dependency-path: ./yarn.lock
+
+      - if: ${{ env.ACT }}
+        run: |
+          corepack enable
+
+      - run: yarn config set network-timeout 120000
+
+      - run: yarn install --frozen-lockfile
+
+      - run: bundle exec rails assets:precompile
+        env:
+          RAILS_ENV: production
+          OTP_SECRET: precompile_placeholder
+          SECRET_KEY_BASE: precompile_placeholder
+
+      - uses: docker/setup-qemu-action@v2
+
+      - uses: docker/setup-buildx-action@v2
+
+      - uses: docker/login-action@v2
+        with:
+          username: mohemohe
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v3
+        with:
+          push: false
+          file: gha.Dockerfile
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
+          cache-from: type=gha,scope=${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.arch }}

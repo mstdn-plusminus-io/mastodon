@@ -53,7 +53,7 @@ export default class ColumnsArea extends ImmutablePureComponent {
   };
 
   // Corresponds to (max-width: $no-gap-breakpoint + 285px - 1px) in SCSS
-  mediaQuery = 'matchMedia' in window && window.matchMedia('(max-width: 1174px)');
+  mediaQuery = 'matchMedia' in window && window.matchMedia('(max-width: 854px)');
 
   state = {
     renderComposePanel: !(this.mediaQuery && this.mediaQuery.matches),
