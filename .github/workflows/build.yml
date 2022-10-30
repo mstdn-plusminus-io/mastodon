@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: buildjet-16vcpu-ubuntu-2204
 
     steps:
       - uses: actions/checkout@v3
@@ -35,7 +35,7 @@ jobs:
           bundle config set --local deployment 'true'
           bundle config set --local without 'development test'
           bundle config set silence_root_warning true
-          bundle install -j10
+          bundle install -j"$(nproc)"
 
       - uses: actions/setup-node@v3
         with:
@@ -68,7 +68,7 @@ jobs:
 
       - uses: docker/build-push-action@v3
         with:
-          push: false
+          push: true
           file: gha.Dockerfile
           platforms: linux/amd64,linux/arm64,linux/arm/v7
           tags: ${{ steps.metadata.outputs.tags }}

@@ -12,13 +12,12 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Enable jemalloc
+# Install jemalloc
 RUN apt-get update && \
     apt-get -y --no-install-recommends install libjemalloc2 && \
     ln -nfs /usr/lib/$(uname -m)-linux-gnu /usr/lib/linux-gnu && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-ENV LD_PRELOAD=${LD_PRELOAD}:/usr/lib/linux-gnu/libjemalloc.so.2
 
 # Create the mastodon user
 ARG UID=991
@@ -54,11 +53,13 @@ RUN apt-get update && \
     gem install bundler && \
     npm install -g yarn && \
     cd /opt/mastodon && \
-    if [[ "$(uname -i)" != "x86_64" ]] ; then rm -rf vendor/bundle ; fi && \
     bundle config set --local deployment 'true' && \
     bundle config set --local without 'development test' && \
     bundle config set silence_root_warning true && \
-    bundle install -j10 && \
+    if [[ "$(uname -i)" != "x86_64" ]] ; then \
+      rm -rf vendor/bundle && \
+      bundle install -j"$(nproc)" && \
+    fi && \
     yarn config set network-timeout 1000000 && \
     yarn install --pure-lockfile && \
     rm -rf /opt/mastodon/node_modules/.cache && \
@@ -74,6 +75,9 @@ RUN apt-get update && \
 	    ca-certificates tzdata libreadline8 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+# Enable jemalloc
+ENV LD_PRELOAD=${LD_PRELOAD}:/usr/lib/linux-gnu/libjemalloc.so.2
 
 # Set the run user
 USER mastodon
