@@ -1,0 +1,35 @@
+name: build latest image
+
+on:
+  push:
+    branches:
+      - master
+
+concurrency: 
+  group: build-${{ github.ref }}
+
+jobs:
+  retag:
+    runs-on: latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: docker/login-action@v2
+        with:
+          username: mohemohe
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v3
+        with:
+          push: true
+          file: latest.Dockerfile
+          tags: plusminusio/mastodon:latest
+
+      - uses: docker/build-push-action@v3
+        with:
+          push: true
+          file: latest-arm64.Dockerfile
+          tags: plusminusio/mastodon:latest-arm64

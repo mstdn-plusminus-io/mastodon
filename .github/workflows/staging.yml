@@ -1,0 +1,46 @@
+name: build staging image
+
+on:
+  push:
+    branches:
+      - staging
+
+concurrency: 
+  group: build-${{ github.ref }}
+
+jobs:
+  build_amd64:
+    runs-on: buildjet-4vcpu-ubuntu-2204
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: docker/login-action@v2
+        with:
+          username: mohemohe
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: plusminusio/mastodon:staging
+
+  build_arm64:
+    runs-on: buildjet-4vcpu-ubuntu-2204-arm
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: docker/login-action@v2
+        with:
+          username: mohemohe
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: plusminusio/mastodon:staging-arm64
