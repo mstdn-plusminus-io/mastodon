@@ -1,4 +1,11 @@
-@media screen and (min-width: 600px + (285px * 1) + (10px * 1)) {
+// UserCSSで動確するとき用
+// @import "../mastodon/variables.scss";
+
+@media screen and (min-width: (600px + (285px * 1) + (10px * 1))) {
+  /* 4.0 サイドバーのロゴを消す */
+  .navigation-panel__logo {
+    display: none;
+  }
   /* 2019/07/28 master追従の仕様変更 */
   .layout-single-column {
     overflow-x: hidden !important;
@@ -34,7 +41,11 @@
 
     /* Slackっぽい左右分割レイアウトにする */
     .columns-area__panels {
-      flex-direction: row-reverse;
+      .column-header__collapsible {
+        position: absolute !important;
+        width: 100% !important;
+        opacity: 1 !important;
+      }
     }
 
     /* タブバー常時非表示 */
@@ -55,7 +66,7 @@
     /* サイドバーがスクロールできるようにする */
     .columns-area__panels__pane--navigational .columns-area__panels__pane__inner {
       position: static !important;
-      height: calc(100% - 68px);
+      // height: calc(100% - 68px);
       overflow: auto;
       box-sizing: border-box;
     }
@@ -126,7 +137,7 @@
       pointer-events: all;
     }
 
-    /* ここにコメントを書こうとしたけど何を書こうとしたか忘れた */
+    /* メインカラムの表示部分を確保する */
     .columns-area__panels__pane--compositional .columns-area__panels__pane__inner .compose-panel {
       display: flex;
       flex-direction: row;
@@ -204,7 +215,7 @@
       background: #17191f !important;
       min-height: 40px !important;
       box-sizing: content-box !important;
-      padding: 10px !important;
+      padding: 10px 0px !important;
       margin: 0 !important;
       overflow-y: visible !important;
       position: relative !important;
@@ -386,6 +397,8 @@
     .media-gallery {
       display: flex !important;
       height: fit-content !important;
+      margin-left: 56px;
+      width: calc(100% - 56px) !important;
     }
 
     .spoiler-button {
@@ -506,6 +519,7 @@
     .column-header__wrapper .column-header {
       display: flex !important;
       flex-direction: row-reverse !important;
+      border-radius: 0 !important;
     }
 
     .column-header__wrapper .column-header .column-header__buttons .column-header__back-button {
@@ -532,24 +546,37 @@
       transform: translateX(-20px) !important;
     }
 
-    /* タイムラインのボーダーを消す */
     .status {
+      /* タイムラインのボーダーを消す */
       border: none !important;
-    }
 
-    /* 投稿日時を右寄せにしない */
-    .status__info {
-      display: flex !important;
-      flex-direction: row-reverse !important;
-      justify-content: flex-end !important;
-    }
+      .status__info {
+        /* 投稿日時を右寄せにしない */
+        display: flex !important;
+        justify-content: flex-start !important;
+        align-items: flex-start !important;
 
-    .status__relative-time {
-      float: none !important;
-    }
+        /* Slackっぽく上・左寄せにする */
+        .status__display-name {
+          display: flex !important;
+          align-items: flex-start !important;
+  
+          .display-name {
+            display: flex !important;
+            align-items: flex-start !important;
+      
+            .display-name__account {
+              padding-left: 0.666em;
+            }
+          }
+        }
+      }
 
-    .status__display-name {
-      padding-right: 0.666em !important;
+      /* アイコンの右側から投稿が始まるように詰める */
+      .status__content {
+        margin-left: 56px;
+        margin-top: calc((-56px / 2) - 2px);
+      }
     }
 
     /* D&Dのメディアアップロードのオーバーレイがズレないようにする */
