@@ -1,0 +1,55 @@
+name: dispatch build image
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        type: string
+        required: true
+        description: target branch
+      tag:
+        type: string
+        required: true
+        description: docker image tag
+
+concurrency: 
+  group: build-${{ github.ref }}
+
+jobs:
+  build_amd64:
+    runs-on: buildjet-4vcpu-ubuntu-2204
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.branch }}
+          fetch-depth: 0
+
+      - uses: docker/login-action@v2
+        with:
+          username: mohemohe
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: plusminusio/mastodon:${{ github.event.inputs.tag }}
+
+  build_arm64:
+    runs-on: buildjet-4vcpu-ubuntu-2204-arm
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.branch }}
+          fetch-depth: 0
+
+      - uses: docker/login-action@v2
+        with:
+          username: mohemohe
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: plusminusio/mastodon:${{ github.event.inputs.tag }}-arm64
