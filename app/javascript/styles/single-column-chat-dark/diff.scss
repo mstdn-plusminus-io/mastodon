@@ -469,8 +469,8 @@
 
     /* サイドバーのアクティブな項目の背景色を変える */
     .columns-area__panels__pane--navigational .columns-area__panels__pane__inner .navigation-panel .column-link.active {
-      background: $highlight-text-color;
-      color: $ui-secondary-color;
+      background: $ui-highlight-color;
+      color: $secondary-text-color;
     }
 
     /* ふぁぼとかをオーバーレイにする */
