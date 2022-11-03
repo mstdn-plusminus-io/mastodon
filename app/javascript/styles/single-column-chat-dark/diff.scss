@@ -580,6 +580,16 @@
       }
     }
 
+    /* tootごとのmenuがキツいので補正 */
+    .dropdown-menu {
+      margin-left: -1rem !important;
+
+      .dropdown-menu__arrow.top,
+      .dropdown-menu__arrow.bottom {
+        margin-left: 1rem !important;
+      }
+    }
+
     /* D&Dのメディアアップロードのオーバーレイがズレないようにする */
     .upload-area {
       position: fixed !important;
