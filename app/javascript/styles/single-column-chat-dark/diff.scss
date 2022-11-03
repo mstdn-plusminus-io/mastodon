@@ -394,7 +394,8 @@
     }
 
     /* TL内の画像が異様に伸びないように固定する */
-    .media-gallery {
+    .media-gallery,
+    .status-card {
       display: flex !important;
       height: fit-content !important;
       margin-left: 56px;
