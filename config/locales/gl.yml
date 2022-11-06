@@ -207,6 +207,7 @@ gl:
         reject_user: Rexeitar Usuaria
         remove_avatar_user: Eliminar avatar
         reopen_report: Reabrir denuncia
+        resend_user: Reenviar o email de confirmación
         reset_password_user: Restabelecer contrasinal
         resolve_report: Resolver denuncia
         sensitive_account: Marca o multimedia da túa conta como sensible
@@ -265,6 +266,7 @@ gl:
         reject_user_html: "%{name} rexeitou o rexistro de %{target}"
         remove_avatar_user_html: "%{name} eliminou o avatar de %{target}"
         reopen_report_html: "%{name} reabriu a denuncia %{target}"
+        resend_user_html: "%{name} reenviou o email de confirmación para %{target}"
         reset_password_user_html: "%{name} restableceu o contrasinal da usuaria %{target}"
         resolve_report_html: "%{name} resolveu a denuncia %{target}"
         sensitive_account_html: "%{name} marcou o multimedia de %{target} como sensible"
@@ -667,29 +669,67 @@ gl:
       empty: Aínda non se definiron as regras do servidor.
       title: Regras do servidor
     settings:
+      about:
+        manage_rules: Xestionar regras do servidor
+        preamble: Proporciona información detallada acerca do xeito en que se xestiona, modera e financia o servidor.
+        rules_hint: Hai un espazo dedicado para as normas que é de agardar que as túas usuarias cumpran.
+        title: Acerca de
+      appearance:
+        preamble: Personalizar a interface web de Mastodon.
+        title: Aparencia
+      branding:
+        preamble: A personalización do teu servidor diferénciao doutros servidores da rede. A información podería mostrarse en diversos entornos, como a interface web de Mastodon, aplicacións nativas, vista previa das ligazóns noutras webs e apps de mensaxería, e similares. Debido a esto é recomendable que a información sexa clara, curta e concisa.
+        title: Personalización
+      content_retention:
+        preamble: Controla como se gardan en Mastodon os contidos creados polas usuarias.
+        title: Retención do contido
+      discovery:
+        follow_recommendations: Recomendacións de seguimento
+        preamble: Destacar contido interesante é importante para axudar a que as novas usuarias se sintan cómodas se non coñecen a ninguén en Mastodon. Xestiona os diferentes xeitos de promocionar contidos.
+        profile_directory: Directorio de perfís
+        public_timelines: Cronoloxías públicas
+        title: Descubrir
+        trends: Tendencias
       domain_blocks:
         all: Para todos
         disabled: Para ninguén
         users: Para usuarias locais conectadas
+      registrations:
+        preamble: Xestiona quen pode crear unha conta no teu servidor.
+        title: Rexistros
       registrations_mode:
         modes:
           approved: Precisa aprobación para rexistrarse
           none: Rexistro pechado
           open: Rexistro aberto
+      title: Axustes do servidor
     site_uploads:
       delete: Eliminar o ficheiro subido
       destroyed_msg: Eliminado correctamente o subido!
     statuses:
+      account: Conta
+      application: Aplicación
       back_to_account: Volver a páxina da conta
       back_to_report: Volver a denuncias
       batch:
         remove_from_report: Eliminar da denuncia
         report: Denuncia
       deleted: Eliminado
+      favourites: Favoritas
+      history: Historial de versións
+      in_reply_to: En resposta a
+      language: Idioma
       media:
         title: Medios
+      metadata: Metadatos
       no_status_selected: Non se cambiou ningunha publicación xa que ningunha foi seleccionada
+      open: Abrir publicación
+      original_status: Publicación orixinal
+      reblogs: Promocións
+      status_changed: Publicación editada
       title: Publicacións da conta
+      trending: Tendencia
+      visibility: Visibilidade
       with_media: con medios
     strikes:
       actions:
@@ -1024,7 +1064,7 @@ gl:
       content: Sentímolo, pero algo do noso lado falloou.
       title: Esta páxina non é correcta
     '503': A páxina non se puido servir debido a un fallo temporal no servidor.
-    noscript_html: Para utilizar a aplicación web de Mastodon debes activar JavaScript. De xeito alternativo, probb cunha das <a href="%{apps_path}">apps nativas</a> para Mastodon na túa plataforma.
+    noscript_html: Para utilizar a aplicación web de Mastodon debes activar JavaScript. De xeito alternativo, proba cunha das <a href="%{apps_path}">apps nativas</a> para Mastodon na túa plataforma.
   existing_username_validator:
     not_found: non se atopou unha usuaria local con ese alcume
     not_found_multiple: non se atopou a %{usernames}
@@ -1211,6 +1251,8 @@ gl:
     carry_blocks_over_text: Esta usuaria chegou desde %{acct}, que ti tes bloqueada.
     carry_mutes_over_text: Esta usuaria chegou desde %{acct}, que ti tes acalada.
     copy_account_note_text: 'Esta usuaria chegou desde %{acct}, aquí están as túas notas previas acerca dela:'
+  navigation:
+    toggle_menu: Activa o menú
   notification_mailer:
     admin:
       report:

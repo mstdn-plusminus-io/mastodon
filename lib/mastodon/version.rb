@@ -17,7 +17,7 @@ module Mastodon
     end
 
     def flags
-      'rc1'
+      'rc2'
     end
 
     def suffix
@@ -25,7 +25,7 @@ module Mastodon
     end
 
     def revision
-      6
+      1
     end
 
     def to_a

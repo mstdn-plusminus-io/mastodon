@@ -207,6 +207,7 @@ it:
         reject_user: Rifiuta Utente
         remove_avatar_user: Elimina avatar
         reopen_report: Riapri report
+        resend_user: Invia di nuovo l'email di conferma
         reset_password_user: Reimposta password
         resolve_report: Risolvi report
         sensitive_account: Contrassegna il media nel tuo profilo come sensibile
@@ -265,6 +266,7 @@ it:
         reject_user_html: "%{name} ha rifiutato la registrazione da %{target}"
         remove_avatar_user_html: "%{name} ha rimosso l'immagine profilo di %{target}"
         reopen_report_html: "%{name} ha riaperto il rapporto %{target}"
+        resend_user_html: "%{name} inviata nuovamente l'email di conferma per %{target}"
         reset_password_user_html: "%{name} ha reimpostato la password dell'utente %{target}"
         resolve_report_html: "%{name} ha risolto il rapporto %{target}"
         sensitive_account_html: "%{name} ha segnato il media di %{target} come sensibile"
@@ -705,16 +707,29 @@ it:
       delete: Cancella il file caricato
       destroyed_msg: Caricamento sito eliminato!
     statuses:
+      account: Autore
+      application: Applicazione
       back_to_account: Torna alla pagina dell'account
       back_to_report: Torna alla pagina del report
       batch:
         remove_from_report: Rimuovi dal report
         report: Rapporto
       deleted: Cancellato
+      favourites: Preferiti
+      history: Cronologia delle versioni
+      in_reply_to: In risposta a
+      language: Lingua
       media:
         title: Media
+      metadata: Metadati
       no_status_selected: Nessun status è stato modificato perché nessuno era stato selezionato
+      open: Apri il post
+      original_status: Post originale
+      reblogs: Condivisioni
+      status_changed: Post modificato
       title: Gli status dell'account
+      trending: Di tendenza
+      visibility: Visibilità
       with_media: con media
     strikes:
       actions:
@@ -1238,6 +1253,8 @@ it:
     carry_blocks_over_text: Questo utente si è spostato da %{acct} che hai bloccato.
     carry_mutes_over_text: Questo utente si è spostato da %{acct} che hai silenziato.
     copy_account_note_text: 'Questo utente si è spostato da %{acct}, ecco le tue note precedenti su di loro:'
+  navigation:
+    toggle_menu: Cambia menu
   notification_mailer:
     admin:
       report:
