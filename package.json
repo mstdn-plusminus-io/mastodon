@@ -16,7 +16,8 @@
     "test:lint:sass": "stylelint '**/*.scss'",
     "test:jest": "cross-env NODE_ENV=test jest",
     "format": "prettier --write '**/*.{json,yml}'",
-    "format-check": "prettier --write '**/*.{json,yml}'"
+    "format-check": "prettier --write '**/*.{json,yml}'",
+    "watch": "foreman start"
   },
   "repository": {
     "type": "git",
