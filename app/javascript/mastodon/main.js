@@ -17,6 +17,8 @@ function main() {
     const mountNode = document.getElementById('mastodon');
     const props = JSON.parse(mountNode.getAttribute('data-props'));
 
+    window.__PLUS_MINUS_EVENTS__ = new EventTarget();
+
     ReactDOM.render(<Mastodon {...props} />, mountNode);
     store.dispatch(setupBrowserNotifications());
 
