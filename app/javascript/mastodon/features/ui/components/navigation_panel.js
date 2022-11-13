@@ -91,7 +91,7 @@ class NavigationPanel extends React.Component {
             <hr />
 
             <ColumnLink transparent href='/settings/preferences' icon='cog' text={intl.formatMessage(messages.preferences)} />
-            <ColumnLink transparent to='#' icon='cog' text={'plusminus設定 (β)'} onClick={(e) => {
+            <ColumnLink transparent to='#' icon='puzzle-piece' text={'plusminus設定 (β)'} onClick={(e) => {
               e.preventDefault();
               window.__PLUS_MINUS_EVENTS__.dispatchEvent(new Event('openConfig'));
             }}/>
