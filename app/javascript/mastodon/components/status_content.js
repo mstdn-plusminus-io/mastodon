@@ -111,6 +111,7 @@ class StatusContent extends React.PureComponent {
         link.setAttribute('href', `/tags/${link.text.slice(1)}`);
       } else {
         link.setAttribute('title', link.href);
+        link.setAttribute('target', '_blank');
         link.classList.add('unhandled-link');
       }
     }
