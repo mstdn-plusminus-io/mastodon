@@ -11,4 +11,5 @@
           = t('admin.accounts.whitelisted')
         - else
           = t('admin.accounts.no_limits_imposed')
+
     .trends__item__current{ title: t('admin.instances.known_accounts', count: instance.accounts_count) }= friendly_number_to_human instance.accounts_count

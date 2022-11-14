@@ -1,4 +1,34 @@
-@media screen and (min-width: 600px + (285px * 1) + (10px * 1)) {
+// UserCSSで動確するとき用
+// @import "../mastodon/variables.scss";
+
+@media screen and (min-width: (600px + (285px * 1) + (10px * 1))) {
+  ::-webkit-scrollbar-thumb {
+    border-right: 2px solid transparent !important;
+    border-left: 2px solid transparent !important;
+    background-clip: padding-box !important;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: rgba($base-overlay-background, 0.1) !important;
+  }
+  
+  ::-webkit-scrollbar-track:hover {
+    background: rgba($base-overlay-background, 0.1) !important;
+  }
+  
+  ::-webkit-scrollbar-track:active {
+    background: rgba($base-overlay-background, 0.1) !important;
+  }
+  
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+  
+
+  /* 4.0 サイドバーのロゴを消す */
+  .navigation-panel__logo {
+    display: none;
+  }
   /* 2019/07/28 master追従の仕様変更 */
   .layout-single-column {
     overflow-x: hidden !important;
@@ -34,7 +64,11 @@
 
     /* Slackっぽい左右分割レイアウトにする */
     .columns-area__panels {
-      flex-direction: row-reverse;
+      .column-header__collapsible {
+        position: absolute !important;
+        width: 100% !important;
+        opacity: 1 !important;
+      }
     }
 
     /* タブバー常時非表示 */
@@ -55,7 +89,7 @@
     /* サイドバーがスクロールできるようにする */
     .columns-area__panels__pane--navigational .columns-area__panels__pane__inner {
       position: static !important;
-      height: calc(100% - 68px);
+      // height: calc(100% - 68px);
       overflow: auto;
       box-sizing: border-box;
     }
@@ -65,8 +99,9 @@
       width: 100%;
     }
 
-    .columns-area__panels__pane__inner .column-link {
+    .columns-area__panels__pane__inner .navigation-panel .column-link {
       display: flex;
+      overflow: visible !important;
     }
 
     .columns-area__panels__pane--navigational .column-link span {
@@ -126,7 +161,7 @@
       pointer-events: all;
     }
 
-    /* ここにコメントを書こうとしたけど何を書こうとしたか忘れた */
+    /* メインカラムの表示部分を確保する */
     .columns-area__panels__pane--compositional .columns-area__panels__pane__inner .compose-panel {
       display: flex;
       flex-direction: row;
@@ -147,6 +182,11 @@
     .columns-area__panels__pane--compositional .columns-area__panels__pane__inner .compose-panel .flex-spacer,
     .columns-area__panels__pane--compositional .columns-area__panels__pane__inner .compose-panel .getting-started__footer {
       display: none;
+    }
+
+    /* フッター削除 */
+    .columns-area__panels__pane--compositional .columns-area__panels__pane__inner .compose-panel .link-footer {
+      display: none !important;
     }
 
     /* 検索窓調整 */
@@ -204,7 +244,7 @@
       background: #17191f !important;
       min-height: 40px !important;
       box-sizing: content-box !important;
-      padding: 10px !important;
+      padding: 10px 0px !important;
       margin: 0 !important;
       overflow-y: visible !important;
       position: relative !important;
@@ -383,9 +423,12 @@
     }
 
     /* TL内の画像が異様に伸びないように固定する */
-    .media-gallery {
+    .media-gallery,
+    .status-card {
       display: flex !important;
       height: fit-content !important;
+      margin-left: 56px;
+      width: calc(100% - 56px) !important;
     }
 
     .spoiler-button {
@@ -456,8 +499,8 @@
 
     /* サイドバーのアクティブな項目の背景色を変える */
     .columns-area__panels__pane--navigational .columns-area__panels__pane__inner .navigation-panel .column-link.active {
-      background: $highlight-text-color;
-      color: $ui-secondary-color;
+      background: $ui-highlight-color;
+      color: $secondary-text-color;
     }
 
     /* ふぁぼとかをオーバーレイにする */
@@ -506,6 +549,7 @@
     .column-header__wrapper .column-header {
       display: flex !important;
       flex-direction: row-reverse !important;
+      border-radius: 0 !important;
     }
 
     .column-header__wrapper .column-header .column-header__buttons .column-header__back-button {
@@ -532,24 +576,47 @@
       transform: translateX(-20px) !important;
     }
 
-    /* タイムラインのボーダーを消す */
     .status {
+      /* タイムラインのボーダーを消す */
       border: none !important;
+
+      .status__info {
+        /* 投稿日時を右寄せにしない */
+        display: flex !important;
+        justify-content: flex-start !important;
+        align-items: flex-start !important;
+
+        /* Slackっぽく上・左寄せにする */
+        .status__display-name {
+          display: flex !important;
+          align-items: flex-start !important;
+  
+          .display-name {
+            display: flex !important;
+            align-items: flex-start !important;
+      
+            .display-name__account {
+              padding-left: 0.666em;
+            }
+          }
+        }
+      }
+
+      /* アイコンの右側から投稿が始まるように詰める */
+      .status__content {
+        margin-left: 56px;
+        margin-top: calc((-56px / 2) - 2px);
+      }
     }
 
-    /* 投稿日時を右寄せにしない */
-    .status__info {
-      display: flex !important;
-      flex-direction: row-reverse !important;
-      justify-content: flex-end !important;
-    }
+    /* tootごとのmenuがキツいので補正 */
+    .dropdown-menu {
+      margin-left: -1rem !important;
 
-    .status__relative-time {
-      float: none !important;
-    }
-
-    .status__display-name {
-      padding-right: 0.666em !important;
+      .dropdown-menu__arrow.top,
+      .dropdown-menu__arrow.bottom {
+        margin-left: 1rem !important;
+      }
     }
 
     /* D&Dのメディアアップロードのオーバーレイがズレないようにする */

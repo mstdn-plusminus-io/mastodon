@@ -28,7 +28,7 @@ RSpec.describe ActivityPub::OutboxesController, type: :controller do
   end
 
   before do
-    allow(controller).to receive(:signed_request_account).and_return(remote_account)
+    allow(controller).to receive(:signed_request_actor).and_return(remote_account)
   end
 
   describe 'GET #show' do
@@ -54,10 +54,6 @@ RSpec.describe ActivityPub::OutboxesController, type: :controller do
         end
 
         it_behaves_like 'cacheable response'
-
-        it 'does not have a Vary header' do
-          expect(response.headers['Vary']).to be_nil
-        end
 
         it 'does not have a Vary header' do
           expect(response.headers['Vary']).to be_nil
@@ -103,10 +99,6 @@ RSpec.describe ActivityPub::OutboxesController, type: :controller do
         end
 
         it_behaves_like 'cacheable response'
-
-        it 'returns Vary header with Signature' do
-          expect(response.headers['Vary']).to include 'Signature'
-        end
 
         it 'returns Vary header with Signature' do
           expect(response.headers['Vary']).to include 'Signature'
