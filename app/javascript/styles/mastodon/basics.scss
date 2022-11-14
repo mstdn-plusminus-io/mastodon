@@ -287,4 +287,12 @@ article {
   li {
     list-style-type: auto !important;
   }
+
+  img[src^="/emoji"],
+  img[src*="/custom_emojis/images/"] {
+    width: 20px !important;
+    height: 20px !important;
+    margin: -3px 0 0 !important;
+    background-color: transparent !important;
+  }
 }
