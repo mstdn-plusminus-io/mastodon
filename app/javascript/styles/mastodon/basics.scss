@@ -283,6 +283,8 @@ article {
 
 .markdown-body {
   background-color: transparent !important;
+  font-size: inherit !important;
+  color: unset !important;
 
   li {
     list-style-type: auto !important;
