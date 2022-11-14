@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+    tags:
+      - v*
 
 concurrency: 
   group: build-${{ github.ref }}
@@ -28,6 +30,15 @@ jobs:
           username: mohemohe
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            plusminusio/mastodon
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+
       - uses: docker/build-push-action@v3
         with:
           push: true
@@ -37,8 +48,29 @@ jobs:
       - uses: docker/build-push-action@v3
         with:
           push: true
+          file: latest.Dockerfile
+          tags: ${{ steps.meta.outputs.tags }}
+
+      - id: meta_arm64
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            plusminusio/mastodon
+          tags: |
+            type=semver,pattern={{version}}-arm64
+            type=semver,pattern={{major}}.{{minor}}-arm64
+
+      - uses: docker/build-push-action@v3
+        with:
+          push: true
           file: latest-arm64.Dockerfile
           tags: plusminusio/mastodon:latest-arm64
+
+      - uses: docker/build-push-action@v3
+        with:
+          push: true
+          file: latest-arm64.Dockerfile
+          tags: ${{ steps.meta_arm64.outputs.tags }}
 
       - if: success()
         uses: joelwmale/webhook-action@2.1.0
