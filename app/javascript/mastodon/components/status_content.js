@@ -7,6 +7,15 @@ import classnames from 'classnames';
 import PollContainer from 'mastodon/containers/poll_container';
 import Icon from 'mastodon/components/icon';
 import { autoPlayGif, languages as preloadedLanguages, translationEnabled } from 'mastodon/initial_state';
+import TurndownService from 'turndown';
+import { gfm as turndownPluginGfm } from 'turndown-plugin-gfm';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import 'github-markdown-css';
+
+const turndownService = new TurndownService();
+turndownService.escape = (content) => content;
+turndownService.use(turndownPluginGfm);
 
 const MAX_HEIGHT = 642; // 20px * 32 (+ 2px padding at the top)
 
@@ -210,6 +219,24 @@ class StatusContent extends React.PureComponent {
     this.node = c;
   }
 
+  renderContent = (content) => {
+    if (localStorage.plusminus_config_content === 'markdown') {
+      const markdown = turndownService.turndown(content.__html);
+      return (
+        <ReactMarkdown
+          className={'markdown-body'}
+          children={markdown}
+          remarkPlugins={[remarkGfm]}
+          components={{
+            br: () => '',
+          }}
+        />
+      );
+    }
+
+    return <div dangerouslySetInnerHTML={content} />;
+  }
+
   render () {
     const { status, intl } = this.props;
 
@@ -265,7 +292,9 @@ class StatusContent extends React.PureComponent {
 
           {mentionsPlaceholder}
 
-          <div tabIndex={!hidden ? 0 : null} className={`status__content__text ${!hidden ? 'status__content__text--visible' : ''} translate`} lang={lang} dangerouslySetInnerHTML={content} />
+          <div tabIndex={!hidden ? 0 : null} className={`status__content__text ${!hidden ? 'status__content__text--visible' : ''} translate`} lang={lang}>
+            {this.renderContent(content)}
+          </div>
 
           {!hidden && poll}
           {!hidden && translateButton}
@@ -275,7 +304,9 @@ class StatusContent extends React.PureComponent {
       return (
         <>
           <div className={classNames} ref={this.setRef} tabIndex='0' onMouseDown={this.handleMouseDown} onMouseUp={this.handleMouseUp} key='status-content' onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
-            <div className='status__content__text status__content__text--visible translate' lang={lang} dangerouslySetInnerHTML={content} />
+            <div className='status__content__text status__content__text--visible translate' lang={lang}>
+              {this.renderContent(content)}
+            </div>
 
             {poll}
             {translateButton}
@@ -287,7 +318,9 @@ class StatusContent extends React.PureComponent {
     } else {
       return (
         <div className={classNames} ref={this.setRef} tabIndex='0' onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
-          <div className='status__content__text status__content__text--visible translate' lang={lang} dangerouslySetInnerHTML={content} />
+          <div className='status__content__text status__content__text--visible translate' lang={lang}>
+            {this.renderContent(content)}
+          </div>
 
           {poll}
           {translateButton}
