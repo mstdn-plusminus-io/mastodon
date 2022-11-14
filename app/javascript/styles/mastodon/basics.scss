@@ -292,7 +292,7 @@ article {
   img[src*="/custom_emojis/images/"] {
     width: 20px !important;
     height: 20px !important;
-    margin: -3px 0 0 !important;
+    margin: 0 0 -4px 0 !important;
     background-color: transparent !important;
   }
 }
