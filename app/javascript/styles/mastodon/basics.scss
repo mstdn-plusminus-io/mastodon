@@ -280,3 +280,11 @@ article {
     z-index: unset !important;
   }
 }
+
+.markdown-body {
+  background-color: transparent !important;
+
+  li {
+    list-style-type: auto !important;
+  }
+}

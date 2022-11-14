@@ -36,12 +36,17 @@ const styles = {
   },
   config: {
     fontSize: '1rem',
+    marginTop: '1rem',
   },
   description: {
     opacity: 0.6,
     marginTop: 4,
     marginLeft: 20,
     fontSize: '0.85em',
+  },
+  link: {
+    color: 'rgb(165 199 255)',
+    textDecoration: 'underline',
   },
   actionBar: {
     display: 'flex',
@@ -120,6 +125,7 @@ export class PlusMinusSettingModal extends React.Component {
   state = {
     config: {
       timestamp: 'relative',
+      content: 'plain',
     },
   };
 
@@ -153,6 +159,18 @@ export class PlusMinusSettingModal extends React.Component {
                 絶対時刻表示
               </label>
               <p style={styles.description}>タイムライン中の時刻表示を相対時刻から絶対時刻に変更します</p>
+            </div>
+            <div style={styles.config}>
+              <label>
+                <input
+                  name='mark-sensitive'
+                  type='checkbox'
+                  checked={this.state.config.content === 'markdown'}
+                  onChange={(e) => this.updateConfig('content', e.target.checked ? 'markdown' : 'plain')}
+                />
+                Markdownをレンダリング
+              </label>
+              <p style={styles.description}><a style={styles.link} href='https://github.com/mixmark-io/turndown' target='_blank'>turndown</a>と<a style={styles.link} href='https://github.com/remarkjs/react-markdown' target='_blank'>react-markdown</a>を使用してMarkdownをレンダリングします（実験的）</p>
             </div>
           </div>
         </div>

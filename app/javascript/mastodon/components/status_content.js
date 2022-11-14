@@ -7,8 +7,17 @@ import classnames from 'classnames';
 import PollContainer from 'mastodon/containers/poll_container';
 import Icon from 'mastodon/components/icon';
 import { autoPlayGif, languages as preloadedLanguages, translationEnabled } from 'mastodon/initial_state';
+import TurndownService from 'turndown';
+import { gfm as turndownPluginGfm } from 'turndown-plugin-gfm';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import 'github-markdown-css';
 
-const MAX_HEIGHT = 642; // 20px * 32 (+ 2px padding at the top)
+const turndownService = new TurndownService();
+turndownService.escape = (content) => content;
+turndownService.use(turndownPluginGfm);
+
+const MAX_HEIGHT = 706; // 22px * 32 (+ 2px padding at the top)
 
 class TranslateButton extends React.PureComponent {
 
@@ -77,16 +86,21 @@ class StatusContent extends React.PureComponent {
       return;
     }
 
+    const { status, onCollapsedToggle } = this.props;
     const links = node.querySelectorAll('a');
 
+    let link, mention;
+
     for (var i = 0; i < links.length; ++i) {
-      let link = links[i];
+      link = links[i];
+
       if (link.classList.contains('status-link')) {
         continue;
       }
+
       link.classList.add('status-link');
 
-      let mention = this.props.status.get('mentions').find(item => link.href === item.get('url'));
+      mention = this.props.status.get('mentions').find(item => link.href === item.get('url'));
 
       if (mention) {
         link.addEventListener('click', this.onMentionClick.bind(this, mention), false);
@@ -101,16 +115,16 @@ class StatusContent extends React.PureComponent {
       }
     }
 
-    if (this.props.status.get('collapsed', null) === null) {
-      let collapsed =
-          this.props.collapsable
-          && this.props.onClick
+    if (status.get('collapsed', null) === null && onCollapsedToggle) {
+      const { collapsable, onClick } = this.props;
+
+      const collapsed =
+          collapsable
+          && onClick
           && node.clientHeight > MAX_HEIGHT
-          && this.props.status.get('spoiler_text').length === 0;
+          && status.get('spoiler_text').length === 0;
 
-      if(this.props.onCollapsedToggle) this.props.onCollapsedToggle(collapsed);
-
-      this.props.status.set('collapsed', collapsed);
+      onCollapsedToggle(collapsed);
     }
   }
 
@@ -210,6 +224,24 @@ class StatusContent extends React.PureComponent {
     this.node = c;
   }
 
+  renderContent = (content) => {
+    if (localStorage.plusminus_config_content === 'markdown') {
+      const markdown = turndownService.turndown(content.__html);
+      return (
+        <ReactMarkdown
+          className={'markdown-body'}
+          children={markdown}
+          remarkPlugins={[remarkGfm]}
+          components={{
+            br: () => '',
+          }}
+        />
+      );
+    }
+
+    return <div dangerouslySetInnerHTML={content} />;
+  }
+
   render () {
     const { status, intl } = this.props;
 
@@ -265,7 +297,9 @@ class StatusContent extends React.PureComponent {
 
           {mentionsPlaceholder}
 
-          <div tabIndex={!hidden ? 0 : null} className={`status__content__text ${!hidden ? 'status__content__text--visible' : ''} translate`} lang={lang} dangerouslySetInnerHTML={content} />
+          <div tabIndex={!hidden ? 0 : null} className={`status__content__text ${!hidden ? 'status__content__text--visible' : ''} translate`} lang={lang}>
+            {this.renderContent(content)}
+          </div>
 
           {!hidden && poll}
           {!hidden && translateButton}
@@ -275,7 +309,9 @@ class StatusContent extends React.PureComponent {
       return (
         <>
           <div className={classNames} ref={this.setRef} tabIndex='0' onMouseDown={this.handleMouseDown} onMouseUp={this.handleMouseUp} key='status-content' onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
-            <div className='status__content__text status__content__text--visible translate' lang={lang} dangerouslySetInnerHTML={content} />
+            <div className='status__content__text status__content__text--visible translate' lang={lang}>
+              {this.renderContent(content)}
+            </div>
 
             {poll}
             {translateButton}
@@ -287,7 +323,9 @@ class StatusContent extends React.PureComponent {
     } else {
       return (
         <div className={classNames} ref={this.setRef} tabIndex='0' onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
-          <div className='status__content__text status__content__text--visible translate' lang={lang} dangerouslySetInnerHTML={content} />
+          <div className='status__content__text status__content__text--visible translate' lang={lang}>
+            {this.renderContent(content)}
+          </div>
 
           {poll}
           {translateButton}
