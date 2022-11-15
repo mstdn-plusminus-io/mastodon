@@ -47,7 +47,7 @@ class AppSignUpService < BaseService
   end
 
   def allowed_registrations?
-    registrations_open? && !single_user_mode? && !omniauth_only? && !ip_blocked?
+    registrations_open? && !single_user_mode? && !omniauth_only? && !ip_blocked? && !disable_signup_by_api?
   end
 
   def registrations_open?
@@ -64,5 +64,9 @@ class AppSignUpService < BaseService
 
   def ip_blocked?
     IpBlock.where(severity: :sign_up_block).where('ip >>= ?', @remote_ip.to_s).exists?
+  end
+
+  def disable_signup_by_api?
+    ENV['DISABLE_SIGNUP_BY_API'] == 'true'
   end
 end
