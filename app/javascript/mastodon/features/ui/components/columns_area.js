@@ -139,7 +139,7 @@ export default class ColumnsArea extends ImmutablePureComponent {
 
     if (singleColumn) {
       return (
-        <div className='columns-area__panels'>
+        <div className={`columns-area__panels ${localStorage.plusminus_config_sidenav === 'reverse' ? 'reverse' : ''}`}>
           <div className='columns-area__panels__pane columns-area__panels__pane--compositional'>
             <div className='columns-area__panels__pane__inner'>
               {renderComposePanel && <ComposePanel />}

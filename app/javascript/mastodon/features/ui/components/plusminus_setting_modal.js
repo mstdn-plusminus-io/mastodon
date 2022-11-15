@@ -33,6 +33,7 @@ const styles = {
   section: {
     fontSize: '1.3rem',
     lineHeight: '2em',
+    marginTop: '1em',
   },
   config: {
     fontSize: '1rem',
@@ -126,6 +127,8 @@ export class PlusMinusSettingModal extends React.Component {
     config: {
       timestamp: 'relative',
       content: 'plain',
+      sidenav: 'normal',
+      post_button_location: 'normal',
     },
   };
 
@@ -143,6 +146,35 @@ export class PlusMinusSettingModal extends React.Component {
 
           <div style={styles.main}>
             <hr />
+
+            <div style={styles.section}>
+              <h2>UI</h2>
+            </div>
+
+            <div style={styles.config}>
+              <label>
+                <input
+                  name='mark-sensitive'
+                  type='checkbox'
+                  checked={this.state.config.sidenav === 'reverse'}
+                  onChange={(e) => this.updateConfig('sidenav', e.target.checked ? 'reverse' : 'normal')}
+                />
+                ナビゲージョンを左側に表示する
+              </label>
+              <p style={styles.description}>スマートフォンなどの小さい画面で表示されるサイド ナビゲーションを左側に表示します</p>
+            </div>
+            <div style={styles.config}>
+              <label>
+                <input
+                  name='mark-sensitive'
+                  type='checkbox'
+                  checked={this.state.config.post_button_location === 'bottom_right'}
+                  onChange={(e) => this.updateConfig('post_button_location', e.target.checked ? 'bottom_right' : 'normal')}
+                />
+                投稿ボタンを右下に表示する
+              </label>
+              <p style={styles.description}>スマートフォンなどの小さい画面で表示される画面上部の投稿ボタンを右下に表示します</p>
+            </div>
 
             <div style={styles.section}>
               <h2>タイムライン</h2>

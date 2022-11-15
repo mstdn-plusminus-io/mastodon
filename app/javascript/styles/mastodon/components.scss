@@ -2497,6 +2497,15 @@ $ui-header-height: 55px;
     min-height: calc(100vh - $ui-header-height);
   }
 
+  .columns-area__panels.reverse {
+    flex-direction: row-reverse;
+
+    .navigation-panel {
+      border-right: 1px solid lighten($ui-base-color, 8%);
+      border-left: 0;
+    }
+  }
+
   .columns-area__panels__pane--navigational {
     min-width: $sidebar-width;
 
@@ -2526,6 +2535,19 @@ $ui-header-height: 55px;
     display: flex;
     background: $ui-base-color;
     border-bottom: 1px solid lighten($ui-base-color, 8%);
+
+    .ui__header__links .button.bottom_right {
+      position: fixed;
+      right: 12px;
+      bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 56px;
+      height: 56px;
+      font-size: 24px;
+      border-radius: 50%;
+    }
   }
 
   .column-header,
