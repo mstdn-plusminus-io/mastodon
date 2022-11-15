@@ -6,6 +6,7 @@ import { registrationsOpen, me } from 'mastodon/initial_state';
 import Avatar from 'mastodon/components/avatar';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Icon from 'mastodon/components/icon';
 
 const Account = connect(state => ({
   account: state.getIn(['accounts', me]),
@@ -33,9 +34,15 @@ class Header extends React.PureComponent {
     let content;
 
     if (signedIn) {
+      const isBottomRightButton = localStorage.plusminus_config_post_button_location === 'bottom_right';
       content = (
         <>
-          {location.pathname !== '/publish' && <Link to='/publish' className='button'><FormattedMessage id='compose_form.publish' defaultMessage='Publish' /></Link>}
+          {location.pathname !== '/publish' && (
+            <Link to='/publish' className={`button ${isBottomRightButton ? 'bottom_right' : ''}`}>
+              {isBottomRightButton && <Icon id='send' fixedWidth />}
+              {!isBottomRightButton && <FormattedMessage id='compose_form.publish' defaultMessage='Publish' /> }
+            </Link>
+          )}
           <Account />
         </>
       );
