@@ -21,11 +21,11 @@ module Mastodon
     end
 
     def suffix
-      '_plusminus-'
+      '-plusminus.'
     end
 
     def revision
-      3
+      4
     end
 
     def to_a
