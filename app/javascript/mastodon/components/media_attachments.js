@@ -66,7 +66,7 @@ export default class MediaAttachments extends ImmutablePureComponent {
               alt={audio.get('description')}
               width={width}
               height={height}
-              poster={audio.get('preview_url') || status.getIn(['account', 'avatar_static'])}
+              poster={audio.get('preview_url') || attachment.get('preview_remote_url') || status.getIn(['account', 'avatar_static'])}
               backgroundColor={audio.getIn(['meta', 'colors', 'background'])}
               foregroundColor={audio.getIn(['meta', 'colors', 'foreground'])}
               accentColor={audio.getIn(['meta', 'colors', 'accent'])}
@@ -82,7 +82,7 @@ export default class MediaAttachments extends ImmutablePureComponent {
         <Bundle fetchComponent={Video} loading={this.renderLoadingVideoPlayer} >
           {Component => (
             <Component
-              preview={video.get('preview_url')}
+              preview={video.get('preview_url') || video.get('preview_remote_url')}
               frameRate={video.getIn(['meta', 'original', 'frame_rate'])}
               blurhash={video.get('blurhash')}
               src={video.get('url')}

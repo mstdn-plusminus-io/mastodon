@@ -415,9 +415,9 @@ class Status extends ImmutablePureComponent {
           <Bundle fetchComponent={Audio} loading={this.renderLoadingAudioPlayer} >
             {Component => (
               <Component
-                src={attachment.get('url')}
+                src={attachment.get('url') || attachment.get('remote_url')}
                 alt={attachment.get('description')}
-                poster={attachment.get('preview_url') || status.getIn(['account', 'avatar_static'])}
+                poster={attachment.get('preview_url') || attachment.get('preview_remote_url') || status.getIn(['account', 'avatar_static'])}
                 backgroundColor={attachment.getIn(['meta', 'colors', 'background'])}
                 foregroundColor={attachment.getIn(['meta', 'colors', 'foreground'])}
                 accentColor={attachment.getIn(['meta', 'colors', 'accent'])}
@@ -441,10 +441,10 @@ class Status extends ImmutablePureComponent {
           <Bundle fetchComponent={Video} loading={this.renderLoadingVideoPlayer} >
             {Component => (
               <Component
-                preview={attachment.get('preview_url')}
+                preview={attachment.get('preview_url') || attachment.get('preview_remote_url')}
                 frameRate={attachment.getIn(['meta', 'original', 'frame_rate'])}
                 blurhash={attachment.get('blurhash')}
-                src={attachment.get('url')}
+                src={attachment.get('url') || attachment.get('remote_url')}
                 alt={attachment.get('description')}
                 width={this.props.cachedMediaWidth}
                 height={110}

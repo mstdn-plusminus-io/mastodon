@@ -40,7 +40,7 @@ export default class Upload extends ImmutablePureComponent {
       <div className='compose-form__upload' tabIndex='0' role='button'>
         <Motion defaultStyle={{ scale: 0.8 }} style={{ scale: spring(1, { stiffness: 180, damping: 12 }) }}>
           {({ scale }) => (
-            <div className='compose-form__upload-thumbnail' style={{ transform: `scale(${scale})`, backgroundImage: `url(${media.get('preview_url')})`, backgroundPosition: `${x}% ${y}%` }}>
+            <div className='compose-form__upload-thumbnail' style={{ transform: `scale(${scale})`, backgroundImage: `url(${media.get('preview_url') || media.get('preview_remote_url')})`, backgroundPosition: `${x}% ${y}%` }}>
               <div className='compose-form__upload__actions'>
                 <button type='button' className='icon-button' onClick={this.handleUndoClick}><Icon id='times' /> <FormattedMessage id='upload_form.undo' defaultMessage='Delete' /></button>
                 {!!media.get('unattached') && (<button type='button' className='icon-button' onClick={this.handleFocalPointClick}><Icon id='pencil' /> <FormattedMessage id='upload_form.edit' defaultMessage='Edit' /></button>)}

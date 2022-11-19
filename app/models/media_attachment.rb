@@ -398,6 +398,8 @@ class MediaAttachment < ApplicationRecord
   end
 
   def enqueue_processing
+    return nil if ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true' && remote_url.present?
+
     PostProcessMediaWorker.perform_async(id) if delay_processing?
   end
 
