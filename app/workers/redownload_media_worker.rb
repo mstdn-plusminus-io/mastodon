@@ -10,7 +10,7 @@ class RedownloadMediaWorker
   def perform(id)
     media_attachment = MediaAttachment.find(id)
 
-    return if media_attachment.remote_url.blank?
+    return if ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true' || media_attachment.remote_url.blank?
 
     media_attachment.download_file!
     media_attachment.download_thumbnail!

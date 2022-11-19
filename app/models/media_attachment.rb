@@ -218,7 +218,7 @@ class MediaAttachment < ApplicationRecord
   end
 
   def needs_redownload?
-    file.blank? && remote_url.present?
+    file.blank? && remote_url.present? && ENV['DISABLE_REMOTE_MEDIA_CACHE'] != 'true'
   end
 
   def significantly_changed?
@@ -398,7 +398,7 @@ class MediaAttachment < ApplicationRecord
   end
 
   def enqueue_processing
-    return nil if ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true' && remote_url.present?
+    return if ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true' && remote_url.present?
 
     PostProcessMediaWorker.perform_async(id) if delay_processing?
   end

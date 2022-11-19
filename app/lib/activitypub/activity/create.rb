@@ -377,7 +377,7 @@ class ActivityPub::Activity::Create < ActivityPub::Activity
   end
 
   def skip_download?
-    return @skip_download if defined?(@skip_download)
+    return @skip_download if defined?(@skip_download) || ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true'
 
     @skip_download ||= DomainBlock.reject_media?(@account.domain)
   end
