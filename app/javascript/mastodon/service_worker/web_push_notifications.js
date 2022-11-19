@@ -89,12 +89,12 @@ export const handlePush = (event) => {
       options.timestamp = notification.created_at && new Date(notification.created_at);
       options.tag       = notification.id;
       options.badge     = '/badge.png';
-      options.image     = notification.status && notification.status.media_attachments.length > 0 && notification.status.media_attachments[0].preview_url || undefined;
+      options.image     = notification.status && notification.status.media_attachments.length > 0 && (notification.status.media_attachments[0].preview_url || notification.status.media_attachments[0].preview_remote_url) || undefined;
       options.data      = { access_token, preferred_locale, id: notification.status ? notification.status.id : notification.account.id, url: notification.status ? `/@${notification.account.acct}/${notification.status.id}` : `/@${notification.account.acct}` };
 
       if (notification.status && notification.status.spoiler_text || notification.status.sensitive) {
         options.data.hiddenBody  = htmlToPlainText(notification.status.content);
-        options.data.hiddenImage = notification.status.media_attachments.length > 0 && notification.status.media_attachments[0].preview_url;
+        options.data.hiddenImage = notification.status.media_attachments.length > 0 && (notification.status.media_attachments[0].preview_url || notification.status.media_attachments[0].preview_remote_url);
 
         if (notification.status.spoiler_text) {
           options.body    = notification.status.spoiler_text;

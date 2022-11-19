@@ -75,7 +75,7 @@ export default class MediaItem extends ImmutablePureComponent {
       if (['audio', 'video'].includes(attachment.get('type'))) {
         content = (
           <img
-            src={attachment.get('preview_url') || attachment.getIn(['account', 'avatar_static'])}
+            src={attachment.get('preview_url') || attachment.get('preview_remote_url') || attachment.getIn(['account', 'avatar_static'])}
             alt={attachment.get('description')}
             onLoad={this.handleImageLoad}
           />
@@ -94,7 +94,7 @@ export default class MediaItem extends ImmutablePureComponent {
 
         content = (
           <img
-            src={attachment.get('preview_url')}
+            src={attachment.get('preview_url') || attachment.get('preview_remote_url')}
             alt={attachment.get('description')}
             style={{ objectPosition: `${x}% ${y}%` }}
             onLoad={this.handleImageLoad}
@@ -106,7 +106,7 @@ export default class MediaItem extends ImmutablePureComponent {
             className='media-gallery__item-gifv-thumbnail'
             aria-label={attachment.get('description')}
             role='application'
-            src={attachment.get('url')}
+            src={attachment.get('url') || attachment.get('remote_url')}
             onMouseEnter={this.handleMouseEnter}
             onMouseLeave={this.handleMouseLeave}
             autoPlay={!isIOS() && autoPlayGif}

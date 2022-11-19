@@ -38,7 +38,7 @@ export default class VideoModal extends ImmutablePureComponent {
       <div className='modal-root__modal video-modal'>
         <div className='video-modal__container'>
           <Video
-            preview={media.get('preview_url')}
+            preview={media.get('preview_url') || media.get('preview_remote_url')}
             frameRate={media.getIn(['meta', 'original', 'frame_rate'])}
             blurhash={media.get('blurhash')}
             src={media.get('url')}
