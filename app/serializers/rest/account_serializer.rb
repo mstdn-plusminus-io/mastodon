@@ -45,24 +45,24 @@ class REST::AccountSerializer < ActiveModel::Serializer
   end
 
   def avatar
-    if object.avatar.remote_url.present? && ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true'
-      object.avatar.remote_url
+    if object.avatar_remote_url.present? && ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true'
+      object.avatar_remote_url
     else
       full_asset_url(object.suspended? ? object.avatar.default_url : object.avatar_original_url)
     end
   end
 
   def avatar_static
-    if object.avatar.remote_url.present? && ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true'
-      object.avatar.remote_url
+    if object.avatar_remote_url.present? && ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true'
+      object.avatar_remote_url
     else
       full_asset_url(object.suspended? ? object.avatar.default_url : object.avatar_static_url)
     end
   end
 
   def header
-    if object.header.remote_url.present? && ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true'
-      object.header.remote_url
+    if object.header_remote_url.present? && ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true'
+      object.header_remote_url
     else
       full_asset_url(object.suspended? ? object.header.default_url : object.header_original_url)
     end
