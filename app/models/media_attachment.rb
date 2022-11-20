@@ -320,10 +320,9 @@ class MediaAttachment < ApplicationRecord
       if ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true'
         self.file_content_type = Marcel::MimeType.for(File.basename(remote_url))
         set_type_and_extension
-        return
+      else
+        self.type = :unknown
       end
-
-      self.type = :unknown
     end
   end
 
