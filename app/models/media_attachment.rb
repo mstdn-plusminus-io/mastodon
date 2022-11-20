@@ -218,7 +218,7 @@ class MediaAttachment < ApplicationRecord
   end
 
   def needs_redownload?
-    file.blank? && remote_url.present?
+    file.blank? && remote_url.present? && ENV['DISABLE_REMOTE_MEDIA_CACHE'] != 'true'
   end
 
   def significantly_changed?
@@ -316,7 +316,15 @@ class MediaAttachment < ApplicationRecord
   private
 
   def set_unknown_type
-    self.type = :unknown if file.blank? && !type_changed?
+    if file.blank? && !type_changed?
+      if ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true'
+        self.file_content_type = Marcel::MimeType.for(File.basename(remote_url))
+        set_type_and_extension
+        return
+      end
+
+      self.type = :unknown
+    end
   end
 
   def set_type_and_extension
@@ -398,7 +406,7 @@ class MediaAttachment < ApplicationRecord
   end
 
   def enqueue_processing
-    return nil if ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true' && remote_url.present?
+    return if ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true' && remote_url.present?
 
     PostProcessMediaWorker.perform_async(id) if delay_processing?
   end
