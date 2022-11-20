@@ -144,12 +144,12 @@ class MediaModal extends ImmutablePureComponent {
       if (image.get('type') === 'image') {
         return (
           <ImageLoader
-            previewSrc={image.get('preview_url')}
-            src={image.get('url')}
+            previewSrc={image.get('preview_url') || image.get('preview_remote_url') || image.get('url') || image.get('remote_url')}
+            src={image.get('url') || image.get('remote_url')}
             width={width}
             height={height}
             alt={image.get('description')}
-            key={image.get('url')}
+            key={image.get('preview_url') || image.get('preview_remote_url') || image.get('url') || image.get('remote_url')}
             onClick={this.toggleNavigation}
             zoomButtonHidden={this.state.zoomButtonHidden}
           />
@@ -159,7 +159,7 @@ class MediaModal extends ImmutablePureComponent {
 
         return (
           <Video
-            preview={image.get('preview_url')}
+            preview={image.get('preview_url') || image.get('preview_remote_url')}
             blurhash={image.get('blurhash')}
             src={image.get('url')}
             width={image.get('width')}
@@ -180,7 +180,7 @@ class MediaModal extends ImmutablePureComponent {
             src={image.get('url')}
             width={width}
             height={height}
-            key={image.get('preview_url')}
+            key={image.get('preview_url') || image.get('preview_remote_url')}
             alt={image.get('description')}
             onClick={this.toggleNavigation}
           />

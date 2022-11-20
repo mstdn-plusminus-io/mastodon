@@ -387,7 +387,7 @@ class FocalPointModal extends ImmutablePureComponent {
 
                 <div className='focal-point__preview'>
                   <strong><FormattedMessage id='upload_modal.preview_label' defaultMessage='Preview ({ratio})' values={{ ratio: '16:9' }} /></strong>
-                  <div style={{ width: previewWidth, height: previewHeight, backgroundImage: `url(${media.get('preview_url')})`, backgroundSize: 'cover', backgroundPosition: `${x * 100}% ${y * 100}%` }} />
+                  <div style={{ width: previewWidth, height: previewHeight, backgroundImage: `url(${media.get('preview_url') || media.get('preview_remote_url')})`, backgroundSize: 'cover', backgroundPosition: `${x * 100}% ${y * 100}%` }} />
                 </div>
 
                 <div className='focal-point__reticle' style={{ top: `${y * 100}%`, left: `${x * 100}%` }} />
@@ -397,7 +397,7 @@ class FocalPointModal extends ImmutablePureComponent {
 
             {media.get('type') === 'video' && (
               <Video
-                preview={media.get('preview_url')}
+                preview={media.get('preview_url') || media.get('preview_remote_url')}
                 frameRate={media.getIn(['meta', 'original', 'frame_rate'])}
                 blurhash={media.get('blurhash')}
                 src={media.get('url')}
@@ -412,7 +412,7 @@ class FocalPointModal extends ImmutablePureComponent {
                 src={media.get('url')}
                 duration={media.getIn(['meta', 'original', 'duration'], 0)}
                 height={150}
-                poster={media.get('preview_url') || account.get('avatar_static')}
+                poster={media.get('preview_url') || media.get('preview_remote_url') || account.get('avatar_static')}
                 backgroundColor={media.getIn(['meta', 'colors', 'background'])}
                 foregroundColor={media.getIn(['meta', 'colors', 'foreground'])}
                 accentColor={media.getIn(['meta', 'colors', 'accent'])}

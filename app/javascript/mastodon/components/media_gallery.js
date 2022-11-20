@@ -145,11 +145,11 @@ class Item extends React.PureComponent {
         </div>
       );
     } else if (attachment.get('type') === 'image') {
-      const previewUrl   = attachment.get('preview_url');
-      const previewWidth = attachment.getIn(['meta', 'small', 'width']);
-
-      const originalUrl   = attachment.get('url');
+      const originalUrl   = attachment.get('url') || attachment.get('remote_url');
       const originalWidth = attachment.getIn(['meta', 'original', 'width']);
+
+      const previewUrl   = attachment.get('preview_url') || attachment.get('preview_remote_url') || originalUrl;
+      const previewWidth = attachment.getIn(['meta', 'small', 'width']);
 
       const hasSize = typeof originalWidth === 'number' && typeof previewWidth === 'number';
 
@@ -190,7 +190,7 @@ class Item extends React.PureComponent {
             aria-label={attachment.get('description')}
             title={attachment.get('description')}
             role='application'
-            src={attachment.get('url')}
+            src={attachment.get('url') || attachment.get('remote_url')}
             onClick={this.handleClick}
             onMouseEnter={this.handleMouseEnter}
             onMouseLeave={this.handleMouseLeave}

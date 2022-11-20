@@ -137,10 +137,10 @@ class DetailedStatus extends ImmutablePureComponent {
 
         media = (
           <Audio
-            src={attachment.get('url')}
+            src={attachment.get('url') || attachment.get('remote_url')}
             alt={attachment.get('description')}
             duration={attachment.getIn(['meta', 'original', 'duration'], 0)}
-            poster={attachment.get('preview_url') || status.getIn(['account', 'avatar_static'])}
+            poster={attachment.get('preview_url') || attachment.get('preview_remote_url') || status.getIn(['account', 'avatar_static'])}
             backgroundColor={attachment.getIn(['meta', 'colors', 'background'])}
             foregroundColor={attachment.getIn(['meta', 'colors', 'foreground'])}
             accentColor={attachment.getIn(['meta', 'colors', 'accent'])}
@@ -156,10 +156,10 @@ class DetailedStatus extends ImmutablePureComponent {
 
         media = (
           <Video
-            preview={attachment.get('preview_url')}
+            preview={attachment.get('preview_url') || attachment.get('preview_remote_url')}
             frameRate={attachment.getIn(['meta', 'original', 'frame_rate'])}
             blurhash={attachment.get('blurhash')}
-            src={attachment.get('url')}
+            src={attachment.get('url') || attachment.get('remote_url')}
             alt={attachment.get('description')}
             width={300}
             height={150}
