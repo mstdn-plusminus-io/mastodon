@@ -11,7 +11,7 @@ class RedownloadAvatarWorker
     account = Account.find(id)
 
     return if account.suspended? || DomainBlock.rule_for(account.domain)&.reject_media?
-    return if account.avatar_remote_url.blank? || account.avatar_file_name.present?
+    return if account.avatar_remote_url.blank? || account.avatar_file_name.present? || ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true'
 
     account.reset_avatar!
     account.save!
