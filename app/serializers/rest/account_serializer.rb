@@ -69,8 +69,8 @@ class REST::AccountSerializer < ActiveModel::Serializer
   end
 
   def header_static
-    if object.header.remote_url.present? && ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true'
-      object.header.remote_url
+    if object.header_remote_url.present? && ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true'
+      object.header_remote_url
     else
       full_asset_url(object.suspended? ? object.header.default_url : object.header_static_url)
     end
