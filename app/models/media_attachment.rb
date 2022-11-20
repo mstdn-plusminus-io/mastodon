@@ -316,7 +316,15 @@ class MediaAttachment < ApplicationRecord
   private
 
   def set_unknown_type
-    self.type = :unknown if file.blank? && !type_changed?
+    if file.blank? && !type_changed?
+      if ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true'
+        self.file_content_type = Marcel::MimeType.for(File.basename(remote_url))
+        set_type_and_extension
+        return
+      end
+
+      self.type = :unknown
+    end
   end
 
   def set_type_and_extension
