@@ -12,7 +12,9 @@ class REST::MediaAttachmentSerializer < ActiveModel::Serializer
   end
 
   def url
-    if object.not_processed?
+    if object.remote_url.present? && ENV['DISABLE_REMOTE_MEDIA_CACHE'] != 'true'
+      object.remote_url
+    elsif object.not_processed?
       nil
     elsif object.needs_redownload?
       media_proxy_url(object.id, :original)
