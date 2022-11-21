@@ -67,7 +67,7 @@ RUN apt-get update && \
     yarn cache clean && \
     apt-get -y --auto-remove purge \
       git libicu-dev libidn11-dev libpq-dev libprotobuf-dev \
-      protobuf-compiler shared-mime-info gcc build-essential && \
+      protobuf-compiler gcc build-essential && \
     apt-get -y --no-install-recommends install \
       libssl1.1 libpq5 imagemagick ffmpeg libjemalloc2 \
 	    libicu67 libprotobuf23 libidn11 libyaml-0-2 \
