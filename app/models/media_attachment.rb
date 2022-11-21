@@ -318,7 +318,7 @@ class MediaAttachment < ApplicationRecord
   def set_unknown_type
     if file.blank? && !type_changed?
       if ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true'
-        mime = Marcel::MimeType.for(File.basename(remote_url))
+        mime = MimeMagic.by_path(File.basename(remote_url)).type
         self.type = begin
           if VIDEO_MIME_TYPES.include?(mime)
             :video
