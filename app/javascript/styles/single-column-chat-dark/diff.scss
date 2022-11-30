@@ -590,6 +590,7 @@
         .status__display-name {
           display: flex !important;
           align-items: flex-start !important;
+          flex: none !important;
   
           .display-name {
             display: flex !important;
