@@ -25,7 +25,7 @@ module Mastodon
     end
 
     def revision
-      15
+      16
     end
 
     def to_a
