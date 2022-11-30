@@ -286,8 +286,12 @@ article {
   font-size: inherit !important;
   color: unset !important;
 
-  li {
-    list-style-type: auto !important;
+  ol li {
+    list-style-type: decimal !important;
+  }
+
+  ul li {
+    list-style-type: disc !important;
   }
 
   img[src^="/emoji"],

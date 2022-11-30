@@ -129,6 +129,7 @@ export class PlusMinusSettingModal extends React.Component {
       content: 'plain',
       sidenav: 'normal',
       post_button_location: 'normal',
+      post_page_link: 'hidden',
     },
   };
 
@@ -148,13 +149,12 @@ export class PlusMinusSettingModal extends React.Component {
             <hr />
 
             <div style={styles.section}>
-              <h2>UI</h2>
+              <h2>UI全般</h2>
             </div>
 
             <div style={styles.config}>
               <label>
                 <input
-                  name='mark-sensitive'
                   type='checkbox'
                   checked={this.state.config.sidenav === 'reverse'}
                   onChange={(e) => this.updateConfig('sidenav', e.target.checked ? 'reverse' : 'normal')}
@@ -166,7 +166,6 @@ export class PlusMinusSettingModal extends React.Component {
             <div style={styles.config}>
               <label>
                 <input
-                  name='mark-sensitive'
                   type='checkbox'
                   checked={this.state.config.post_button_location === 'bottom_right'}
                   onChange={(e) => this.updateConfig('post_button_location', e.target.checked ? 'bottom_right' : 'normal')}
@@ -183,7 +182,6 @@ export class PlusMinusSettingModal extends React.Component {
             <div style={styles.config}>
               <label>
                 <input
-                  name='mark-sensitive'
                   type='checkbox'
                   checked={this.state.config.timestamp === 'absolute'}
                   onChange={(e) => this.updateConfig('timestamp', e.target.checked ? 'absolute' : 'relative')}
@@ -195,14 +193,24 @@ export class PlusMinusSettingModal extends React.Component {
             <div style={styles.config}>
               <label>
                 <input
-                  name='mark-sensitive'
                   type='checkbox'
                   checked={this.state.config.content === 'markdown'}
                   onChange={(e) => this.updateConfig('content', e.target.checked ? 'markdown' : 'plain')}
                 />
-                Markdownをレンダリング
+                Markdownをレンダリング（実験的）
               </label>
-              <p style={styles.description}><a style={styles.link} href='https://github.com/mixmark-io/turndown' target='_blank'>turndown</a>と<a style={styles.link} href='https://github.com/remarkjs/react-markdown' target='_blank'>react-markdown</a>を使用してMarkdownをレンダリングします（実験的）</p>
+              <p style={styles.description}><a style={styles.link} href='https://github.com/mixmark-io/turndown' target='_blank'>turndown</a>と<a style={styles.link} href='https://github.com/remarkjs/react-markdown' target='_blank'>react-markdown</a>を使用してMarkdownをレンダリングします</p>
+            </div>
+            <div style={styles.config}>
+              <label>
+                <input
+                  type='checkbox'
+                  checked={this.state.config.post_page_link === 'visible'}
+                  onChange={(e) => this.updateConfig('post_page_link', e.target.checked ? 'visible' : 'hidden')}
+                />
+                投稿元ページのリンクを表示する
+              </label>
+              <p style={styles.description}>投稿時刻の右側に投稿元ページを別タブで開くリンクを追加します</p>
             </div>
           </div>
         </div>
