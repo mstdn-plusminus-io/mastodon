@@ -16,6 +16,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     fontSize: 'initial',
+    color: 'white',
   },
   container: {
     padding: '1rem',
