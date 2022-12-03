@@ -301,4 +301,21 @@ article {
     margin: 0 0 -4px 0 !important;
     background-color: transparent !important;
   }
+
+  .code code {
+    color: rgb(171, 178, 191);
+  }
+
+  .prism {
+    padding: 0 !important;
+
+    .syntax-highlighter {
+      margin: 0 !important;
+    }
+
+    .syntax-highlighter,
+    .syntax-highlighter * {
+      background-color: transparent !important;
+    }
+  }
 }

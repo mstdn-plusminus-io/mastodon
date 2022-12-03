@@ -40,6 +40,11 @@ const styles = {
     fontSize: '1rem',
     marginTop: '1rem',
   },
+  hint: {
+    opacity: 0.6,
+    marginTop: 4,
+    fontSize: '0.85em',
+  },
   description: {
     opacity: 0.6,
     marginTop: 4,
@@ -149,6 +154,8 @@ export class PlusMinusSettingModal extends React.Component {
           <div style={styles.main}>
             <hr />
 
+            <p style={styles.hint}>以下の設定はブラウザごとに保存されます</p>
+
             <div style={styles.section}>
               <h2>UI全般</h2>
             </div>
@@ -200,7 +207,7 @@ export class PlusMinusSettingModal extends React.Component {
                 />
                 Markdownをレンダリング（実験的）
               </label>
-              <p style={styles.description}><a style={styles.link} href='https://github.com/mixmark-io/turndown' target='_blank'>turndown</a>と<a style={styles.link} href='https://github.com/remarkjs/react-markdown' target='_blank'>react-markdown</a>を使用してMarkdownをレンダリングします</p>
+              <p style={styles.description}><a style={styles.link} href='https://github.com/mixmark-io/turndown' target='_blank'>turndown</a>と<a style={styles.link} href='https://github.com/remarkjs/react-markdown' target='_blank'>react-markdown</a>を使用してMarkdownをレンダリングします<br />投稿のHTMLに依存するため、スペースや改行などが正しく反映されるとは限りません</p>
             </div>
             <div style={styles.config}>
               <label>

@@ -227,46 +227,49 @@ class ComposeForm extends ImmutablePureComponent {
 
         <ReplyIndicatorContainer />
 
-        <div className={`spoiler-input ${this.props.spoiler ? 'spoiler-input--visible' : ''}`} ref={this.setRef}>
-          <AutosuggestInput
-            placeholder={intl.formatMessage(messages.spoiler_placeholder)}
-            value={this.props.spoilerText}
-            onChange={this.handleChangeSpoilerText}
-            onKeyDown={this.handleKeyDown}
-            disabled={!this.props.spoiler}
-            ref={this.setSpoilerText}
+        <div className='compose-form__input-wrapper'>
+          <div className={`spoiler-input ${this.props.spoiler ? 'spoiler-input--visible' : ''}`} ref={this.setRef}>
+            <AutosuggestInput
+              placeholder={intl.formatMessage(messages.spoiler_placeholder)}
+              value={this.props.spoilerText}
+              onChange={this.handleChangeSpoilerText}
+              onKeyDown={this.handleKeyDown}
+              disabled={!this.props.spoiler}
+              ref={this.setSpoilerText}
+              suggestions={this.props.suggestions}
+              onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+              onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+              onSuggestionSelected={this.onSpoilerSuggestionSelected}
+              searchTokens={[':']}
+              id='cw-spoiler-input'
+              className='spoiler-input__input'
+            />
+          </div>
+
+          <AutosuggestTextarea
+            ref={this.setAutosuggestTextarea}
+            placeholder={intl.formatMessage(messages.placeholder)}
+            disabled={disabled}
+            value={this.props.text}
+            onChange={this.handleChange}
             suggestions={this.props.suggestions}
+            onFocus={this.handleFocus}
+            onKeyDown={this.handleKeyDown}
             onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
             onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-            onSuggestionSelected={this.onSpoilerSuggestionSelected}
-            searchTokens={[':']}
-            id='cw-spoiler-input'
-            className='spoiler-input__input'
-          />
+            onSuggestionSelected={this.onSuggestionSelected}
+            onPaste={onPaste}
+            autoFocus={!showSearch && !isMobile(window.innerWidth)}
+          >
+            <EmojiPickerDropdown onPickEmoji={this.handleEmojiPick} />
+
+            <div className='compose-form__modifiers'>
+              <UploadFormContainer />
+              <PollFormContainer />
+            </div>
+          </AutosuggestTextarea>
         </div>
-
-        <AutosuggestTextarea
-          ref={this.setAutosuggestTextarea}
-          placeholder={intl.formatMessage(messages.placeholder)}
-          disabled={disabled}
-          value={this.props.text}
-          onChange={this.handleChange}
-          suggestions={this.props.suggestions}
-          onFocus={this.handleFocus}
-          onKeyDown={this.handleKeyDown}
-          onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-          onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-          onSuggestionSelected={this.onSuggestionSelected}
-          onPaste={onPaste}
-          autoFocus={!showSearch && !isMobile(window.innerWidth)}
-        >
-          <EmojiPickerDropdown onPickEmoji={this.handleEmojiPick} />
-
-          <div className='compose-form__modifiers'>
-            <UploadFormContainer />
-            <PollFormContainer />
-          </div>
-        </AutosuggestTextarea>
+        
 
         <div className='compose-form__buttons-wrapper'>
           <div className='compose-form__buttons'>
