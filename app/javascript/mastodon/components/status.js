@@ -534,7 +534,7 @@ class Status extends ImmutablePureComponent {
                 </a>
                 {localStorage.plusminus_config_post_page_link === 'visible' && (
                   <a href={status.get('url')} className='status__link_icon' target='_blank' rel='noopener noreferrer'>
-                    <span><Icon id='external-link' title='external-link' />{console.log(JSON.parse(JSON.stringify(status)))}</span>
+                    <span><Icon id='external-link' title='external-link' /></span>
                   </a>
                 )}
               </div>

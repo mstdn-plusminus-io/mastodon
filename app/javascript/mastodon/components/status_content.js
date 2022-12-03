@@ -12,10 +12,18 @@ import { gfm as turndownPluginGfm } from 'turndown-plugin-gfm';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import 'github-markdown-css';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-const turndownService = new TurndownService();
+const turndownService = new TurndownService({
+  codeBlockStyle: 'fenced',
+});
 turndownService.escape = (content) => content;
 turndownService.use(turndownPluginGfm);
+
+const codeFanceRegex = /\<p>```(.*?)<br\/?>(.*?)```\<\/p>/g;
+const lineBreakRegex = /<br\/?>/g;
+const languageRegex = /language-(\w+)/;
 
 const MAX_HEIGHT = 706; // 22px * 32 (+ 2px padding at the top)
 
@@ -227,7 +235,16 @@ class StatusContent extends React.PureComponent {
 
   renderContent = (content) => {
     if (localStorage.plusminus_config_content === 'markdown') {
-      const markdown = turndownService.turndown(content.__html);
+      let html = `${content.__html}`;
+      const codeFanceInners = html.matchAll(codeFanceRegex);
+      for (const codeFanceInner of codeFanceInners) {
+        const [orig, lang, body] = codeFanceInner;
+        const element = document.createElement('div');
+        element.innerHTML = body.replaceAll(lineBreakRegex, '\n').replaceAll('</p><p>', '\n');
+        html = html.replace(orig, `<pre><code${lang ? ` class="language-${lang}"` : ''}>${element.innerText}</code></pre>`);
+      }
+
+      const markdown = turndownService.turndown(html);
       return (
         <ReactMarkdown
           className={'markdown-body'}
@@ -235,6 +252,47 @@ class StatusContent extends React.PureComponent {
           remarkPlugins={[remarkGfm]}
           components={{
             br: () => '',
+            pre: ({ node, inline, className, children, ...props }) => {
+              if (children[0].props?.node?.tagName === 'code') {
+                if (children[0].props?.className?.includes('language')) {
+                  return (
+                    <pre className='prism'>
+                      {children}
+                    </pre>
+                  );
+                }
+                return (
+                  <pre className='code'>
+                    {children}
+                  </pre>
+                );
+              }
+              return (
+                <pre>
+                  {children}
+                </pre>
+              );
+            },
+            code: ({ node, inline, className, children, ...props }) => {
+              const match = languageRegex.exec(className || '');
+              if (!inline && match) {
+                return (
+                  <SyntaxHighlighter
+                    className='syntax-highlighter'
+                    children={String(children).replace(/\n$/, '')}
+                    style={oneDark}
+                    language={match[1]}
+                    PreTag='div'
+                    {...props}
+                  />
+                );
+              };
+              return (
+                <code className={className} {...props}>
+                  {children}
+                </code>
+              );
+            },
           }}
         />
       );
