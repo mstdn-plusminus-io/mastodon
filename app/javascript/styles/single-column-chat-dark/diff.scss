@@ -248,6 +248,17 @@
       margin: 0 !important;
       overflow-y: visible !important;
       position: relative !important;
+
+      .compose-form__input-wrapper {
+        flex: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+
+        .spoiler-input {
+          margin-bottom: 10px !important;
+          width: calc(100% - 10px) !important;
+        }
+      }
     }
 
     /* 非公開とかDMとかの表示をサイドバーに押し込む */
@@ -293,8 +304,7 @@
 
     /* リプライ元表示・公開垢の鍵トゥート警告とかの水色のアレを固定幅にする */
     .reply-indicator,
-    .compose-form__warning,
-    .spoiler-input.spoiler-input--visible {
+    .compose-form__warning {
       width: 210px !important;
       margin-bottom: 0 !important;
     }
