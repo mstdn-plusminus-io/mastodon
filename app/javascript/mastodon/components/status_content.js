@@ -20,6 +20,18 @@ const turndownService = new TurndownService({
 });
 turndownService.escape = (content) => content;
 turndownService.use(turndownPluginGfm);
+turndownService.addRule('a', {
+  filter: function (node, options) {
+    return (
+      options.linkStyle === 'inlined' &&
+      node.nodeName === 'A' &&
+      node.getAttribute('href')
+    );
+  },
+  replacement: function(content) {
+    return content;
+  },
+});
 
 const codeFanceRegex = /\<p>```(.*?)<br\/?>(.*?)```\<\/p>/g;
 const lineBreakRegex = /<br\/?>/g;
