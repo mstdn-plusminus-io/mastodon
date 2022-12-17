@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-no-bind */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from 'mastodon/components/button';
@@ -70,15 +72,12 @@ const localStorageKeyPrefix = 'plusminus_config_';
 
 export default class PlusMinusSettingModalLoader extends React.Component {
 
-  static propTypes = {
-  };
-
-  state = {
-    open: false,
-  }
-
   constructor() {
     super();
+
+    this.state = {
+      open: false,
+    };
 
     this.onOpenEvent = this.onOpenEvent.bind(this);
   }
