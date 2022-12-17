@@ -240,11 +240,11 @@ class StatusContent extends React.PureComponent {
       for (const codeFanceInner of codeFanceInners) {
         const [orig, lang, body] = codeFanceInner;
         const element = document.createElement('div');
-        element.innerHTML = body.replaceAll(lineBreakRegex, '\n').replaceAll('</p><p>', '\n');
+        element.innerHTML = body.replaceAll(lineBreakRegex, '\n').replaceAll(' ', '␚').replaceAll('</p><p>', '\n');
         html = html.replace(orig, `<pre><code${lang ? ` class="language-${lang}"` : ''}>${element.innerText}</code></pre>`);
       }
 
-      const markdown = turndownService.turndown(html);
+      const markdown = turndownService.turndown(html).replaceAll('␚', ' ');
       return (
         <ReactMarkdown
           className={'markdown-body'}
