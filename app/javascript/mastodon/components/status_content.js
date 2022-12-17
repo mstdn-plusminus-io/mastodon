@@ -305,6 +305,15 @@ class StatusContent extends React.PureComponent {
                 </code>
               );
             },
+            img: ({ node, inline, className, children, ...props }) => {
+              const emojiClassName = [className];
+              if (node.properties?.src?.includes('/emoji/')) {
+                emojiClassName.push('emojione');
+              }
+              return (
+                <img className={emojiClassName.join(' ')} {...node.properties} />
+              );
+            },
           }}
         />
       );

@@ -298,8 +298,11 @@ article {
   img[src*="/custom_emojis/images/"] {
     width: 20px !important;
     height: 20px !important;
-    margin: 0 0 -4px 0 !important;
     background-color: transparent !important;
+  }
+
+  img[src*="/custom_emojis/images/"] {
+    margin: 0 0 -4px 0 !important;
   }
 
   .code code {
