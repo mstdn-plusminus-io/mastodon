@@ -20,10 +20,23 @@ const turndownService = new TurndownService({
 });
 turndownService.escape = (content) => content;
 turndownService.use(turndownPluginGfm);
+turndownService.addRule('a', {
+  filter: function (node, options) {
+    return (
+      options.linkStyle === 'inlined' &&
+      node.nodeName === 'A' &&
+      node.getAttribute('href')
+    );
+  },
+  replacement: function(content) {
+    return content;
+  },
+});
 
 const codeFanceRegex = /\<p>```(.*?)<br\/?>(.*?)```\<\/p>/g;
 const lineBreakRegex = /<br\/?>/g;
 const languageRegex = /language-(\w+)/;
+const searchRegex = /\[?(検索|Search)\]?$/;
 
 const MAX_HEIGHT = 706; // 22px * 32 (+ 2px padding at the top)
 
@@ -234,18 +247,20 @@ class StatusContent extends React.PureComponent {
   }
 
   renderContent = (content) => {
+    let inner;
+
     if (localStorage.plusminus_config_content === 'markdown') {
       let html = `${content.__html}`;
       const codeFanceInners = html.matchAll(codeFanceRegex);
       for (const codeFanceInner of codeFanceInners) {
         const [orig, lang, body] = codeFanceInner;
         const element = document.createElement('div');
-        element.innerHTML = body.replaceAll(lineBreakRegex, '\n').replaceAll('</p><p>', '\n');
+        element.innerHTML = body.replaceAll(lineBreakRegex, '\n').replaceAll(' ', '␚').replaceAll('</p><p>', '\n');
         html = html.replace(orig, `<pre><code${lang ? ` class="language-${lang}"` : ''}>${element.innerText}</code></pre>`);
       }
 
-      const markdown = turndownService.turndown(html);
-      return (
+      const markdown = turndownService.turndown(html).replaceAll('␚', ' ');
+      inner = (
         <ReactMarkdown
           className={'markdown-body'}
           children={markdown}
@@ -293,12 +308,47 @@ class StatusContent extends React.PureComponent {
                 </code>
               );
             },
+            img: ({ node, inline, className, children, ...props }) => {
+              const emojiClassName = [className];
+              if (node.properties?.src?.includes('/emoji/')) {
+                emojiClassName.push('emojione');
+              }
+              return (
+                <img className={emojiClassName.join(' ')} {...node.properties} />
+              );
+            },
           }}
-        />
-      );
+        />);
+    } else {
+      inner = <div dangerouslySetInnerHTML={content} />;
     }
 
-    return <div dangerouslySetInnerHTML={content} />;
+    let searchBox = [];
+    if (localStorage.plusminus_config_searchbox === 'visible' && (content.__html.includes('検索') || content.__html.includes('Search'))) {
+      const element = document.createElement('div');
+      element.innerHTML = content.__html.replaceAll('</p>', '␚').replaceAll(lineBreakRegex, '␚');
+      element.innerText.replaceAll('␚', '\n').split('\n').forEach((line, index) => {
+        if (line.match(searchRegex)) {
+          const keyword = line.replace(searchRegex, '').trim();
+          searchBox.push(
+            <button key={index} className='plusminus-searchbox__container' onClick={() => window.open(`https://google.com/search?q=${keyword}`)}>
+              <input type='text' value={keyword} readOnly />
+              <button>検索</button>
+            </button>,
+          );
+        }
+      });
+    }
+    return (
+      <>
+        {inner}
+        {searchBox.length > 0 && (
+          <div className='plusminus-searchbox'>
+            {searchBox}
+          </div>
+        )}
+      </>
+    );
   }
 
   render () {
