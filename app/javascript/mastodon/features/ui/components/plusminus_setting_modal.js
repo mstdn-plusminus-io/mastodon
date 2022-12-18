@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-no-bind */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from 'mastodon/components/button';
@@ -17,6 +19,7 @@ const styles = {
     flexDirection: 'column',
     fontSize: 'initial',
     color: 'white',
+    overflow: 'auto',
   },
   container: {
     padding: '1rem',
@@ -64,21 +67,39 @@ const styles = {
   cancelButton: {
     marginRight: '1rem',
   },
+  customCwInputs: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginTop: '1rem',
+    marginLeft: 20,
+    maxWidth: '640px',
+  },
+  customCwInput: {
+    display: 'flex',
+    width: '100%',
+    marginBottom: '0.5rem',
+  },
+  customCwInputTextArea: {
+    flex: 1,
+  },
+  customCwInputDeleteButton: {
+    marginLeft: '0.25rem',
+  },
+  customCwInputAddButton: {
+  },
 };
 
 const localStorageKeyPrefix = 'plusminus_config_';
 
 export default class PlusMinusSettingModalLoader extends React.Component {
 
-  static propTypes = {
-  };
-
-  state = {
-    open: false,
-  }
-
   constructor() {
     super();
+
+    this.state = {
+      open: false,
+    };
 
     this.onOpenEvent = this.onOpenEvent.bind(this);
   }
@@ -115,14 +136,28 @@ export class PlusMinusSettingModal extends React.Component {
     onCancel: PropTypes.func.isRequired,
   };
 
+  UNSAFE_componentWillMount() {
+    const currentSettings = Object.keys(localStorage).filter((key) => key.startsWith(localStorageKeyPrefix)).reduce((obj, key) => {
+      if (localStorage[key].startsWith('{') || localStorage[key].startsWith('[')) {
+        try {
+          obj[key.replace(localStorageKeyPrefix, '')] = JSON.parse(localStorage[key]);
+        } catch (e) {
+          // eslint-disable-next-line eqeqeq
+          if (localStorage[key] != null) {
+            obj[key.replace(localStorageKeyPrefix, '')] = localStorage[key];
+          }
+        }
+      } else {
+        obj[key.replace(localStorageKeyPrefix, '')] = localStorage[key];
+      }
+
+      return obj;
+    }, { ...this.state.config });
+    this.state = { config: currentSettings };
+  }
+
   componentDidMount() {
     document.body.style.overflow = 'hidden';
-
-    const currentSettings = Object.keys(localStorage).filter((key) => key.startsWith(localStorageKeyPrefix)).reduce((obj, key) => {
-      obj[key.replace(localStorageKeyPrefix, '')] = localStorage[key];
-      return obj;
-    }, {});
-    this.setState({ config: { ...this.state.config, ...currentSettings } });
   }
 
   componentWillUnmount() {
@@ -136,6 +171,9 @@ export class PlusMinusSettingModal extends React.Component {
       sidenav: 'normal',
       post_button_location: 'normal',
       post_page_link: 'hidden',
+      searchbox: 'hidden',
+      custom_spoiler_button: 'hidden',
+      custom_spoiler_buttons: ['そぎぎ'],
     },
   };
 
@@ -220,6 +258,67 @@ export class PlusMinusSettingModal extends React.Component {
               </label>
               <p style={styles.description}>投稿時刻の右側に投稿元ページを別タブで開くリンクを追加します</p>
             </div>
+            <div style={styles.config}>
+              <label>
+                <input
+                  type='checkbox'
+                  checked={this.state.config.searchbox === 'visible'}
+                  onChange={(e) => this.updateConfig('searchbox', e.target.checked ? 'visible' : 'hidden')}
+                />
+                Misskey Flavored Markdownの検索窓を展開する
+              </label>
+              <p style={styles.description}><a style={styles.link} href='https://wiki.misskey.io/ja/function/mfm#%E6%A4%9C%E7%B4%A2%E7%AA%93' target='_blank'>Misskey Flavored Markdownの検索窓</a>を投稿本文の下に展開します</p>
+            </div>
+
+            <div style={styles.section}>
+              <h2>投稿欄</h2>
+            </div>
+
+            <div style={styles.config}>
+              <label>
+                <input
+                  type='checkbox'
+                  checked={this.state.config.custom_spoiler_button === 'visible'}
+                  onChange={(e) => this.updateConfig('custom_spoiler_button', e.target.checked ? 'visible' : 'hidden')}
+                />
+                CW (Content Warning)のプリセットボタンを表示する
+              </label>
+              <p style={styles.description}>ボタンを押すだけで任意の文章をCWに入力できるようになります<br />また、CWが有効になっていない場合は自動的に有効になります</p>
+
+              <div style={styles.customCwInputs}>
+                {this.state.config.custom_spoiler_buttons?.map((buttonText, index) => (
+                  <div key={`${index}_${this.state.config.custom_spoiler_buttons.length}`} style={styles.customCwInput}>
+                    <input
+                      style={styles.customCwInputTextArea}
+                      type='text'
+                      value={buttonText}
+                      onChange={(e) => {
+                        this.state.config.custom_spoiler_buttons[index] = e.target.value;
+                        this.updateConfig('custom_spoiler_buttons', this.state.config.custom_spoiler_buttons);
+                      }}
+                    />
+                    <button
+                      style={styles.customCwInputDeleteButton}
+                      onClick={() => {
+                        this.state.config.custom_spoiler_buttons.splice(index, 1);
+                        this.updateConfig('custom_spoiler_buttons', this.state.config.custom_spoiler_buttons);
+                      }}
+                    >
+                      -
+                    </button>
+                  </div>
+                ))}
+                <button
+                  style={styles.customCwInputAddButton}
+                  onClick={() => {
+                    this.state.config.custom_spoiler_buttons.push('');
+                    this.updateConfig('custom_spoiler_buttons', this.state.config.custom_spoiler_buttons);
+                  }}
+                >
+                  +
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -242,7 +341,9 @@ export class PlusMinusSettingModal extends React.Component {
   }
 
   handleSave() {
-    Object.keys(this.state.config).forEach((key) => localStorage[`${localStorageKeyPrefix}${key}`] = this.state.config[key]);
+    Object.keys(this.state.config).forEach((key) =>
+      localStorage[`${localStorageKeyPrefix}${key}`] = typeof this.state.config[key] === 'object' ? JSON.stringify(this.state.config[key]) : this.state.config[key],
+    );
     location.reload();
   }
 
