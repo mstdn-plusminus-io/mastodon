@@ -19,6 +19,7 @@ const styles = {
     flexDirection: 'column',
     fontSize: 'initial',
     color: 'white',
+    overflow: 'auto',
   },
   container: {
     padding: '1rem',
@@ -135,6 +136,7 @@ export class PlusMinusSettingModal extends React.Component {
       sidenav: 'normal',
       post_button_location: 'normal',
       post_page_link: 'hidden',
+      searchbox: 'hidden',
     },
   };
 
@@ -218,6 +220,17 @@ export class PlusMinusSettingModal extends React.Component {
                 投稿元ページのリンクを表示する
               </label>
               <p style={styles.description}>投稿時刻の右側に投稿元ページを別タブで開くリンクを追加します</p>
+            </div>
+            <div style={styles.config}>
+              <label>
+                <input
+                  type='checkbox'
+                  checked={this.state.config.searchbox === 'visible'}
+                  onChange={(e) => this.updateConfig('searchbox', e.target.checked ? 'visible' : 'hidden')}
+                />
+                Misskey Flavored Markdownの検索窓を展開する
+              </label>
+              <p style={styles.description}><a style={styles.link} href='https://wiki.misskey.io/ja/function/mfm#%E6%A4%9C%E7%B4%A2%E7%AA%93' target='_blank'>Misskey Flavored Markdownの検索窓</a>を投稿本文の下に展開します</p>
             </div>
           </div>
         </div>

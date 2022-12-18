@@ -36,6 +36,7 @@ turndownService.addRule('a', {
 const codeFanceRegex = /\<p>```(.*?)<br\/?>(.*?)```\<\/p>/g;
 const lineBreakRegex = /<br\/?>/g;
 const languageRegex = /language-(\w+)/;
+const searchRegex = /\[?(検索|Search)\]?$/;
 
 const MAX_HEIGHT = 706; // 22px * 32 (+ 2px padding at the top)
 
@@ -246,6 +247,8 @@ class StatusContent extends React.PureComponent {
   }
 
   renderContent = (content) => {
+    let inner;
+
     if (localStorage.plusminus_config_content === 'markdown') {
       let html = `${content.__html}`;
       const codeFanceInners = html.matchAll(codeFanceRegex);
@@ -257,7 +260,7 @@ class StatusContent extends React.PureComponent {
       }
 
       const markdown = turndownService.turndown(html).replaceAll('␚', ' ');
-      return (
+      inner = (
         <ReactMarkdown
           className={'markdown-body'}
           children={markdown}
@@ -315,11 +318,37 @@ class StatusContent extends React.PureComponent {
               );
             },
           }}
-        />
-      );
+        />);
+    } else {
+      inner = <div dangerouslySetInnerHTML={content} />;
     }
 
-    return <div dangerouslySetInnerHTML={content} />;
+    let searchBox = [];
+    if (localStorage.plusminus_config_searchbox === 'visible' && (content.__html.includes('検索') || content.__html.includes('Search'))) {
+      const element = document.createElement('div');
+      element.innerHTML = content.__html.replaceAll('</p>', '␚').replaceAll(lineBreakRegex, '␚');
+      element.innerText.replaceAll('␚', '\n').split('\n').forEach((line, index) => {
+        if (line.match(searchRegex)) {
+          const keyword = line.replace(searchRegex, '').trim();
+          searchBox.push(
+            <button key={index} className='plusminus-searchbox__container' onClick={() => window.open(`https://google.com/search?q=${keyword}`)}>
+              <input type='text' value={keyword} readOnly />
+              <button>検索</button>
+            </button>,
+          );
+        }
+      });
+    }
+    return (
+      <>
+        {inner}
+        {searchBox.length > 0 && (
+          <div className='plusminus-searchbox'>
+            {searchBox}
+          </div>
+        )}
+      </>
+    );
   }
 
   render () {

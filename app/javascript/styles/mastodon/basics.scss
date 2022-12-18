@@ -281,6 +281,41 @@ article {
   }
 }
 
+.plusminus-searchbox__container {
+  width: 100%;
+  margin: 1em 0 0.5em 0;
+  padding: 0;
+  border: 0;
+  color: $inverted-text-color;
+  background: $simple-background-color;
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  height: 2.5em;
+  font-size: 14px;
+
+  * {
+    border: 0;
+    pointer-events: none;
+    height: 100%;
+    color: $inverted-text-color;
+    background: $simple-background-color;
+  }
+
+  input {
+    flex: 1;
+    padding: 0 1em;
+    text-overflow: ellipsis;
+  }
+
+  button {
+    padding: 0 2em;
+    border: 1px solid $ui-highlight-color;
+    background: $ui-highlight-color;
+    color: $primary-text-color;
+  }
+}
+
 .markdown-body {
   background-color: transparent !important;
   font-size: inherit !important;
