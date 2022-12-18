@@ -11,18 +11,18 @@ const messages = defineMessages({
 });
 
 const mapStateToProps = (state, { intl, value }) => ({
-  label: 'そぎ',
   title: intl.formatMessage(state.getIn(['compose', 'spoiler']) ? messages.marked : messages.unmarked),
   cwActive: state.getIn(['compose', 'spoiler']),
-  active: state.getIn(['compose', 'spoiler']) && value === 'そぎぎ',
+  value,
   ariaControls: 'cw-spoiler-input',
 });
 
 export default @injectIntl
 @connect(mapStateToProps)
-class SogigiButtonContainer extends React.Component {
+class CustomSpoilerButtonContainer extends React.Component {
 
   static propTypes = {
+    preset: PropTypes.string.isRequired,
     dispatch: PropTypes.func.isRequired,
     value: PropTypes.string.isRequired,
     cwActive: PropTypes.bool,
@@ -31,19 +31,21 @@ class SogigiButtonContainer extends React.Component {
 
   onClick() {
     if (this.props.cwActive) {
-      if (this.props.value !== 'そぎぎ') {
-        this.props.dispatch(changeComposeSpoilerText('そぎぎ'));
+      if (this.props.value !== this.props.preset) {
+        this.props.dispatch(changeComposeSpoilerText(this.props.preset));
       } else {
         this.props.dispatch(changeComposeSpoilerness());
       }
     } else {
       this.props.dispatch(changeComposeSpoilerness());
-      this.props.dispatch(changeComposeSpoilerText('そぎぎ'));
+      this.props.dispatch(changeComposeSpoilerText(this.props.preset));
     }
   }
 
   render() {
-    return <TextIconButton {...this.props} onClick={() => this.onClick()} />;
+    const label = [...this.props.preset].slice(0, 2);
+    const active = this.props.cwActive && this.props.value === this.props.preset;
+    return <TextIconButton {...this.props} label={label} active={active} onClick={() => this.onClick()} />;
   }
 
 }

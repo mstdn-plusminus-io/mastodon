@@ -10,7 +10,7 @@ import PollButtonContainer from '../containers/poll_button_container';
 import UploadButtonContainer from '../containers/upload_button_container';
 import { defineMessages, injectIntl } from 'react-intl';
 import SpoilerButtonContainer from '../containers/spoiler_button_container';
-import SogigiButtonContainer from '../containers/sogigi_button_container';
+import CustomSpoilerButtonContainer from '../containers/custom_spoiler_button_container';
 import PrivacyDropdownContainer from '../containers/privacy_dropdown_container';
 import EmojiPickerDropdown from '../containers/emoji_picker_dropdown_container';
 import PollFormContainer from '../containers/poll_form_container';
@@ -179,7 +179,7 @@ class ComposeForm extends ImmutablePureComponent {
     } else if(prevProps.isSubmitting && !this.props.isSubmitting) {
       this.autosuggestTextarea.textarea.focus();
     } else if (this.props.spoiler !== prevProps.spoiler) {
-      if (this.props.spoiler && this.props.spoilerText !== 'そぎぎ') {
+      if (this.props.spoiler && (localStorage.plusminus_config_custom_spoiler_button === 'visible' && !JSON.parse(localStorage.plusminus_config_custom_spoiler_buttons).includes(this.props.spoilerText))) {
         this.spoilerText.input.focus();
       } else {
         this.autosuggestTextarea.textarea.focus();
@@ -269,7 +269,6 @@ class ComposeForm extends ImmutablePureComponent {
             </div>
           </AutosuggestTextarea>
         </div>
-        
 
         <div className='compose-form__buttons-wrapper'>
           <div className='compose-form__buttons'>
@@ -277,7 +276,13 @@ class ComposeForm extends ImmutablePureComponent {
             <PollButtonContainer />
             <PrivacyDropdownContainer disabled={this.props.isEditing} />
             <SpoilerButtonContainer />
-            <SogigiButtonContainer value={this.props.spoilerText} />
+            {localStorage.plusminus_config_custom_spoiler_button === 'visible' && (
+              <>
+                {JSON.parse(localStorage.plusminus_config_custom_spoiler_buttons).map((buttonText, index) => (
+                  <CustomSpoilerButtonContainer key={index} preset={buttonText} value={this.props.spoilerText} />
+                ))}
+              </>
+            )}
             <LanguageDropdown />
           </div>
 
