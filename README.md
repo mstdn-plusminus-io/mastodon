@@ -12,7 +12,7 @@
 [releases]: https://github.com/mstdn-plusminus-io/mastodon/releases
 [docker]: https://hub.docker.com/r/plusminusio/mastodon/
 
-[Original README.md](https://github.com/mastodon/mastodon/blob/main/README.md)
+[Upstream README.md](https://github.com/mastodon/mastodon/blob/main/README.md)
 
 ## Additional and/or changed features
 
@@ -23,12 +23,13 @@
 ### User interfaces
 
 - Add Slack like user interfaces
-- Add Sogigi (そぎぎ) button to easy to use Sogigi spoiler
-- Configurable side navigation in right side or left side on phone
-- Configurable show relative time or absolute time in toot timeline
-- Configurable toot button position on phone
-- Configurable plain text or render GitHub flavored markdown (experimental)
-- Configurable show original post link in toot timeline
+- Spoiler message preset
+- Side navigation in right side or left side on phone
+- Show relative time or absolute time in toot timeline
+- Toot button position on phone
+- Plain text or render GitHub Flavored Markdown (experimental)
+- Preview search box by Misskey Flavored Markdown
+- Show original post link in toot timeline
 
 ### Server
 
