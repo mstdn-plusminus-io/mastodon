@@ -82,11 +82,18 @@ const styles = {
   },
   customCwInputTextArea: {
     flex: 1,
+    fontSize: 16,
   },
   customCwInputDeleteButton: {
     marginLeft: '0.25rem',
+    fontSize: 16,
+    minWidth: '25px',
+    minHeight: '25px',
   },
   customCwInputAddButton: {
+    fontSize: 16,
+    minWidth: '25px',
+    minHeight: '25px',
   },
 };
 

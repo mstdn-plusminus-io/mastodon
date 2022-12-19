@@ -15,6 +15,15 @@ import 'github-markdown-css';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
+const codeFanceRegex = /\<p>```(.*?)<br\/?>(.*?)```\<\/p>/g;
+const lineBreakRegex = /<br\/?>/g;
+const languageRegex = /language-(\w+)/;
+const searchRegex = /\[?(検索|Search)\]?$/;
+const hashTagRegex = /\/tags\/(.*)$/;
+const mentionRegex = /\/@(.*)$/;
+
+const MAX_HEIGHT = 706; // 22px * 32 (+ 2px padding at the top)
+
 const turndownService = new TurndownService({
   codeBlockStyle: 'fenced',
 });
@@ -28,17 +37,22 @@ turndownService.addRule('a', {
       node.getAttribute('href')
     );
   },
-  replacement: function(content) {
+  replacement: function(content, node) {
+    if (node.classList.contains('hashtag')) {
+      const match = node.href.match(hashTagRegex);
+      if (match) {
+        return `[#${decodeURIComponent(match[1])}](${node.href})`;
+      }
+    }
+    if (node.classList.contains('mention')) {
+      const match = node.href.match(mentionRegex);
+      if (match) {
+        return `[@${decodeURIComponent(match[1])}](${node.href})`;
+      }
+    }
     return content;
   },
 });
-
-const codeFanceRegex = /\<p>```(.*?)<br\/?>(.*?)```\<\/p>/g;
-const lineBreakRegex = /<br\/?>/g;
-const languageRegex = /language-(\w+)/;
-const searchRegex = /\[?(検索|Search)\]?$/;
-
-const MAX_HEIGHT = 706; // 22px * 32 (+ 2px padding at the top)
 
 class TranslateButton extends React.PureComponent {
 
@@ -333,7 +347,7 @@ class StatusContent extends React.PureComponent {
           searchBox.push(
             <button key={index} className='plusminus-searchbox__container' onClick={() => window.open(`https://google.com/search?q=${keyword}`)}>
               <input type='text' value={keyword} readOnly />
-              <button>検索</button>
+              <div>検索</div>
             </button>,
           );
         }
