@@ -308,9 +308,10 @@ article {
     text-overflow: ellipsis;
   }
 
-  button {
-    padding: 0 2em;
-    border: 1px solid $ui-highlight-color;
+  div {
+    display: flex;
+    align-items: center;
+    padding: 0 1.5em;
     background: $ui-highlight-color;
     color: $primary-text-color;
   }

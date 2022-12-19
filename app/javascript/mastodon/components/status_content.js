@@ -333,7 +333,7 @@ class StatusContent extends React.PureComponent {
           searchBox.push(
             <button key={index} className='plusminus-searchbox__container' onClick={() => window.open(`https://google.com/search?q=${keyword}`)}>
               <input type='text' value={keyword} readOnly />
-              <button>検索</button>
+              <div>検索</div>
             </button>,
           );
         }
