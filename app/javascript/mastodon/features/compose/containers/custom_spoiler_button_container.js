@@ -43,7 +43,7 @@ class CustomSpoilerButtonContainer extends React.Component {
   }
 
   render() {
-    const label = [...this.props.preset].slice(0, 2);
+    const label = [...this.props.preset].slice(0, 2).join('');
     const active = this.props.cwActive && this.props.value === this.props.preset;
     return <TextIconButton {...this.props} label={label} active={active} onClick={() => this.onClick()} />;
   }
