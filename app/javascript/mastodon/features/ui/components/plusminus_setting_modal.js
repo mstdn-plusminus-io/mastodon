@@ -181,6 +181,10 @@ export class PlusMinusSettingModal extends React.Component {
       searchbox: 'hidden',
       custom_spoiler_button: 'hidden',
       custom_spoiler_buttons: ['そぎぎ'],
+      sp_header: 'visible',
+      decode_morse: 'disabled',
+      encode_morse: 'disabled',
+      reload_button: 'hidden',
     },
   };
 
@@ -202,7 +206,7 @@ export class PlusMinusSettingModal extends React.Component {
             <p style={styles.hint}>以下の設定はブラウザごとに保存されます</p>
 
             <div style={styles.section}>
-              <h2>UI全般</h2>
+              <h2>スマートフォン向けUI</h2>
             </div>
 
             <div style={styles.config}>
@@ -214,7 +218,7 @@ export class PlusMinusSettingModal extends React.Component {
                 />
                 ナビゲージョンを左側に表示する
               </label>
-              <p style={styles.description}>スマートフォンなどの小さい画面で表示されるサイド ナビゲーションを左側に表示します</p>
+              <p style={styles.description}>サイド ナビゲーションを左側に表示します</p>
             </div>
             <div style={styles.config}>
               <label>
@@ -225,7 +229,29 @@ export class PlusMinusSettingModal extends React.Component {
                 />
                 投稿ボタンを右下に表示する
               </label>
-              <p style={styles.description}>スマートフォンなどの小さい画面で表示される画面上部の投稿ボタンを右下に表示します</p>
+              <p style={styles.description}>画面上部の投稿ボタンを右下に表示します</p>
+            </div>
+            <div style={styles.config}>
+              <label>
+                <input
+                  type='checkbox'
+                  checked={this.state.config.sp_header === 'hidden'}
+                  onChange={(e) => this.updateConfig('sp_header', e.target.checked ? 'hidden' : 'visible')}
+                />
+                ヘッダーを非表示にする
+              </label>
+              <p style={styles.description}>画面上部のヘッダーを非表示にします</p>
+            </div>
+            <div style={styles.config}>
+              <label>
+                <input
+                  type='checkbox'
+                  checked={this.state.config.reload_button === 'visible'}
+                  onChange={(e) => this.updateConfig('reload_button', e.target.checked ? 'visible' : 'hidden')}
+                />
+                リロードボタンを表示する
+              </label>
+              <p style={styles.description}>サイド ナビゲーション最上部にリロードボタンを表示します<br />PWAとしてインストールしている場合にリロードできない問題を暫定的に解決します</p>
             </div>
 
             <div style={styles.section}>
@@ -276,6 +302,17 @@ export class PlusMinusSettingModal extends React.Component {
               </label>
               <p style={styles.description}><a style={styles.link} href='https://wiki.misskey.io/ja/function/mfm#%E6%A4%9C%E7%B4%A2%E7%AA%93' target='_blank'>Misskey Flavored Markdownの検索窓</a>を投稿本文の下に展開します</p>
             </div>
+            <div style={styles.config}>
+              <label>
+                <input
+                  type='checkbox'
+                  checked={this.state.config.decode_morse === 'enabled'}
+                  onChange={(e) => this.updateConfig('decode_morse', e.target.checked ? 'enabled' : 'disabled')}
+                />
+                y4aスタイルのモールス符号をデコードする
+              </label>
+              <p style={styles.description}><a style={styles.link} href='https://github.com/shibafu528/Yukari' target='_blank'>Yukari for Android</a>スタイルの日本語モールス符号をカタカナに変換して表示します</p>
+            </div>
 
             <div style={styles.section}>
               <h2>投稿欄</h2>
@@ -325,6 +362,17 @@ export class PlusMinusSettingModal extends React.Component {
                   +
                 </button>
               </div>
+            </div>
+            <div style={styles.config}>
+              <label>
+                <input
+                  type='checkbox'
+                  checked={this.state.config.encode_morse === 'enabled'}
+                  onChange={(e) => this.updateConfig('encode_morse', e.target.checked ? 'enabled' : 'disabled')}
+                />
+                y4aスタイルのモールス符号にエンコードするボタンを表示する
+              </label>
+              <p style={styles.description}>ひらがな/カタカナを<a style={styles.link} href='https://github.com/shibafu528/Yukari' target='_blank'>Yukari for Android</a>スタイルの日本語モールス符号に変換します<br />アルファベット/漢字/一部を除く記号は対象外です</p>
             </div>
           </div>
         </div>

@@ -51,6 +51,13 @@ class NavigationPanel extends React.Component {
           <hr />
         </div>
 
+        {signedIn && localStorage.plusminus_config_reload_button === 'visible' && (
+          <div className={'sidenav__reload'}>
+            <ColumnLink transparent href={location.href} icon='refresh' text={'Reload'} />
+            <hr />
+          </div>
+        )}
+
         {signedIn && (
           <React.Fragment>
             <ColumnLink transparent to='/home' icon='home' text={intl.formatMessage(messages.home)} />
@@ -94,7 +101,7 @@ class NavigationPanel extends React.Component {
             <ColumnLink transparent to='#' icon='puzzle-piece' text={'plusminus設定 (β)'} onClick={(e) => {
               e.preventDefault();
               window.__PLUS_MINUS_EVENTS__.dispatchEvent(new Event('openConfig'));
-            }}/>
+            }} />
           </React.Fragment>
         )}
 

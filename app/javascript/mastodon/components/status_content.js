@@ -14,6 +14,7 @@ import remarkGfm from 'remark-gfm';
 import 'github-markdown-css';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { decodeMorse } from '../utils/morse';
 
 const codeFanceRegex = /\<p>```(.*?)<br\/?>(.*?)```\<\/p>/g;
 const lineBreakRegex = /<br\/?>/g;
@@ -261,6 +262,15 @@ class StatusContent extends React.PureComponent {
   }
 
   renderContent = (content) => {
+    if (localStorage.plusminus_config_decode_morse === 'enabled') {
+      if (content.__html.includes('－') || content.__html.includes('・')) {
+        const el = document.createElement('div');
+        el.innerHTML = content.__html;
+        decodeMorse(el);
+        content.__html = el.innerHTML;
+      }
+    }
+
     let inner;
 
     if (localStorage.plusminus_config_content === 'markdown') {
