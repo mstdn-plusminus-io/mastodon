@@ -2563,6 +2563,17 @@ $ui-header-height: 55px;
     }
   }
 
+  body.hide-sp-header {
+    .ui__header {
+      height: 0 !important;
+      overflow: hidden !important;
+    }
+
+    .tabs-bar__wrapper {
+      top: 0 !important;
+    }
+  }
+
   .column-header,
   .column-back-button,
   .scrollable,
@@ -2591,17 +2602,6 @@ $ui-header-height: 55px;
 
     .list-panel {
       display: none;
-    }
-  }
-
-  body.hide-sp-header {
-    .ui__header {
-      height: 0 !important;
-      overflow: hidden !important;
-    }
-
-    .tabs-bar__wrapper {
-      top: 0 !important;
     }
   }
 }

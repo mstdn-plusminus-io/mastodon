@@ -233,7 +233,7 @@ export class PlusMinusSettingModal extends React.Component {
                 <input
                   type='checkbox'
                   checked={this.state.config.sp_header === 'hidden'}
-                  onChange={(e) => this.updateConfig('sp_header', e.target.checked ? 'visible' : 'hidden')}
+                  onChange={(e) => this.updateConfig('sp_header', e.target.checked ? 'hidden' : 'visible')}
                 />
                 ヘッダーを非表示にする
               </label>
