@@ -182,6 +182,8 @@ export class PlusMinusSettingModal extends React.Component {
       custom_spoiler_button: 'hidden',
       custom_spoiler_buttons: ['そぎぎ'],
       sp_header: 'visible',
+      decode_morse: 'disabled',
+      encode_morse: 'disabled',
     },
   };
 
@@ -288,6 +290,17 @@ export class PlusMinusSettingModal extends React.Component {
               </label>
               <p style={styles.description}><a style={styles.link} href='https://wiki.misskey.io/ja/function/mfm#%E6%A4%9C%E7%B4%A2%E7%AA%93' target='_blank'>Misskey Flavored Markdownの検索窓</a>を投稿本文の下に展開します</p>
             </div>
+            <div style={styles.config}>
+              <label>
+                <input
+                  type='checkbox'
+                  checked={this.state.config.decode_morse === 'enabled'}
+                  onChange={(e) => this.updateConfig('decode_morse', e.target.checked ? 'enabled' : 'disabled')}
+                />
+                y4aスタイルのモールス符号をデコードする
+              </label>
+              <p style={styles.description}><a style={styles.link} href='https://github.com/shibafu528/Yukari' target='_blank'>Yukari for Android</a>スタイルの日本語モールス符号をカタカナに変換して表示します</p>
+            </div>
 
             <div style={styles.section}>
               <h2>投稿欄</h2>
@@ -337,6 +350,17 @@ export class PlusMinusSettingModal extends React.Component {
                   +
                 </button>
               </div>
+            </div>
+            <div style={styles.config}>
+              <label>
+                <input
+                  type='checkbox'
+                  checked={this.state.config.encode_morse === 'enabled'}
+                  onChange={(e) => this.updateConfig('encode_morse', e.target.checked ? 'enabled' : 'disabled')}
+                />
+                y4aスタイルのモールス符号にエンコードするボタンを表示する
+              </label>
+              <p style={styles.description}>ひらがな/カタカナを<a style={styles.link} href='https://github.com/shibafu528/Yukari' target='_blank'>Yukari for Android</a>スタイルの日本語モールス符号に変換します<br />アルファベット/漢字/一部を除く記号は対象外です</p>
             </div>
           </div>
         </div>
