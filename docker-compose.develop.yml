@@ -1,0 +1,35 @@
+version: '3'
+services:
+  db:
+    restart: always
+    image: postgres:14-alpine
+    shm_size: 256mb
+    networks:
+      - default
+    ports:
+      - '127.0.0.1:5432:5432'
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-U', 'postgres']
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - 'POSTGRES_HOST_AUTH_METHOD=trust'
+
+  redis:
+    restart: always
+    image: redis:7-alpine
+    networks:
+      - default
+    ports:
+      - '127.0.0.1:6379:6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+    volumes:
+      - redis_data:/data
+
+networks:
+  default:
+
+volumes:
+  postgres_data:
+  redis_data:

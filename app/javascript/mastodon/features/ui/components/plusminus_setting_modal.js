@@ -181,6 +181,7 @@ export class PlusMinusSettingModal extends React.Component {
       searchbox: 'hidden',
       custom_spoiler_button: 'hidden',
       custom_spoiler_buttons: ['そぎぎ'],
+      sp_header: 'visible',
     },
   };
 
@@ -202,7 +203,7 @@ export class PlusMinusSettingModal extends React.Component {
             <p style={styles.hint}>以下の設定はブラウザごとに保存されます</p>
 
             <div style={styles.section}>
-              <h2>UI全般</h2>
+              <h2>スマートフォン向けUI</h2>
             </div>
 
             <div style={styles.config}>
@@ -214,7 +215,7 @@ export class PlusMinusSettingModal extends React.Component {
                 />
                 ナビゲージョンを左側に表示する
               </label>
-              <p style={styles.description}>スマートフォンなどの小さい画面で表示されるサイド ナビゲーションを左側に表示します</p>
+              <p style={styles.description}>サイド ナビゲーションを左側に表示します</p>
             </div>
             <div style={styles.config}>
               <label>
@@ -225,7 +226,18 @@ export class PlusMinusSettingModal extends React.Component {
                 />
                 投稿ボタンを右下に表示する
               </label>
-              <p style={styles.description}>スマートフォンなどの小さい画面で表示される画面上部の投稿ボタンを右下に表示します</p>
+              <p style={styles.description}>画面上部の投稿ボタンを右下に表示します</p>
+            </div>
+            <div style={styles.config}>
+              <label>
+                <input
+                  type='checkbox'
+                  checked={this.state.config.sp_header === 'hidden'}
+                  onChange={(e) => this.updateConfig('sp_header', e.target.checked ? 'visible' : 'hidden')}
+                />
+                ヘッダーを非表示にする
+              </label>
+              <p style={styles.description}>画面上部のヘッダーを非表示にします</p>
             </div>
 
             <div style={styles.section}>
