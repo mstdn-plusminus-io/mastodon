@@ -19,6 +19,10 @@ function main() {
 
     window.__PLUS_MINUS_EVENTS__ = new EventTarget();
 
+    if (localStorage.plusminus_config_sp_header === 'hidden') {
+      document.body.classList.add('hide-sp-header');
+    }
+
     ReactDOM.render(<Mastodon {...props} />, mountNode);
     store.dispatch(setupBrowserNotifications());
 

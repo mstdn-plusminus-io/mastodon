@@ -17,7 +17,8 @@
     "test:jest": "cross-env NODE_ENV=test jest",
     "format": "prettier --write '**/*.{json,yml}'",
     "format-check": "prettier --write '**/*.{json,yml}'",
-    "watch": "foreman start"
+    "watch": "foreman start",
+    "docker:dev": "docker-compose -f docker-compose.develop.yml"
   },
   "repository": {
     "type": "git",

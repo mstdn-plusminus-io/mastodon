@@ -42,6 +42,24 @@
 - Configurable enable or disable remote media cache
   - `DISABLE_REMOTE_MEDIA_CACHE=true`
 
+## Start develop 
+
+Before developing, you need to install the following software.
+
+- Ruby 3.0.x
+- Node.js 16.x
+- Yarn 1.22.x
+
+Then run the following commands.
+
+```sh
+yarn docker:dev up -d
+bundle install
+cp .env.sample .env
+rails db:migrate
+yarn watch
+```
+
 ## License
 
 Copyright (C) 2016-2022 Eugen Rochko & other Mastodon contributors (see [AUTHORS.md](AUTHORS.md))
