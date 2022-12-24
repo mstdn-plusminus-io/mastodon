@@ -2572,6 +2572,10 @@ $ui-header-height: 55px;
     .tabs-bar__wrapper {
       top: 0 !important;
     }
+
+    .columns-area__panels {
+      min-height: 100vh !important;
+    }
   }
 
   .column-header,
