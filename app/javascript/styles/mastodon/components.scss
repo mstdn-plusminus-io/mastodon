@@ -2497,6 +2497,10 @@ $ui-header-height: 55px;
   .navigation-panel__legal {
     display: none;
   }
+
+  .sidenav__reload {
+    display: none;
+  }
 }
 
 @media screen and (max-width: $no-gap-breakpoint - 1px) {

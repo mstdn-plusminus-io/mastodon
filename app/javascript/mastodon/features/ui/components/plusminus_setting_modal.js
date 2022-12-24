@@ -184,6 +184,7 @@ export class PlusMinusSettingModal extends React.Component {
       sp_header: 'visible',
       decode_morse: 'disabled',
       encode_morse: 'disabled',
+      reload_button: 'hidden',
     },
   };
 
@@ -240,6 +241,17 @@ export class PlusMinusSettingModal extends React.Component {
                 ヘッダーを非表示にする
               </label>
               <p style={styles.description}>画面上部のヘッダーを非表示にします</p>
+            </div>
+            <div style={styles.config}>
+              <label>
+                <input
+                  type='checkbox'
+                  checked={this.state.config.reload_button === 'visible'}
+                  onChange={(e) => this.updateConfig('reload_button', e.target.checked ? 'visible' : 'hidden')}
+                />
+                リロードボタンを表示する
+              </label>
+              <p style={styles.description}>サイド ナビゲーション最上部にリロードボタンを表示します<br />PWAとしてインストールしている場合にリロードできない問題を暫定的に解決します</p>
             </div>
 
             <div style={styles.section}>
