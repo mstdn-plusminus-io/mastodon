@@ -110,8 +110,17 @@ const morse2kana = Object.keys(kana2morse).reduce((obj, kana) => {
 export const decodeMorse = (node) => {
   if (node.nodeType === node.TEXT_NODE) {
     const codes = node.nodeValue.split(' ');
-    const kana = codes.map((code) => morse2kana[code] || code).join('');
-    node.nodeValue = `≪${kana}≫`;
+    let replaced = 0;
+    const kana = codes.map((code) => {
+      if (morse2kana[code]) {
+        replaced++;
+        return morse2kana[code];
+      }
+      return code;
+    }).join('');
+    if (replaced > 1) {
+      node.nodeValue = `≪${kana}≫`;
+    }
   } else {
     for (let i = 0; i < node.childNodes.length; i++) {
       decodeMorse(node.childNodes[i]);
