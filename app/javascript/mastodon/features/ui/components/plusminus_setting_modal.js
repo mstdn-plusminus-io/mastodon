@@ -185,6 +185,8 @@ export class PlusMinusSettingModal extends React.Component {
       decode_morse: 'disabled',
       encode_morse: 'disabled',
       reload_button: 'hidden',
+      keyword_based_visibility: 'disabled',
+      keyword_based_visibilities: [{ keyword: 'ここだけの話なんだけど', visibility: 'unlisted' }],
     },
   };
 
@@ -357,6 +359,63 @@ export class PlusMinusSettingModal extends React.Component {
                   onClick={() => {
                     this.state.config.custom_spoiler_buttons.push('');
                     this.updateConfig('custom_spoiler_buttons', this.state.config.custom_spoiler_buttons);
+                  }}
+                >
+                  +
+                </button>
+              </div>
+            </div>
+            <div style={styles.config}>
+              <label>
+                <input
+                  type='checkbox'
+                  checked={this.state.config.keyword_based_visibility === 'enabled'}
+                  onChange={(e) => this.updateConfig('keyword_based_visibility', e.target.checked ? 'enabled' : 'disabled')}
+                />
+                キーワードで公開範囲を自動的に設定する
+              </label>
+              <p style={styles.description}>指定した文字列が本文に含まれる場合に、公開範囲を自動的に設定します</p>
+
+              <div style={styles.customCwInputs}>
+                {this.state.config.keyword_based_visibilities?.map(({ keyword, visibility }, index) => (
+                  <div key={`${index}_${this.state.config.custom_spoiler_buttons.length}`} style={styles.customCwInput}>
+                    <input
+                      style={styles.customCwInputTextArea}
+                      type='text'
+                      value={keyword}
+                      onChange={(e) => {
+                        this.state.config.keyword_based_visibilities[index].keyword = e.target.value;
+                        this.updateConfig('keyword_based_visibilities', this.state.config.keyword_based_visibilities);
+                      }}
+                    />
+                    <select
+                      value={visibility}
+                      onChange={(e) => {
+                        this.state.config.keyword_based_visibilities[index].visibility = e.target.value;
+                        this.updateConfig('keyword_based_visibilities', this.state.config.keyword_based_visibilities);
+                      }}
+                    >
+                      <option value='public'>Public</option>
+                      <option value='unlisted'>Unlisted</option>
+                      <option value='private'>Followers only</option>
+                      <option value='direct'>Mentioned people only</option>
+                    </select>
+                    <button
+                      style={styles.customCwInputDeleteButton}
+                      onClick={() => {
+                        this.state.config.keyword_based_visibilities.splice(index, 1);
+                        this.updateConfig('keyword_based_visibilities', this.state.config.keyword_based_visibilities);
+                      }}
+                    >
+                      -
+                    </button>
+                  </div>
+                ))}
+                <button
+                  style={styles.customCwInputAddButton}
+                  onClick={() => {
+                    this.state.config.keyword_based_visibilities.push({ keyword: '', visibility: 'public' });
+                    this.updateConfig('keyword_based_visibilities', this.state.config.keyword_based_visibilities);
                   }}
                 >
                   +

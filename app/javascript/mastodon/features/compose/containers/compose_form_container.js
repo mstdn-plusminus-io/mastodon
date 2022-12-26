@@ -9,6 +9,7 @@ import {
   changeComposeSpoilerText,
   insertEmojiCompose,
   uploadCompose,
+  changeComposeVisibility,
 } from '../../../actions/compose';
 
 const mapStateToProps = state => ({
@@ -29,10 +30,22 @@ const mapStateToProps = state => ({
   isInReply: state.getIn(['compose', 'in_reply_to']) !== null,
 });
 
+let cachedKeywordVisibilities = null;
+
 const mapDispatchToProps = (dispatch) => ({
 
   onChange (text) {
     dispatch(changeCompose(text));
+
+    if (localStorage.plusminus_config_keyword_based_visibility === 'enabled') {
+      if (!cachedKeywordVisibilities) {
+        cachedKeywordVisibilities = JSON.parse(localStorage.plusminus_config_keyword_based_visibilities);
+      }
+      const matched = cachedKeywordVisibilities.find((option) => text.includes(option.keyword));
+      if (matched) {
+        dispatch(changeComposeVisibility(matched.visibility));
+      }
+    }
   },
 
   onSubmit (router) {
