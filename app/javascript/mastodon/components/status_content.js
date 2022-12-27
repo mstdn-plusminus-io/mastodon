@@ -263,7 +263,7 @@ class StatusContent extends React.PureComponent {
 
   renderContent = (content) => {
     if (localStorage.plusminus_config_decode_morse === 'enabled') {
-      if (content.__html.includes('－') || content.__html.includes('・')) {
+      if (content.__html.includes('－') || content.__html.includes('・') || content.__html.includes('.') || content.__html.includes('_')) {
         const el = document.createElement('div');
         el.innerHTML = content.__html;
         decodeMorse(el);
