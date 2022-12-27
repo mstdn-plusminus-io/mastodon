@@ -43,6 +43,11 @@ const styles = {
     fontSize: '1rem',
     marginTop: '1rem',
   },
+  childConfig: {
+    fontSize: '1rem',
+    marginTop: '1rem',
+    marginLeft: 20,
+  },
   hint: {
     opacity: 0.6,
     marginTop: 4,
@@ -186,6 +191,7 @@ export class PlusMinusSettingModal extends React.Component {
       encode_morse: 'disabled',
       reload_button: 'hidden',
       keyword_based_visibility: 'disabled',
+      spoiler_keyword_based_visibility: 'disabled',
       keyword_based_visibilities: [{ keyword: 'ここだけの話なんだけど', visibility: 'unlisted' }],
     },
   };
@@ -379,50 +385,93 @@ export class PlusMinusSettingModal extends React.Component {
               </label>
               <p style={styles.description}>指定した文字列が本文に含まれる場合に、公開範囲を自動的に設定します</p>
 
-              <div style={styles.customCwInputs}>
-                {this.state.config.keyword_based_visibilities?.map(({ keyword, visibility }, index) => (
-                  <div key={`${index}_${this.state.config.custom_spoiler_buttons.length}`} style={styles.customCwInput}>
-                    <input
-                      style={styles.customCwInputTextArea}
-                      type='text'
-                      value={keyword}
-                      onChange={(e) => {
-                        this.state.config.keyword_based_visibilities[index].keyword = e.target.value;
-                        this.updateConfig('keyword_based_visibilities', this.state.config.keyword_based_visibilities);
-                      }}
-                    />
-                    <select
-                      value={visibility}
-                      onChange={(e) => {
-                        this.state.config.keyword_based_visibilities[index].visibility = e.target.value;
-                        this.updateConfig('keyword_based_visibilities', this.state.config.keyword_based_visibilities);
-                      }}
-                    >
-                      <option value='public'>Public</option>
-                      <option value='unlisted'>Unlisted</option>
-                      <option value='private'>Followers only</option>
-                      <option value='direct'>Mentioned people only</option>
-                    </select>
-                    <button
-                      style={styles.customCwInputDeleteButton}
-                      onClick={() => {
-                        this.state.config.keyword_based_visibilities.splice(index, 1);
-                        this.updateConfig('keyword_based_visibilities', this.state.config.keyword_based_visibilities);
-                      }}
-                    >
-                      -
-                    </button>
-                  </div>
-                ))}
-                <button
-                  style={styles.customCwInputAddButton}
-                  onClick={() => {
-                    this.state.config.keyword_based_visibilities.push({ keyword: '', visibility: 'public' });
-                    this.updateConfig('keyword_based_visibilities', this.state.config.keyword_based_visibilities);
-                  }}
-                >
-                  +
-                </button>
+              <div style={styles.childConfig}>
+                <label>
+                  <input
+                    type='checkbox'
+                    checked={this.state.config.spoiler_keyword_based_visibility === 'enabled'}
+                    onChange={(e) => this.updateConfig('spoiler_keyword_based_visibility', e.target.checked ? 'enabled' : 'disabled')}
+                  />
+                  CW (Content Warning)も対象にする
+                </label>
+                <p style={styles.description}>
+                  指定した文字列がCWに含まれる場合にも、公開範囲を自動的に設定します<br />
+                  CWプリセットボタンで有用です
+                </p>
+              </div>
+
+              <div style={styles.config}>
+                <p style={styles.description}>キーワードは上にあるものが優先されます</p>
+                <div style={styles.customCwInputs}>
+                  {this.state.config.keyword_based_visibilities?.map(({ keyword, visibility }, index) => (
+                    <div key={`${index}_${this.state.config.custom_spoiler_buttons.length}`} style={styles.customCwInput}>
+                      <input
+                        style={styles.customCwInputTextArea}
+                        type='text'
+                        value={keyword}
+                        onChange={(e) => {
+                          this.state.config.keyword_based_visibilities[index].keyword = e.target.value;
+                          this.updateConfig('keyword_based_visibilities', this.state.config.keyword_based_visibilities);
+                        }}
+                      />
+                      <select
+                        value={visibility}
+                        onChange={(e) => {
+                          this.state.config.keyword_based_visibilities[index].visibility = e.target.value;
+                          this.updateConfig('keyword_based_visibilities', this.state.config.keyword_based_visibilities);
+                        }}
+                      >
+                        <option value='public'>Public</option>
+                        <option value='unlisted'>Unlisted</option>
+                        <option value='private'>Followers only</option>
+                        <option value='direct'>Mentioned people only</option>
+                      </select>
+                      <button
+                        style={styles.customCwInputDeleteButton}
+                        disabled={index === 0}
+                        onClick={() => {
+                          const obj = this.state.config.keyword_based_visibilities[index];
+                          this.state.config.keyword_based_visibilities.splice(index, 1);
+                          this.state.config.keyword_based_visibilities.splice(index - 1, 0, obj);
+                          this.updateConfig('keyword_based_visibilities', this.state.config.keyword_based_visibilities);
+                        }}
+                      >
+                        ↑
+                      </button>
+                      <button
+                        style={styles.customCwInputDeleteButton}
+                        disabled={index === this.state.config.keyword_based_visibilities.length - 1}
+                        onClick={() => {
+                          const obj = this.state.config.keyword_based_visibilities[index];
+                          this.state.config.keyword_based_visibilities.splice(index, 1);
+                          this.state.config.keyword_based_visibilities.splice(index + 1, 0, obj);
+                          this.updateConfig('keyword_based_visibilities', this.state.config.keyword_based_visibilities);
+                          this.updateConfig('keyword_based_visibilities', this.state.config.keyword_based_visibilities);
+                        }}
+                      >
+                        ↓
+                      </button>
+                      <button
+                        style={styles.customCwInputDeleteButton}
+                        onClick={() => {
+                          this.state.config.keyword_based_visibilities.splice(index, 1);
+                          this.updateConfig('keyword_based_visibilities', this.state.config.keyword_based_visibilities);
+                        }}
+                      >
+                        -
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    style={styles.customCwInputAddButton}
+                    onClick={() => {
+                      this.state.config.keyword_based_visibilities.push({ keyword: '', visibility: 'public' });
+                      this.updateConfig('keyword_based_visibilities', this.state.config.keyword_based_visibilities);
+                    }}
+                  >
+                    +
+                  </button>
+                </div>
               </div>
             </div>
             <div style={styles.config}>

@@ -27,18 +27,26 @@ class CustomSpoilerButtonContainer extends React.Component {
     value: PropTypes.string.isRequired,
     cwActive: PropTypes.bool,
     active: PropTypes.bool,
+    onChange: PropTypes.func.isRequired,
   };
 
   onClick() {
+    const e = {
+      target: {
+        value: '',
+      },
+    };
     if (this.props.cwActive) {
       if (this.props.value !== this.props.preset) {
-        this.props.dispatch(changeComposeSpoilerText(this.props.preset));
+        e.target.value = this.props.preset;
+        this.props.onChange(e);
       } else {
         this.props.dispatch(changeComposeSpoilerness());
       }
     } else {
       this.props.dispatch(changeComposeSpoilerness());
-      this.props.dispatch(changeComposeSpoilerText(this.props.preset));
+      e.target.value = this.props.preset;
+      this.props.onChange(e);
     }
   }
 
