@@ -66,6 +66,16 @@ const mapDispatchToProps = (dispatch) => ({
 
   onChangeSpoilerText (checked) {
     dispatch(changeComposeSpoilerText(checked));
+
+    if (localStorage.plusminus_config_keyword_based_visibility === 'enabled' && localStorage.plusminus_config_spoiler_keyword_based_visibility === 'enabled') {
+      if (!cachedKeywordVisibilities) {
+        cachedKeywordVisibilities = JSON.parse(localStorage.plusminus_config_keyword_based_visibilities);
+      }
+      const matched = cachedKeywordVisibilities.find((option) => checked.includes(option.keyword));
+      if (matched) {
+        dispatch(changeComposeVisibility(matched.visibility));
+      }
+    }
   },
 
   onPaste (files) {

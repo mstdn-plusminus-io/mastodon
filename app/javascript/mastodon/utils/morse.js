@@ -1,4 +1,4 @@
-const kana2morse = {
+const message2morse = {
   'ア': '－－・－－',
   'イ': '・－',
   'ウ': '・・－',
@@ -52,12 +52,78 @@ const kana2morse = {
   '゜': '・・－－・',
   '、': '・－・－・－',
   '。': '・－・－・・',
-  '（': '－・－－・－',
-  '）': '・－・・－・',
+  '？': '・・－－・・',
+  '！': '－・－・－－',
+  '・': '･', // HACK: 文中の「・」が「ヘ」に変換されるのを避けるために「･」に置き換えておく
+  '’': '・－－－－・',
+  '”': '・－・・－・',
+  '＆': '・－・・・',
+  '：': '－－－・・・',
+  '；': '－・－・－・',
+  '＝': '－・・・－',
+  '−': '－・・・・－',
+  '＿': '・・－－・－',
+  '＄': '・・・－・・－',
+  '＠': '・－－・－・',
+  '　': '／',
+  '0': '_____',
+  '1': '.____',
+  '2': '..___',
+  '3': '...__',
+  '4': '...._',
+  '5': '.....',
+  '6': '_....',
+  '7': '__...',
+  '8': '___..',
+  '9': '____.',
+  'A': '._',
+  'B': '_...',
+  'C': '_._.',
+  'D': '_..',
+  'E': '.',
+  'F': '.._.',
+  'G': '__.',
+  'H': '....',
+  'I': '..',
+  'J': '.___',
+  'K': '_._',
+  'L': '._..',
+  'M': '__',
+  'N': '_.',
+  'O': '___',
+  'P': '.__.',
+  'Q': '__._',
+  'R': '._.',
+  'S': '...',
+  'T': '_',
+  'U': '.._',
+  'V': '..._',
+  'W': '.__',
+  'X': '_.._',
+  'Y': '_.__',
+  'Z': '__..',
+  '.': '._._._',
+  ',': '__..__',
+  '?': '..__..',
+  "'": '.____.',
+  '/': '_.._.',
+  '(': '_.__.',
+  ')': '_.__._',
+  '&': '._...',
+  ':': '___...',
+  ';': '_._._.',
+  '=': '_..._',
+  '+': '._._.',
+  '-': '_...._',
+  '_': '..__._',
+  '"': '._.._.',
+  '$': '..._.._',
+  '@': '.__._.',
+  ' ': '/',
 };
 
-const fullKana2morse = {
-  ...kana2morse,
+const fullMessage2morse = {
+  ...message2morse,
   'ァ': '－－・－－',
   'ィ': '・－',
   'ゥ': '・・－',
@@ -102,8 +168,8 @@ const fullKana2morse = {
   'ヺ': '・－－－ ・・',
 };
 
-const morse2kana = Object.keys(kana2morse).reduce((obj, kana) => {
-  obj[kana2morse[kana]] = kana;
+const morse2message = Object.keys(message2morse).reduce((obj, message) => {
+  obj[message2morse[message]] = message;
   return obj;
 }, {});
 
@@ -112,9 +178,9 @@ export const decodeMorse = (node) => {
     const codes = node.nodeValue.split(' ');
     let replaced = 0;
     const kana = codes.map((code) => {
-      if (morse2kana[code]) {
+      if (morse2message[code]) {
         replaced++;
-        return morse2kana[code];
+        return morse2message[code];
       }
       return code;
     }).join('');
@@ -131,15 +197,21 @@ export const decodeMorse = (node) => {
 export const encodeMorse = (text) => {
   const normalized = text.replace(/[ぁ-ん]/g, function(s) {
     return String.fromCharCode(s.charCodeAt(0) + 0x60);
-  });
+  }).replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
+    return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+  }).replaceAll('（', '(')
+    .replaceAll('）', ')')
+    .toUpperCase();
+
   let shouldPrependSpace = false;
   return [...normalized].map((char) => {
+    console.log(char);
     let code;
-    if (fullKana2morse[char]) {
+    if (fullMessage2morse[char]) {
       if (shouldPrependSpace) {
-        code = ` ${fullKana2morse[char]} `;
+        code = ` ${fullMessage2morse[char]} `;
       } else {
-        code = `${fullKana2morse[char]} `;
+        code = `${fullMessage2morse[char]} `;
       }
       shouldPrependSpace = false;
       return code;
