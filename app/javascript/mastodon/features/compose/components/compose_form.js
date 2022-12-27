@@ -281,7 +281,7 @@ class ComposeForm extends ImmutablePureComponent {
             {localStorage.plusminus_config_custom_spoiler_button === 'visible' && (
               <>
                 {JSON.parse(localStorage.plusminus_config_custom_spoiler_buttons).map((buttonText, index) => (
-                  <CustomSpoilerButtonContainer key={index} preset={buttonText} value={this.props.spoilerText} />
+                  <CustomSpoilerButtonContainer key={index} preset={buttonText} value={this.props.spoilerText} onChange={this.handleChangeSpoilerText} />
                 ))}
               </>
             )}
