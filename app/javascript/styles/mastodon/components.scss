@@ -2583,6 +2583,13 @@ $ui-header-height: 55px;
     }
   }
 
+  .plusminus-settings {
+    .custom-cw-input-button__wrapper .custom-cw-input-button__wrapper-order-button {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
   .column-header,
   .column-back-button,
   .scrollable,

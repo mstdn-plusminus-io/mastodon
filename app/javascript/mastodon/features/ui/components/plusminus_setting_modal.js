@@ -85,11 +85,24 @@ const styles = {
     width: '100%',
     marginBottom: '0.5rem',
   },
+  customCwInputWrapper: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    flex: 1,
+  },
   customCwInputTextArea: {
+    flex: 2,
+    fontSize: 16,
+  },
+  customCwInputSelect: {
     flex: 1,
     fontSize: 16,
   },
-  customCwInputDeleteButton: {
+  customCwInputButtonWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  customCwInputButton: {
     marginLeft: '0.25rem',
     fontSize: 16,
     minWidth: '25px',
@@ -202,7 +215,7 @@ export class PlusMinusSettingModal extends React.Component {
 
   render() {
     return (
-      <div style={styles.root}>
+      <div className={'plusminus-settings'} style={styles.root}>
         <div style={styles.container}>
           <h1 style={styles.title}>
             plusminus設定 (β)
@@ -321,7 +334,7 @@ export class PlusMinusSettingModal extends React.Component {
               </label>
               <p style={styles.description}>
                 <a style={styles.link} href='https://github.com/shibafu528/Yukari' target='_blank'>Yukari for Android</a>スタイルの日本語モールス符号をカタカナに変換して表示します<br />
-                英数モールス符号の互換性はありません
+                英数モールス符号もデコードできますが、互換性はありません
               </p>
             </div>
 
@@ -353,7 +366,7 @@ export class PlusMinusSettingModal extends React.Component {
                       }}
                     />
                     <button
-                      style={styles.customCwInputDeleteButton}
+                      style={styles.customCwInputButton}
                       onClick={() => {
                         this.state.config.custom_spoiler_buttons.splice(index, 1);
                         this.updateConfig('custom_spoiler_buttons', this.state.config.custom_spoiler_buttons);
@@ -405,61 +418,69 @@ export class PlusMinusSettingModal extends React.Component {
                 <div style={styles.customCwInputs}>
                   {this.state.config.keyword_based_visibilities?.map(({ keyword, visibility }, index) => (
                     <div key={`${index}_${this.state.config.custom_spoiler_buttons.length}`} style={styles.customCwInput}>
-                      <input
-                        style={styles.customCwInputTextArea}
-                        type='text'
-                        value={keyword}
-                        onChange={(e) => {
-                          this.state.config.keyword_based_visibilities[index].keyword = e.target.value;
-                          this.updateConfig('keyword_based_visibilities', this.state.config.keyword_based_visibilities);
-                        }}
-                      />
-                      <select
-                        value={visibility}
-                        onChange={(e) => {
-                          this.state.config.keyword_based_visibilities[index].visibility = e.target.value;
-                          this.updateConfig('keyword_based_visibilities', this.state.config.keyword_based_visibilities);
-                        }}
-                      >
-                        <option value='public'>Public</option>
-                        <option value='unlisted'>Unlisted</option>
-                        <option value='private'>Followers only</option>
-                        <option value='direct'>Mentioned people only</option>
-                      </select>
-                      <button
-                        style={styles.customCwInputDeleteButton}
-                        disabled={index === 0}
-                        onClick={() => {
-                          const obj = this.state.config.keyword_based_visibilities[index];
-                          this.state.config.keyword_based_visibilities.splice(index, 1);
-                          this.state.config.keyword_based_visibilities.splice(index - 1, 0, obj);
-                          this.updateConfig('keyword_based_visibilities', this.state.config.keyword_based_visibilities);
-                        }}
-                      >
-                        ↑
-                      </button>
-                      <button
-                        style={styles.customCwInputDeleteButton}
-                        disabled={index === this.state.config.keyword_based_visibilities.length - 1}
-                        onClick={() => {
-                          const obj = this.state.config.keyword_based_visibilities[index];
-                          this.state.config.keyword_based_visibilities.splice(index, 1);
-                          this.state.config.keyword_based_visibilities.splice(index + 1, 0, obj);
-                          this.updateConfig('keyword_based_visibilities', this.state.config.keyword_based_visibilities);
-                          this.updateConfig('keyword_based_visibilities', this.state.config.keyword_based_visibilities);
-                        }}
-                      >
-                        ↓
-                      </button>
-                      <button
-                        style={styles.customCwInputDeleteButton}
-                        onClick={() => {
-                          this.state.config.keyword_based_visibilities.splice(index, 1);
-                          this.updateConfig('keyword_based_visibilities', this.state.config.keyword_based_visibilities);
-                        }}
-                      >
-                        -
-                      </button>
+                      <div style={styles.customCwInputWrapper}>
+                        <input
+                          style={styles.customCwInputTextArea}
+                          type='text'
+                          value={keyword}
+                          onChange={(e) => {
+                            this.state.config.keyword_based_visibilities[index].keyword = e.target.value;
+                            this.updateConfig('keyword_based_visibilities', this.state.config.keyword_based_visibilities);
+                          }}
+                        />
+                        <select
+                          style={styles.customCwInputSelect}
+                          value={visibility}
+                          onChange={(e) => {
+                            this.state.config.keyword_based_visibilities[index].visibility = e.target.value;
+                            this.updateConfig('keyword_based_visibilities', this.state.config.keyword_based_visibilities);
+                          }}
+                        >
+                          <option value='public'>Public</option>
+                          <option value='unlisted'>Unlisted</option>
+                          <option value='private'>Followers only</option>
+                          <option value='direct'>Mentioned people only</option>
+                        </select>
+                      </div>
+                      <div className='custom-cw-input-button__wrapper' style={styles.customCwInputButtonWrapper}>
+                        <div className='custom-cw-input-button__wrapper-order-button'>
+                          <button
+                            style={styles.customCwInputButton}
+                            disabled={index === 0}
+                            onClick={() => {
+                              const obj = this.state.config.keyword_based_visibilities[index];
+                              this.state.config.keyword_based_visibilities.splice(index, 1);
+                              this.state.config.keyword_based_visibilities.splice(index - 1, 0, obj);
+                              this.updateConfig('keyword_based_visibilities', this.state.config.keyword_based_visibilities);
+                            }}
+                          >
+                            ↑
+                          </button>
+                          <button
+                            style={styles.customCwInputButton}
+                            disabled={index === this.state.config.keyword_based_visibilities.length - 1}
+                            onClick={() => {
+                              const obj = this.state.config.keyword_based_visibilities[index];
+                              this.state.config.keyword_based_visibilities.splice(index, 1);
+                              this.state.config.keyword_based_visibilities.splice(index + 1, 0, obj);
+                              this.updateConfig('keyword_based_visibilities', this.state.config.keyword_based_visibilities);
+                              this.updateConfig('keyword_based_visibilities', this.state.config.keyword_based_visibilities);
+                            }}
+                          >
+                            ↓
+                          </button>
+                        </div>
+
+                        <button
+                          style={styles.customCwInputButton}
+                          onClick={() => {
+                            this.state.config.keyword_based_visibilities.splice(index, 1);
+                            this.updateConfig('keyword_based_visibilities', this.state.config.keyword_based_visibilities);
+                          }}
+                        >
+                          -
+                        </button>
+                      </div>
                     </div>
                   ))}
                   <button
@@ -483,7 +504,11 @@ export class PlusMinusSettingModal extends React.Component {
                 />
                 y4aスタイルのモールス符号にエンコードするボタンを表示する
               </label>
-              <p style={styles.description}>ひらがな/カタカナを<a style={styles.link} href='https://github.com/shibafu528/Yukari' target='_blank'>Yukari for Android</a>スタイルの日本語モールス符号に変換します<br />アルファベット/漢字/一部を除く記号は対象外です</p>
+              <p style={styles.description}>
+                ひらがな/カタカナを<a style={styles.link} href='https://github.com/shibafu528/Yukari' target='_blank'>Yukari for Android</a>スタイルのモールス符号に変換します<br />
+                英数モールス符号もエンコードできますが、互換性はありません<br />
+                漢字/一部を除く記号は対象外です
+              </p>
             </div>
           </div>
         </div>
