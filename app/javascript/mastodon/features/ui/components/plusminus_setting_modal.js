@@ -321,7 +321,7 @@ export class PlusMinusSettingModal extends React.Component {
               </label>
               <p style={styles.description}>
                 <a style={styles.link} href='https://github.com/shibafu528/Yukari' target='_blank'>Yukari for Android</a>スタイルの日本語モールス符号をカタカナに変換して表示します<br />
-                英数モールス符号の互換性はありません
+                英数モールス符号もデコードできますが、互換性はありません
               </p>
             </div>
 
@@ -483,7 +483,11 @@ export class PlusMinusSettingModal extends React.Component {
                 />
                 y4aスタイルのモールス符号にエンコードするボタンを表示する
               </label>
-              <p style={styles.description}>ひらがな/カタカナを<a style={styles.link} href='https://github.com/shibafu528/Yukari' target='_blank'>Yukari for Android</a>スタイルの日本語モールス符号に変換します<br />アルファベット/漢字/一部を除く記号は対象外です</p>
+              <p style={styles.description}>
+                ひらがな/カタカナを<a style={styles.link} href='https://github.com/shibafu528/Yukari' target='_blank'>Yukari for Android</a>スタイルのモールス符号に変換します<br />
+                英数モールス符号もエンコードできますが、互換性はありません<br />
+                漢字/一部を除く記号は対象外です
+              </p>
             </div>
           </div>
         </div>
