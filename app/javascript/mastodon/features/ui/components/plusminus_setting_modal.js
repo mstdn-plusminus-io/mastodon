@@ -206,6 +206,7 @@ export class PlusMinusSettingModal extends React.Component {
       keyword_based_visibility: 'disabled',
       spoiler_keyword_based_visibility: 'disabled',
       keyword_based_visibilities: [{ keyword: 'ここだけの話なんだけど', visibility: 'unlisted' }],
+      emotional_button: 'hidden',
     },
   };
 
@@ -494,6 +495,19 @@ export class PlusMinusSettingModal extends React.Component {
                   </button>
                 </div>
               </div>
+            </div>
+            <div style={styles.config}>
+              <label>
+                <input
+                  type='checkbox'
+                  checked={this.state.config.emotional_button === 'visible'}
+                  onChange={(e) => this.updateConfig('emotional_button', e.target.checked ? 'visible' : 'hidden')}
+                />
+                半角英数をUnicodeの数学用英数字ブロックに置き換えるボタンを表示する
+              </label>
+              <p style={styles.description}>
+                <code>Lorem ipsum dolor sit amet,</code> を <code>𝓛𝓸𝓻𝓮𝓶 𝓲𝓹𝓼𝓾𝓶 𝓭𝓸𝓵𝓸𝓻 𝓼𝓲𝓽 𝓪𝓶𝓮𝓽,</code> などのエモい文字に置き換えるボタンを表示します
+              </p>
             </div>
             <div style={styles.config}>
               <label>

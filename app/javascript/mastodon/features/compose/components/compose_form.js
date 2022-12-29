@@ -24,6 +24,8 @@ import { countableText } from '../util/counter';
 import Icon from 'mastodon/components/icon';
 import ComposeExtensionButtonContainer from '../containers/compose_extension_button_container';
 import { encodeMorse } from '../../../utils/morse';
+import EmotionalDropdownContainer from '../containers/emotional_dropdown_container';
+import { text2emotional } from '../../../utils/emotional';
 
 const allowedAroundShortCode = '><\u0085\u0020\u00a0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u202f\u205f\u3000\u2028\u2029\u0009\u000a\u000b\u000c\u000d';
 
@@ -209,6 +211,15 @@ class ComposeForm extends ImmutablePureComponent {
     this.props.onPickEmoji(position, data, needsSpace);
   }
 
+  onSelectEmotional = (type) => {
+    const e = {
+      target: {
+        value: text2emotional(this.props.text, type),
+      },
+    };
+    this.handleChange(e);
+  };
+
   render () {
     const { intl, onPaste, showSearch } = this.props;
     const disabled = this.props.isSubmitting;
@@ -284,6 +295,9 @@ class ComposeForm extends ImmutablePureComponent {
                   <CustomSpoilerButtonContainer key={index} preset={buttonText} value={this.props.spoilerText} onChange={this.handleChangeSpoilerText} />
                 ))}
               </>
+            )}
+            {localStorage.plusminus_config_emotional_button === 'visible' && (
+              <EmotionalDropdownContainer onSelect={this.onSelectEmotional} />
             )}
             {localStorage.plusminus_config_encode_morse === 'enabled' && (
               <ComposeExtensionButtonContainer
