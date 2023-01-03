@@ -26,6 +26,7 @@ import ComposeExtensionButtonContainer from '../containers/compose_extension_but
 import { encodeMorse } from '../../../utils/morse';
 import EmotionalDropdownContainer from '../containers/emotional_dropdown_container';
 import { text2emotional } from '../../../utils/emotional';
+import api from '../../../api';
 
 const allowedAroundShortCode = '><\u0085\u0020\u00a0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u202f\u205f\u3000\u2028\u2029\u0009\u000a\u000b\u000c\u000d';
 
@@ -78,6 +79,10 @@ class ComposeForm extends ImmutablePureComponent {
     showSearch: false,
   };
 
+  state = {
+    maxCharacters: 5000,
+  };
+
   handleChange = (e) => {
     this.props.onChange(e.target.value);
   }
@@ -97,7 +102,7 @@ class ComposeForm extends ImmutablePureComponent {
     const fulltext = this.getFulltextForCharacterCounting();
     const isOnlyWhitespace = fulltext.length !== 0 && fulltext.trim().length === 0;
 
-    return !(isSubmitting || isUploading || isChangingUpload || length(fulltext) > 5000 || (isOnlyWhitespace && !anyMedia));
+    return !(isSubmitting || isUploading || isChangingUpload || length(fulltext) > this.state.maxCharacters || (isOnlyWhitespace && !anyMedia));
   }
 
   handleSubmit = (e) => {
@@ -149,6 +154,13 @@ class ComposeForm extends ImmutablePureComponent {
 
   componentDidMount () {
     this._updateFocusAndSelection({ });
+    api().get('/api/v1/instance').then(res => {
+      this.setState({
+        maxCharacters: res.data.configuration.statuses.max_characters,
+      });
+    }).catch(err => {
+      console.error(err);
+    });
   }
 
   componentDidUpdate (prevProps) {
@@ -311,7 +323,7 @@ class ComposeForm extends ImmutablePureComponent {
           </div>
 
           <div className='character-counter__wrapper'>
-            <CharacterCounter max={5000} text={this.getFulltextForCharacterCounting()} />
+            <CharacterCounter max={this.state.maxCharacters} text={this.getFulltextForCharacterCounting()} />
           </div>
         </div>
 
