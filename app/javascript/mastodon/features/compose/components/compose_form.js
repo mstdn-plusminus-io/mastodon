@@ -70,6 +70,8 @@ class ComposeForm extends ImmutablePureComponent {
     anyMedia: PropTypes.bool,
     isInReply: PropTypes.bool,
     singleColumn: PropTypes.bool,
+    showClose: PropTypes.bool,
+    onClose: PropTypes.func,
   };
 
   static defaultProps = {
@@ -315,6 +317,16 @@ class ComposeForm extends ImmutablePureComponent {
 
         <div className='compose-form__publish'>
           <div className='compose-form__publish-button-wrapper'>
+            <div>
+              {this.props.showClose && this.props.onClose && (
+                <Button
+                  className={'button-secondary'}
+                  text={intl.formatMessage({ id: 'bundle_modal_error.close', defaultMessage: 'Close' })}
+                  onClick={() => this.props.onClose()}
+                  block
+                />
+              )}
+            </div>
             <Button
               type='submit'
               text={publishText}

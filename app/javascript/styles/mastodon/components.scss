@@ -2337,6 +2337,61 @@ $ui-header-height: 55px;
   overflow: hidden;
 }
 
+.compose-half-modal {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: $ui-base-color;
+  z-index: 1;
+
+  .compose-form__publish-button-wrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    button {
+      width: auto;
+    }
+  }
+}
+
+html.show-compose-half-modal {
+  .compose-half-modal {
+    display: block;
+    max-height: 100dvh;
+    overflow: auto;
+  }
+
+  .compose-half-modal,
+  .compose-half-modal * {
+    touch-action: auto;
+  }
+
+  .columns-area__panels {
+    filter: brightness(0.5);
+
+    .navigation-panel {
+      position: sticky;
+      top: 0;
+    }
+  }
+
+  .columns-area__panels,
+  .columns-area__panels * {
+    pointer-events: none !important;
+  }
+
+  .autosuggest-textarea__textarea {
+    resize: none;
+  }
+
+  .compose-form__uploads-wrapper:empty {
+    display: none;
+  }
+}
+
 @media screen and (min-width: 631px) {
   .columns-area {
     padding: 0;

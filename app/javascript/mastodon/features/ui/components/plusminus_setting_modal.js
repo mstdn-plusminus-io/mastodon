@@ -207,6 +207,7 @@ export class PlusMinusSettingModal extends React.Component {
       spoiler_keyword_based_visibility: 'disabled',
       keyword_based_visibilities: [{ keyword: 'ここだけの話なんだけど', visibility: 'unlisted' }],
       emotional_button: 'hidden',
+      post_half_modal: 'disabled',
     },
   };
 
@@ -252,6 +253,17 @@ export class PlusMinusSettingModal extends React.Component {
                 投稿ボタンを右下に表示する
               </label>
               <p style={styles.description}>画面上部の投稿ボタンを右下に表示します</p>
+            </div>
+            <div style={styles.config}>
+              <label>
+                <input
+                  type='checkbox'
+                  checked={this.state.config.post_half_modal === 'enabled'}
+                  onChange={(e) => this.updateConfig('post_half_modal', e.target.checked ? 'enabled' : 'disabled')}
+                />
+                投稿欄をハーフモーダルで表示する
+              </label>
+              <p style={styles.description}>投稿欄を単一の画面で表示せずに、画面下部にハーフモーダルで表示します</p>
             </div>
             <div style={styles.config}>
               <label>
