@@ -7,6 +7,7 @@ import Avatar from 'mastodon/components/avatar';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Icon from 'mastodon/components/icon';
+import ComposeFormContainer from '../../compose/containers/compose_form_container';
 
 const Account = connect(state => ({
   account: state.getIn(['accounts', me]),
@@ -27,6 +28,14 @@ class Header extends React.PureComponent {
     location: PropTypes.object,
   };
 
+  openComposeHalfModal() {
+    document.documentElement.classList.add('show-compose-half-modal');
+  }
+
+  closeComposeHalfModal() {
+    document.documentElement.classList.remove('show-compose-half-modal');
+  }
+
   render () {
     const { signedIn } = this.context.identity;
     const { location } = this.props;
@@ -35,12 +44,25 @@ class Header extends React.PureComponent {
 
     if (signedIn) {
       const isBottomRightButton = localStorage.plusminus_config_post_button_location === 'bottom_right';
+      const useHalfModal = localStorage.plusminus_config_post_half_modal === 'enabled';
+      const buttonInner = (
+        <>
+          {isBottomRightButton && <Icon id='send' fixedWidth />}
+          {!isBottomRightButton && <FormattedMessage id='compose_form.publish' defaultMessage='Publish' /> }
+        </>
+      );
       content = (
         <>
-          {location.pathname !== '/publish' && (
+          {useHalfModal ? (
+            <>
+              <div className={'compose-half-modal'}><ComposeFormContainer showClose onClose={() => this.closeComposeHalfModal()} /></div>
+              <div className={`button ${isBottomRightButton ? 'bottom_right' : ''}`} onClick={() => this.openComposeHalfModal()}>
+                {buttonInner}
+              </div>
+            </>
+          ) : location.pathname !== '/publish' && (
             <Link to='/publish' className={`button ${isBottomRightButton ? 'bottom_right' : ''}`}>
-              {isBottomRightButton && <Icon id='send' fixedWidth />}
-              {!isBottomRightButton && <FormattedMessage id='compose_form.publish' defaultMessage='Publish' /> }
+              {buttonInner}
             </Link>
           )}
           <Account />

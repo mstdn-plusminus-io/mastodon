@@ -207,6 +207,7 @@ export function submitCompose(routerHistory) {
         insertIfOnline('public');
         insertIfOnline(`account:${response.data.account.id}`);
       }
+      document.documentElement.classList.remove('show-compose-half-modal');
     }).catch(function (error) {
       dispatch(submitComposeFail(error));
     });

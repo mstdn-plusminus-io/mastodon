@@ -6,21 +6,6 @@ import Button from 'mastodon/components/button';
 import { FormattedMessage } from 'react-intl';
 
 const styles = {
-  root: {
-    position: 'fixed',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    background: 'rgba(0, 0, 0, 0.888)',
-    backdropFilter: 'blur(4px)',
-    zIndex: 99999,
-    display: 'flex',
-    flexDirection: 'column',
-    fontSize: 'initial',
-    color: 'white',
-    overflow: 'auto',
-  },
   container: {
     padding: '1rem',
     display: 'flex',
@@ -207,6 +192,7 @@ export class PlusMinusSettingModal extends React.Component {
       spoiler_keyword_based_visibility: 'disabled',
       keyword_based_visibilities: [{ keyword: 'ここだけの話なんだけど', visibility: 'unlisted' }],
       emotional_button: 'hidden',
+      post_half_modal: 'disabled',
     },
   };
 
@@ -216,7 +202,7 @@ export class PlusMinusSettingModal extends React.Component {
 
   render() {
     return (
-      <div className={'plusminus-settings'} style={styles.root}>
+      <div className={'plusminus-config__root'}>
         <div style={styles.container}>
           <h1 style={styles.title}>
             plusminus設定 (β)
@@ -252,6 +238,17 @@ export class PlusMinusSettingModal extends React.Component {
                 投稿ボタンを右下に表示する
               </label>
               <p style={styles.description}>画面上部の投稿ボタンを右下に表示します</p>
+            </div>
+            <div style={styles.config}>
+              <label>
+                <input
+                  type='checkbox'
+                  checked={this.state.config.post_half_modal === 'enabled'}
+                  onChange={(e) => this.updateConfig('post_half_modal', e.target.checked ? 'enabled' : 'disabled')}
+                />
+                投稿欄をハーフモーダルで表示する
+              </label>
+              <p style={styles.description}>投稿欄を単一の画面で表示せずに、画面下部にハーフモーダルで表示します</p>
             </div>
             <div style={styles.config}>
               <label>
@@ -300,7 +297,7 @@ export class PlusMinusSettingModal extends React.Component {
                 />
                 Markdownをレンダリング（実験的）
               </label>
-              <p style={styles.description}><a style={styles.link} href='https://github.com/mixmark-io/turndown' target='_blank'>turndown</a>と<a style={styles.link} href='https://github.com/remarkjs/react-markdown' target='_blank'>react-markdown</a>を使用してMarkdownをレンダリングします<br />投稿のHTMLに依存するため、スペースや改行などが正しく反映されるとは限りません</p>
+              <p style={styles.description}><a className={'link'} href='https://github.com/mixmark-io/turndown' target='_blank'>turndown</a>と<a className={'link'} href='https://github.com/remarkjs/react-markdown' target='_blank'>react-markdown</a>を使用してMarkdownをレンダリングします<br />投稿のHTMLに依存するため、スペースや改行などが正しく反映されるとは限りません</p>
             </div>
             <div style={styles.config}>
               <label>
@@ -322,7 +319,7 @@ export class PlusMinusSettingModal extends React.Component {
                 />
                 Misskey Flavored Markdownの検索窓を展開する
               </label>
-              <p style={styles.description}><a style={styles.link} href='https://wiki.misskey.io/ja/function/mfm#%E6%A4%9C%E7%B4%A2%E7%AA%93' target='_blank'>Misskey Flavored Markdownの検索窓</a>を投稿本文の下に展開します</p>
+              <p style={styles.description}><a className={'link'} href='https://wiki.misskey.io/ja/function/mfm#%E6%A4%9C%E7%B4%A2%E7%AA%93' target='_blank'>Misskey Flavored Markdownの検索窓</a>を投稿本文の下に展開します</p>
             </div>
             <div style={styles.config}>
               <label>
@@ -334,7 +331,7 @@ export class PlusMinusSettingModal extends React.Component {
                 y4aスタイルのモールス符号をデコードする
               </label>
               <p style={styles.description}>
-                <a style={styles.link} href='https://github.com/shibafu528/Yukari' target='_blank'>Yukari for Android</a>スタイルの日本語モールス符号をカタカナに変換して表示します<br />
+                <a className={'link'} href='https://github.com/shibafu528/Yukari' target='_blank'>Yukari for Android</a>スタイルの日本語モールス符号をカタカナに変換して表示します<br />
                 英数モールス符号もデコードできますが、互換性はありません
               </p>
             </div>
@@ -419,10 +416,11 @@ export class PlusMinusSettingModal extends React.Component {
                 <div style={styles.customCwInputs}>
                   {this.state.config.keyword_based_visibilities?.map(({ keyword, visibility }, index) => (
                     <div key={`${index}_${this.state.config.custom_spoiler_buttons.length}`} style={styles.customCwInput}>
-                      <div style={styles.customCwInputWrapper}>
+                      <div className='custom-cw-input__wrapper'  style={styles.customCwInputWrapper}>
                         <input
                           style={styles.customCwInputTextArea}
                           type='text'
+                          placeholder={'キーワード'}
                           value={keyword}
                           onChange={(e) => {
                             this.state.config.keyword_based_visibilities[index].keyword = e.target.value;
@@ -519,7 +517,7 @@ export class PlusMinusSettingModal extends React.Component {
                 y4aスタイルのモールス符号にエンコードするボタンを表示する
               </label>
               <p style={styles.description}>
-                ひらがな/カタカナを<a style={styles.link} href='https://github.com/shibafu528/Yukari' target='_blank'>Yukari for Android</a>スタイルのモールス符号に変換します<br />
+                ひらがな/カタカナを<a className={'link'} href='https://github.com/shibafu528/Yukari' target='_blank'>Yukari for Android</a>スタイルのモールス符号に変換します<br />
                 英数モールス符号もエンコードできますが、互換性はありません<br />
                 漢字/一部を除く記号は対象外です
               </p>
