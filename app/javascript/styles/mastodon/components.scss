@@ -2392,6 +2392,39 @@ html.show-compose-half-modal {
   }
 }
 
+.plusminus-config__root {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: darken($ui-base-color, 4%);
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  font-size: initial;
+  color: $primary-text-color;
+  overflow: auto;
+
+  a.link {
+    color: $highlight-text-color;
+  }
+
+  @media screen and (max-width: $no-gap-breakpoint) {
+    .custom-cw-input__wrapper {
+      input,
+      select {
+        flex: auto !important;
+        width: 100%;
+      }
+    }
+    .custom-cw-input-button__wrapper,
+    .custom-cw-input-button__wrapper-order-button {
+      flex: 0;
+    }
+  }
+}
+
 @media screen and (min-width: 631px) {
   .columns-area {
     padding: 0;
