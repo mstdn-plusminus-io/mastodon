@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import { LoadingBar } from 'react-redux-loading-bar';
-import ZoomableImage from './zoomable_image';
+import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 
 export default class ImageLoader extends PureComponent {
 
@@ -26,141 +26,127 @@ export default class ImageLoader extends PureComponent {
     loading: true,
     error: false,
     width: null,
+    minScale: 0,
+    visibility: 'hidden',
   }
 
   removers = [];
-  canvas = null;
 
-  get canvasContext() {
-    if (!this.canvas) {
-      return null;
-    }
-    this._canvasContext = this._canvasContext || this.canvas.getContext('2d');
-    return this._canvasContext;
-  }
+  img = null;
+  transformState = null;
+  centerView = null;
+  zoomToElement = null;
 
-  componentDidMount () {
-    this.loadImage(this.props);
-  }
-
-  UNSAFE_componentWillReceiveProps (nextProps) {
-    if (this.props.src !== nextProps.src) {
-      this.loadImage(nextProps);
-    }
+  componentDidMount() {
+    window.addEventListener('resize', this.onResize);
+    this.removers.push(() => window.removeEventListener('resize', this.onResize));
   }
 
   componentWillUnmount () {
     this.removeEventListeners();
   }
 
-  loadImage (props) {
-    this.removeEventListeners();
-    this.setState({ loading: true, error: false });
-    Promise.all([
-      props.previewSrc && this.loadPreviewCanvas(props),
-      this.hasSize() && this.loadOriginalImage(props),
-    ].filter(Boolean))
-      .then(() => {
-        this.setState({ loading: false, error: false });
-        this.clearPreviewCanvas();
-      })
-      .catch(() => this.setState({ loading: false, error: true }));
-  }
-
-  loadPreviewCanvas = ({ previewSrc, width, height }) => new Promise((resolve, reject) => {
-    const image = new Image();
-    const removeEventListeners = () => {
-      image.removeEventListener('error', handleError);
-      image.removeEventListener('load', handleLoad);
-    };
-    const handleError = () => {
-      removeEventListeners();
-      reject();
-    };
-    const handleLoad = () => {
-      removeEventListeners();
-      this.canvasContext.drawImage(image, 0, 0, width, height);
-      resolve();
-    };
-    image.addEventListener('error', handleError);
-    image.addEventListener('load', handleLoad);
-    image.src = previewSrc;
-    this.removers.push(removeEventListeners);
-  })
-
-  clearPreviewCanvas () {
-    const { width, height } = this.canvas;
-    this.canvasContext.clearRect(0, 0, width, height);
-  }
-
-  loadOriginalImage = ({ src }) => new Promise((resolve, reject) => {
-    const image = new Image();
-    const removeEventListeners = () => {
-      image.removeEventListener('error', handleError);
-      image.removeEventListener('load', handleLoad);
-    };
-    const handleError = () => {
-      removeEventListeners();
-      reject();
-    };
-    const handleLoad = () => {
-      removeEventListeners();
-      resolve();
-    };
-    image.addEventListener('error', handleError);
-    image.addEventListener('load', handleLoad);
-    image.src = src;
-    this.removers.push(removeEventListeners);
-  });
-
   removeEventListeners () {
     this.removers.forEach(listeners => listeners());
     this.removers = [];
   }
 
-  hasSize () {
-    const { width, height } = this.props;
-    return typeof width === 'number' && typeof height === 'number';
+  onClickContainer = onClick => e => {
+    e.stopPropagation();
+    onClick();
   }
 
-  setCanvasRef = c => {
-    this.canvas = c;
-    if (c) this.setState({ width: c.offsetWidth });
+  onLoadImage = e => {
+    this.img = e.currentTarget;
+
+    this.setState({
+      loading: false,
+    });
+    if (this.zoomToElement && (this.img.naturalWidth > window.innerWidth || this.img.naturalHeight > window.innerHeight)) {
+      this.zoomToElement(e.currentTarget, undefined, 0);
+    }
+    if (this.centerView) {
+      this.centerView(undefined, 0);
+    }
+    setTimeout(() => {
+      if (this.state.minScale === 0) {
+        const minScale = this.transformState.scale < 1.0 ? this.transformState.scale : 1.0;
+        this.setState({
+          minScale,
+          visibility: 'visible',
+        });
+      }
+    }, 0);
+  }
+
+  lastResized = null;
+
+  onResize = () => {
+    if (this.lastResized) {
+      clearTimeout(this.lastResized);
+    }
+    this.lastResized = setTimeout(() => {
+      this.setState({
+        minScale: 0,
+      }, () => {
+        if (this.zoomToElement) {
+          this.zoomToElement(this.img, undefined, 0);
+          setTimeout(() => {
+            const minScale = this.transformState.scale < 1.0 ? this.transformState.scale : 1.0;
+            this.setState({ minScale });
+          }, 0);
+        }
+      });
+    }, 32);
+
   }
 
   render () {
-    const { alt, src, width, height, onClick } = this.props;
+    const { alt, src, onClick } = this.props;
     const { loading } = this.state;
 
     const className = classNames('image-loader', {
       'image-loader--loading': loading,
-      'image-loader--amorphous': !this.hasSize(),
     });
 
     return (
-      <div className={className}>
-        {loading ? (
+      <div className={className} onClick={this.onClickContainer(onClick)}>
+        {loading && (
           <>
-            <div className='loading-bar__container' style={{ width: this.state.width || width }}>
+            <div className='loading-bar__container'>
               <LoadingBar className='loading-bar' loading={1} />
             </div>
-            <canvas
-              className='image-loader__preview-canvas'
-              ref={this.setCanvasRef}
-              width={width}
-              height={height}
-            />
           </>
-        ) : (
-          <ZoomableImage
-            alt={alt}
-            src={src}
-            onClick={onClick}
-            width={width}
-            height={height}
-            zoomButtonHidden={this.props.zoomButtonHidden}
-          />
         )}
+        <TransformWrapper
+          minScale={this.state.minScale}
+          initialScale={1}
+          limitToBounds
+          centerZoomedOut
+          centerOnInit
+        >
+          {({ state, zoomIn, zoomOut, zoomToElement, centerView, ...transformProps }) => {
+            this.transformState = state;
+            this.centerView = centerView;
+            this.zoomToElement = zoomToElement;
+            return (
+              <TransformComponent
+                wrapperStyle={{
+                  width: '100dvw',
+                  height: '100dvh',
+                  overflow: 'hidden',
+                }}
+                contentStyle={{
+                  width: 'fit-content',
+                  height: 'fit-content',
+                  transformOrigin: 'left top',
+                }}
+              >
+                <img src={src} alt={alt} onLoad={this.onLoadImage} style={{ visibility: this.state.visibility }} />
+              </TransformComponent>
+            );
+          }}
+        </TransformWrapper>
       </div>
     );
   }
