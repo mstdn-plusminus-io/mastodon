@@ -51,9 +51,10 @@ export default class ImageLoader extends PureComponent {
     this.removers = [];
   }
 
-  onClickContainer = onClick => e => {
+  onClickImage = e => {
     e.stopPropagation();
-    onClick();
+    e.preventDefault();
+    return false;
   }
 
   onLoadImage = e => {
@@ -110,7 +111,7 @@ export default class ImageLoader extends PureComponent {
     });
 
     return (
-      <div className={className} onClick={this.onClickContainer(onClick)}>
+      <div className={className} onClick={onClick}>
         {loading && (
           <>
             <div className='loading-bar__container'>
@@ -142,7 +143,7 @@ export default class ImageLoader extends PureComponent {
                   transformOrigin: 'left top',
                 }}
               >
-                <img src={src} alt={alt} onLoad={this.onLoadImage} style={{ visibility: this.state.visibility }} />
+                <img src={src} alt={alt} onLoad={this.onLoadImage} style={{ visibility: this.state.visibility }} onClick={this.onClickImage} />
               </TransformComponent>
             );
           }}
