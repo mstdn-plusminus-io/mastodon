@@ -62,7 +62,7 @@ export default class ImageLoader extends PureComponent {
     this.setState({
       loading: false,
     });
-    if (this.zoomToElement) {
+    if (this.zoomToElement && (this.img.naturalWidth > window.innerWidth || this.img.naturalHeight > window.innerHeight)) {
       this.zoomToElement(e.currentTarget, undefined, 0);
     }
     if (this.centerView) {
@@ -70,8 +70,9 @@ export default class ImageLoader extends PureComponent {
     }
     setTimeout(() => {
       if (this.state.minScale === 0) {
+        const minScale = this.transformState.scale < 1.0 ? this.transformState.scale : 1.0;
         this.setState({
-          minScale: this.transformState.scale,
+          minScale,
           visibility: 'visible',
         });
       }
@@ -91,9 +92,8 @@ export default class ImageLoader extends PureComponent {
         if (this.zoomToElement) {
           this.zoomToElement(this.img, undefined, 0);
           setTimeout(() => {
-            this.setState({
-              minScale: this.transformState.scale,
-            });
+            const minScale = this.transformState.scale < 1.0 ? this.transformState.scale : 1.0;
+            this.setState({ minScale });
           }, 0);
         }
       });
@@ -120,6 +120,7 @@ export default class ImageLoader extends PureComponent {
         )}
         <TransformWrapper
           minScale={this.state.minScale}
+          initialScale={1}
           limitToBounds
           centerZoomedOut
           centerOnInit
