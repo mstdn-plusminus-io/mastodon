@@ -137,21 +137,18 @@ class MediaModal extends ImmutablePureComponent {
     const leftNav  = media.size > 1 && <button tabIndex='0' className='media-modal__nav media-modal__nav--left' onClick={this.handlePrevClick} aria-label={intl.formatMessage(messages.previous)}><Icon id='chevron-left' fixedWidth /></button>;
     const rightNav = media.size > 1 && <button tabIndex='0' className='media-modal__nav  media-modal__nav--right' onClick={this.handleNextClick} aria-label={intl.formatMessage(messages.next)}><Icon id='chevron-right' fixedWidth /></button>;
 
-    const content = media.map((image) => {
-      const width  = image.getIn(['meta', 'original', 'width']) || null;
+    const content = media.map((image, i) => {
+      const width = image.getIn(['meta', 'original', 'width']) || null;
       const height = image.getIn(['meta', 'original', 'height']) || null;
 
       if (image.get('type') === 'image') {
         return (
           <ImageLoader
-            previewSrc={image.get('preview_url') || image.get('preview_remote_url') || image.get('url') || image.get('remote_url')}
             src={image.get('url') || image.get('remote_url')}
-            width={width}
-            height={height}
             alt={image.get('description')}
             key={image.get('preview_url') || image.get('preview_remote_url') || image.get('url') || image.get('remote_url')}
             onClick={this.toggleNavigation}
-            zoomButtonHidden={this.state.zoomButtonHidden}
+            navigationHidden={this.state.navigationHidden || index !== i}
           />
         );
       } else if (image.get('type') === 'video') {

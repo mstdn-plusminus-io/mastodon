@@ -3,17 +3,15 @@ import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import { LoadingBar } from 'react-redux-loading-bar';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
+import IconButton from '../../../components/icon_button';
 
 export default class ImageLoader extends PureComponent {
 
   static propTypes = {
     alt: PropTypes.string,
     src: PropTypes.string.isRequired,
-    previewSrc: PropTypes.string,
-    width: PropTypes.number,
-    height: PropTypes.number,
     onClick: PropTypes.func,
-    zoomButtonHidden: PropTypes.bool,
+    navigationHidden: PropTypes.bool,
   }
 
   static defaultProps = {
@@ -28,6 +26,7 @@ export default class ImageLoader extends PureComponent {
     width: null,
     minScale: 0,
     visibility: 'hidden',
+    currentScale: 0,
   }
 
   removers = [];
@@ -51,10 +50,11 @@ export default class ImageLoader extends PureComponent {
     this.removers = [];
   }
 
-  onClickImage = e => {
+  onClickImage = onClick => e => {
     e.stopPropagation();
     e.preventDefault();
-    return false;
+
+    onClick();
   }
 
   onLoadImage = e => {
@@ -74,6 +74,7 @@ export default class ImageLoader extends PureComponent {
         const minScale = this.transformState.scale < 1.0 ? this.transformState.scale : 1.0;
         this.setState({
           minScale,
+          currentScale: minScale,
           visibility: 'visible',
         });
       }
@@ -94,12 +95,38 @@ export default class ImageLoader extends PureComponent {
           this.zoomToElement(this.img, undefined, 0);
           setTimeout(() => {
             const minScale = this.transformState.scale < 1.0 ? this.transformState.scale : 1.0;
-            this.setState({ minScale });
+            this.setState({
+              minScale,
+              currentScale: minScale,
+            });
           }, 0);
         }
       });
     }, 32);
+  }
 
+  onZoom = (ref) => {
+    this.setState({
+      currentScale: ref.state.scale,
+    });
+  }
+
+  onClickZoomButton = zoomButtonState => e => {
+    e.stopPropagation();
+
+    if (zoomButtonState === 'compress') {
+      if (this.zoomToElement) {
+        this.zoomToElement(this.img, undefined, 0);
+      }
+    } else {
+      if (this.centerView) {
+        this.centerView(1.0, 0);
+      }
+    }
+    setTimeout(() =>
+      this.setState({
+        currentScale: this.transformState.scale,
+      }), 0);
   }
 
   render () {
@@ -110,8 +137,10 @@ export default class ImageLoader extends PureComponent {
       'image-loader--loading': loading,
     });
 
+    const zoomButtonState = this.state.currentScale >= 1.0 ? 'compress' : 'expand';
+
     return (
-      <div className={className} onClick={onClick}>
+      <div className={className}>
         {loading && (
           <>
             <div className='loading-bar__container'>
@@ -125,8 +154,9 @@ export default class ImageLoader extends PureComponent {
           limitToBounds
           centerZoomedOut
           centerOnInit
+          onZoom={this.onZoom}
         >
-          {({ state, zoomIn, zoomOut, zoomToElement, centerView, ...transformProps }) => {
+          {({ state, zoomToElement, centerView, ...transformProps }) => {
             this.transformState = state;
             this.centerView = centerView;
             this.zoomToElement = zoomToElement;
@@ -143,11 +173,39 @@ export default class ImageLoader extends PureComponent {
                   transformOrigin: 'left top',
                 }}
               >
-                <img src={src} alt={alt} onLoad={this.onLoadImage} style={{ visibility: this.state.visibility }} onClick={this.onClickImage} />
+                <img src={src} alt={alt} onLoad={this.onLoadImage} style={{ visibility: this.state.visibility }} onClick={this.onClickImage(onClick)} />
               </TransformComponent>
             );
           }}
         </TransformWrapper>
+        {!loading && (
+          <div
+            className={classNames('media-modal__navigation', { 'media-modal__navigation--hidden': this.props.navigationHidden })}
+          >
+            <div style={{ margin: '16px 0 0 16px' }}>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div>
+                  <IconButton
+                    className='media-modal__zoom-button'
+                    title={zoomButtonState}
+                    icon={zoomButtonState}
+                    disabled={this.state.minScale === 1.0 && this.state.currentScale === 1.0}
+                    onClick={this.onClickZoomButton(zoomButtonState)}
+                    size={40}
+                  />
+                </div>
+                <div style={{ opacity: 0.8 }}>
+                  <div>
+                    {this.img.naturalWidth} x {this.img.naturalHeight} px
+                  </div>
+                  <div>
+                    {Math.round(this.state.currentScale * 100)}%
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
