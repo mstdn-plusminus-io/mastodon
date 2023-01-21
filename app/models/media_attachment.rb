@@ -3,11 +3,10 @@
 #
 # Table name: media_attachments
 #
-#  id                          :bigint(8)        not null, primary key
 #  status_id                   :bigint(8)
 #  file_file_name              :string
 #  file_content_type           :string
-#  file_file_size              :integer
+#  file_file_size              :bigint(8)
 #  file_updated_at             :datetime
 #  remote_url                  :string           default(""), not null
 #  created_at                  :datetime         not null
@@ -16,6 +15,7 @@
 #  type                        :integer          default("image"), not null
 #  file_meta                   :json
 #  account_id                  :bigint(8)
+#  id                          :bigint(8)        not null, primary key
 #  description                 :text
 #  scheduled_status_id         :bigint(8)
 #  blurhash                    :string
@@ -23,7 +23,7 @@
 #  file_storage_schema_version :integer
 #  thumbnail_file_name         :string
 #  thumbnail_content_type      :string
-#  thumbnail_file_size         :integer
+#  thumbnail_file_size         :bigint(8)
 #  thumbnail_updated_at        :datetime
 #  thumbnail_remote_url        :string
 #
@@ -104,6 +104,7 @@ class MediaAttachment < ApplicationRecord
         'c:v' => 'h264',
         'maxrate' => '1300K',
         'bufsize' => '1300K',
+        'b:v' => '1300K',
         'frames:v' => 60 * 60 * 3,
         'crf' => 18,
         'map_metadata' => '-1',
@@ -208,6 +209,8 @@ class MediaAttachment < ApplicationRecord
   scope :cached,     -> { remote.where.not(file_file_name: nil) }
 
   default_scope { order(id: :asc) }
+
+  attr_accessor :skip_download
 
   def local?
     remote_url.blank?
