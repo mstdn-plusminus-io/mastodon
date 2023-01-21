@@ -4,20 +4,20 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Install Node.js
 RUN apt-get update && \
-    apt install -y --no-install-recommends curl && \
+    apt-get install -y --no-install-recommends curl && \
     curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
     apt-get install -y nodejs && \
     rm -rf /share/doc && \
     apt-get -y --auto-remove purge curl && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt-get/lists/*
 
 # Enable jemalloc
 RUN apt-get update && \
     apt-get -y --no-install-recommends install libjemalloc2 && \
     ln -nfs /usr/lib/$(uname -m)-linux-gnu /usr/lib/linux-gnu && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt-get/lists/*
 ENV LD_PRELOAD=${LD_PRELOAD}:/usr/lib/linux-gnu/libjemalloc.so.2
 
 # Create the mastodon user
@@ -31,7 +31,7 @@ RUN apt-get update && \
     useradd -m -u $UID -g $GID -d /opt/mastodon mastodon && \
     echo "mastodon:$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 24 | mkpasswd -s -m sha-256)" | chpasswd && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt-get/lists/*
 
 COPY --chown=mastodon:mastodon . /opt/mastodon
 
@@ -73,7 +73,7 @@ RUN apt-get update && \
 	    libicu67 libprotobuf23 libidn11 libyaml-0-2 \
 	    ca-certificates tzdata libreadline8 && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt-get/lists/*
 
 # Set the run user
 USER mastodon
