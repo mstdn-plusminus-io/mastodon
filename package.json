@@ -173,8 +173,7 @@
     "yargs": "^17.6.2"
   },
   "resolutions": {
-    "kind-of": "^6.0.3",
-    "acorn": "^8.8.0"
+    "kind-of": "^6.0.3"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.7",
