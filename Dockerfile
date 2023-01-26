@@ -1,4 +1,4 @@
-FROM ruby:3.1-slim-bullseye
+FROM ruby:3.0-slim-bullseye
 
 ENV DEBIAN_FRONTEND=noninteractive
 
