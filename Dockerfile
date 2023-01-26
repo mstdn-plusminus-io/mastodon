@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Install Node.js
 RUN apt-get update && \
     apt-get install -y --no-install-recommends curl && \
-    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
     apt-get install -y nodejs && \
     rm -rf /share/doc && \
     apt-get -y --auto-remove purge curl && \
