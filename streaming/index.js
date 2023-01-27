@@ -274,7 +274,7 @@ const startWorker = async (workerId) => {
    */
   const allowCrossDomain = (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Authorization, Accept, Cache-Control');
+    res.header('Access-Control-Allow-Headers', 'Authorization, Accept, Cache-Control, X-Disconnect-After');
     res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
 
     next();
@@ -841,6 +841,23 @@ const startWorker = async (workerId) => {
     res.end(JSON.stringify({ error: 'Not found' }));
   };
 
+  /**
+   * @param {string | string[]} disconnectAfter
+   * @param {function} callback
+   */
+  const setDiconnectTimer = (disconnectAfter, callback) => {
+    if (Array.isArray(disconnectAfter)) {
+      disconnectAfter = disconnectAfter.shift();
+    }
+
+    if (disconnectAfter) {
+      const sec = parseFloat(disconnectAfter);
+      if (!isNaN(sec)) {
+        setTimeout(callback, sec * 1000);
+      }
+    }
+  };
+
   app.use(setRequestId);
   app.use(setRemoteAddress);
   app.use(allowCrossDomain);
@@ -857,6 +874,8 @@ const startWorker = async (workerId) => {
     channelNameToIds(req, channelNameFromPath(req), req.query).then(({ channelIds, options }) => {
       const onSend = streamToHttp(req, res);
       const onEnd = streamHttpEnd(req, subscriptionHeartbeat(channelIds));
+
+      setDiconnectTimer(req.params['X-Disconnect-After'], () => onEnd(channelIds.map(id => `${redisPrefix}${id}`)));
 
       streamFrom(channelIds, req, onSend, onEnd, options.needsFiltering);
     }).catch(err => {
@@ -1184,6 +1203,11 @@ const startWorker = async (workerId) => {
         stopHeartbeat();
       });
     };
+
+    setDiconnectTimer(location.query['x-disconnect-after'], () => {
+      ws.close();
+      onEnd();
+    });
 
     ws.on('close', onEnd);
     ws.on('error', onEnd);
