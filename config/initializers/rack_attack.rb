@@ -33,6 +33,10 @@ class Rack::Attack
       authenticated_token&.resource_owner_id
     end
 
+    def authenticated_token_id
+      authenticated_token&.id
+    end
+
     def unauthenticated?
       !authenticated_user_id
     end
@@ -64,6 +68,10 @@ class Rack::Attack
 
   throttle('throttle_authenticated_api', limit: 300_000, period: 5.minutes) do |req|
     req.authenticated_user_id if req.api_request?
+  end
+
+  throttle('throttle_per_token_api', limit: 30_000, period: 5.minutes) do |req|
+    req.authenticated_token_id if req.api_request?
   end
 
   throttle('throttle_unauthenticated_api', limit: 300, period: 5.minutes) do |req|

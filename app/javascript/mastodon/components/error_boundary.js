@@ -66,7 +66,7 @@ export default class ErrorBoundary extends React.PureComponent {
 
     this.setState({ copied: true });
     setTimeout(() => this.setState({ copied: false }), 700);
-  }
+  };
 
   render() {
     const { hasError, copied, errorMessage } = this.state;
