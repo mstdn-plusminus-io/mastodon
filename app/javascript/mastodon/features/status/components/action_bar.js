@@ -290,6 +290,10 @@ class ActionBar extends React.PureComponent {
 
         {shareButton}
 
+        {localStorage.plusminus_config_quick_report === 'visible' && (
+          <div className='detailed-status__button'><IconButton title={intl.formatMessage(messages.report, { name: status.getIn(['account', 'username']) })} icon='flag' onClick={this.handleReport} /></div>
+        )}
+
         <div className='detailed-status__action-bar-dropdown'>
           <DropdownMenuContainer size={18} icon='ellipsis-h' disabled={!signedIn} status={status} items={menu} direction='left' title={intl.formatMessage(messages.more)} />
         </div>
