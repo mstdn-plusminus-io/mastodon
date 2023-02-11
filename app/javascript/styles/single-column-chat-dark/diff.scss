@@ -7,23 +7,23 @@
     border-left: 2px solid transparent !important;
     background-clip: padding-box !important;
   }
-  
+
   ::-webkit-scrollbar-track {
     background: rgba($base-overlay-background, 0.1) !important;
   }
-  
+
   ::-webkit-scrollbar-track:hover {
     background: rgba($base-overlay-background, 0.1) !important;
   }
-  
+
   ::-webkit-scrollbar-track:active {
     background: rgba($base-overlay-background, 0.1) !important;
   }
-  
+
   ::-webkit-scrollbar-corner {
     background: transparent;
   }
-  
+
 
   /* 4.0 サイドバーのロゴを消す */
   .navigation-panel__logo {
@@ -426,12 +426,6 @@
       z-index: 5 !important;
     }
 
-    .privacy-dropdown__dropdown {
-      position: fixed !important;
-      bottom: 28px !important;
-      top: unset !important;
-    }
-
     /* TL内の画像が異様に伸びないように固定する */
     .media-gallery,
     .status-card {
@@ -603,11 +597,11 @@
           flex: none !important;
           flex-grow: 0 !important;
           flex-shrink: 1 !important;
-  
+
           .display-name {
             display: flex !important;
             align-items: flex-start !important;
-      
+
             .display-name__account {
               padding-left: 0.666em;
               flex: 1;
