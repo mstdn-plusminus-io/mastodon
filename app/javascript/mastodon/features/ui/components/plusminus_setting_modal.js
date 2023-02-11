@@ -205,6 +205,7 @@ export class PlusMinusSettingModal extends React.Component {
       keyword_based_visibilities: [{ keyword: 'ここだけの話なんだけど', visibility: 'unlisted' }],
       emotional_button: 'hidden',
       post_half_modal: 'disabled',
+      quick_report: 'hidden',
     },
   };
 
@@ -353,6 +354,19 @@ export class PlusMinusSettingModal extends React.Component {
               <p style={styles.description}>
                 <a className={'link'} href='https://github.com/shibafu528/Yukari' target='_blank'>Yukari for Android</a>スタイルの日本語モールス符号をカタカナに変換して表示します<br />
                 英数モールス符号もデコードできますが、互換性はありません
+              </p>
+            </div>
+            <div style={styles.config}>
+              <label>
+                <input
+                  type='checkbox'
+                  checked={this.state.config.quick_report === 'visible'}
+                  onChange={(e) => this.updateConfig('quick_report', e.target.checked ? 'visible' : 'hidden')}
+                />
+                投稿下部のアクションボタンに通報ボタンを追加する
+              </label>
+              <p style={styles.description}>
+                通報をすばやく、簡単に行えるようになります
               </p>
             </div>
 

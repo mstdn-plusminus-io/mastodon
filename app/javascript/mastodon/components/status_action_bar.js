@@ -368,6 +368,10 @@ class StatusActionBar extends ImmutablePureComponent {
 
         {filterButton}
 
+        {localStorage.plusminus_config_quick_report === 'visible' && (
+          <div className='status__action-bar__button report-icon'><IconButton title={intl.formatMessage(messages.report, { name: status.getIn(['account', 'username']) })} icon='flag' onClick={this.handleReport} /></div>
+        )}
+
         <div className='status__action-bar__dropdown'>
           <DropdownMenuContainer
             scrollKey={scrollKey}
