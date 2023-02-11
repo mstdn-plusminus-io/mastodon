@@ -114,7 +114,7 @@ class EmotionalDropdownMenu extends React.PureComponent {
           // It should not be transformed when mounting because the resulting
           // size will be used to determine the coordinate of the menu by
           // react-overlays
-          <div className={`privacy-dropdown__dropdown emoji-mart-scroll ${placement}`} style={{ ...style, opacity: opacity, transform: mounted ? `scale(${scaleX}, ${scaleY})` : null, paddingTop: 6 }} role='listbox' ref={this.setRef}>
+          <div className={`emotional-dropdown__dropdown privacy-dropdown__dropdown emoji-mart-scroll ${placement}`} style={{ ...style, opacity: opacity, transform: mounted ? `scale(${scaleX}, ${scaleY})` : null, paddingTop: 6 }} role='listbox' ref={this.setRef}>
             {items.map(item => (
               <div role='option' tabIndex='0' key={item.value} data-index={item.value} onKeyDown={this.handleKeyDown} onClick={this.handleClick} className={classNames('privacy-dropdown__option', { active: item.value === value })} aria-selected={item.value === value} ref={item.value === value ? this.setFocusRef : null} style={{ borderRadius: 4 }}>
                 <div className='privacy-dropdown__option__content'>
