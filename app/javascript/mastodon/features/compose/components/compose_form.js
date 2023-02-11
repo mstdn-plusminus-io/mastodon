@@ -284,31 +284,31 @@ class ComposeForm extends ImmutablePureComponent {
               </div>
             </AutosuggestInput>
           </div>
+
+          <AutosuggestTextarea
+            ref={this.setAutosuggestTextarea}
+            placeholder={intl.formatMessage(messages.placeholder)}
+            disabled={disabled}
+            value={this.props.text}
+            onChange={this.handleChange}
+            suggestions={this.props.suggestions}
+            onFocus={this.handleFocus}
+            onKeyDown={this.handleKeyDown}
+            onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+            onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+            onSuggestionSelected={this.onSuggestionSelected}
+            onPaste={onPaste}
+            autoFocus={autoFocus}
+            lang={this.props.lang}
+          >
+            <EmojiPickerDropdown onPickEmoji={this.handleEmojiPick} />
+
+            <div className='compose-form__modifiers'>
+              <UploadFormContainer />
+              <PollFormContainer />
+            </div>
+          </AutosuggestTextarea>
         </div>
-
-        <AutosuggestTextarea
-          ref={this.setAutosuggestTextarea}
-          placeholder={intl.formatMessage(messages.placeholder)}
-          disabled={disabled}
-          value={this.props.text}
-          onChange={this.handleChange}
-          suggestions={this.props.suggestions}
-          onFocus={this.handleFocus}
-          onKeyDown={this.handleKeyDown}
-          onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-          onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-          onSuggestionSelected={this.onSuggestionSelected}
-          onPaste={onPaste}
-          autoFocus={autoFocus}
-          lang={this.props.lang}
-        >
-          <EmojiPickerDropdown onPickEmoji={this.handleEmojiPick} />
-
-          <div className='compose-form__modifiers'>
-            <UploadFormContainer />
-            <PollFormContainer />
-          </div>
-        </AutosuggestTextarea>
 
         <div className='compose-form__buttons-wrapper'>
           <div className='compose-form__buttons'>
