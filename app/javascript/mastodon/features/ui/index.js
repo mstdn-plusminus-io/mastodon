@@ -42,6 +42,7 @@ import {
   FollowRequests,
   FavouritedStatuses,
   BookmarkedStatuses,
+  FollowedTags,
   ListTimeline,
   Blocks,
   DomainBlocks,
@@ -54,7 +55,7 @@ import {
   About,
   PrivacyPolicy,
 } from './util/async-components';
-import initialState, { me, owner, singleUserMode, showTrends } from '../../initial_state';
+import initialState, { me, owner, singleUserMode, showTrends, trendsAsLanding } from '../../initial_state';
 import { closeOnboarding, INTRODUCTION_VERSION } from 'mastodon/actions/onboarding';
 import Header from './components/header';
 import PlusMinusSettingModal from './components/plusminus_setting_modal';
@@ -148,7 +149,7 @@ class SwitchingColumnsArea extends React.PureComponent {
     if (c) {
       this.node = c;
     }
-  }
+  };
 
   render () {
     const { children, mobile } = this.props;
@@ -164,7 +165,7 @@ class SwitchingColumnsArea extends React.PureComponent {
       }
     } else if (singleUserMode && owner && initialState?.accounts[owner]) {
       redirect = <Redirect from='/' to={`/@${initialState.accounts[owner].username}`} exact />;
-    } else if (showTrends) {
+    } else if (showTrends && trendsAsLanding) {
       redirect = <Redirect from='/' to='/explore' exact />;
     } else {
       redirect = <Redirect from='/' to='/about' exact />;
@@ -217,6 +218,7 @@ class SwitchingColumnsArea extends React.PureComponent {
           <WrappedRoute path='/follow_requests' component={FollowRequests} content={children} />
           <WrappedRoute path='/blocks' component={Blocks} content={children} />
           <WrappedRoute path='/domain_blocks' component={DomainBlocks} content={children} />
+          <WrappedRoute path='/followed_tags' component={FollowedTags} content={children} />
           <WrappedRoute path='/mutes' component={Mutes} content={children} />
           <WrappedRoute path='/lists' component={Lists} content={children} />
 
@@ -269,16 +271,16 @@ class UI extends React.PureComponent {
       // but we set user-friendly message for other browsers, e.g. Edge.
       e.returnValue = intl.formatMessage(messages.beforeUnload);
     }
-  }
+  };
 
   handleWindowFocus = () => {
     this.props.dispatch(focusApp());
     this.props.dispatch(submitMarkers({ immediate: true }));
-  }
+  };
 
   handleWindowBlur = () => {
     this.props.dispatch(unfocusApp());
-  }
+  };
 
   handleDragEnter = (e) => {
     e.preventDefault();
@@ -294,7 +296,7 @@ class UI extends React.PureComponent {
     if (e.dataTransfer && Array.from(e.dataTransfer.types).includes('Files') && this.props.canUploadMore && this.context.identity.signedIn) {
       this.setState({ draggingOver: true });
     }
-  }
+  };
 
   handleDragOver = (e) => {
     if (this.dataTransferIsText(e.dataTransfer)) return false;
@@ -309,7 +311,7 @@ class UI extends React.PureComponent {
     }
 
     return false;
-  }
+  };
 
   handleDrop = (e) => {
     if (this.dataTransferIsText(e.dataTransfer)) return;
@@ -322,7 +324,7 @@ class UI extends React.PureComponent {
     if (e.dataTransfer && e.dataTransfer.files.length >= 1 && this.props.canUploadMore && this.context.identity.signedIn) {
       this.props.dispatch(uploadCompose(e.dataTransfer.files));
     }
-  }
+  };
 
   handleDragLeave = (e) => {
     e.preventDefault();
@@ -335,15 +337,15 @@ class UI extends React.PureComponent {
     }
 
     this.setState({ draggingOver: false });
-  }
+  };
 
   dataTransferIsText = (dataTransfer) => {
     return (dataTransfer && Array.from(dataTransfer.types).filter((type) => type === 'text/plain').length === 1);
-  }
+  };
 
   closeUploadModal = () => {
     this.setState({ draggingOver: false });
-  }
+  };
 
   handleServiceWorkerPostMessage = ({ data }) => {
     if (data.type === 'navigate') {
@@ -351,7 +353,7 @@ class UI extends React.PureComponent {
     } else {
       console.warn('Unknown message type:', data.type);
     }
-  }
+  };
 
   handleLayoutChange = debounce(() => {
     this.props.dispatch(clearHeight()); // The cached heights are no longer accurate, invalidate
@@ -368,7 +370,7 @@ class UI extends React.PureComponent {
     } else {
       this.handleLayoutChange();
     }
-  }
+  };
 
   componentDidMount () {
     const { signedIn } = this.context.identity;
@@ -422,7 +424,7 @@ class UI extends React.PureComponent {
 
   setRef = c => {
     this.node = c;
-  }
+  };
 
   handleHotkeyNew = e => {
     e.preventDefault();
@@ -432,7 +434,7 @@ class UI extends React.PureComponent {
     if (element) {
       element.focus();
     }
-  }
+  };
 
   handleHotkeySearch = e => {
     e.preventDefault();
@@ -442,17 +444,17 @@ class UI extends React.PureComponent {
     if (element) {
       element.focus();
     }
-  }
+  };
 
   handleHotkeyForceNew = e => {
     this.handleHotkeyNew(e);
     this.props.dispatch(resetCompose());
-  }
+  };
 
   handleHotkeyToggleComposeSpoilers = e => {
     e.preventDefault();
     this.props.dispatch(changeComposeSpoilerness());
-  }
+  };
 
   handleHotkeyFocusColumn = e => {
     const index  = (e.key * 1) + 1; // First child is drawer, skip that
@@ -470,7 +472,7 @@ class UI extends React.PureComponent {
         status.focus();
       }
     }
-  }
+  };
 
   handleHotkeyBack = () => {
     if (window.history && window.history.length === 1) {
@@ -478,11 +480,11 @@ class UI extends React.PureComponent {
     } else {
       this.context.router.history.goBack();
     }
-  }
+  };
 
   setHotkeysRef = c => {
     this.hotkeys = c;
-  }
+  };
 
   handleHotkeyToggleHelp = () => {
     if (this.props.location.pathname === '/keyboard-shortcuts') {
@@ -490,55 +492,55 @@ class UI extends React.PureComponent {
     } else {
       this.context.router.history.push('/keyboard-shortcuts');
     }
-  }
+  };
 
   handleHotkeyGoToHome = () => {
     this.context.router.history.push('/home');
-  }
+  };
 
   handleHotkeyGoToNotifications = () => {
     this.context.router.history.push('/notifications');
-  }
+  };
 
   handleHotkeyGoToLocal = () => {
     this.context.router.history.push('/public/local');
-  }
+  };
 
   handleHotkeyGoToFederated = () => {
     this.context.router.history.push('/public');
-  }
+  };
 
   handleHotkeyGoToDirect = () => {
     this.context.router.history.push('/conversations');
-  }
+  };
 
   handleHotkeyGoToStart = () => {
     this.context.router.history.push('/getting-started');
-  }
+  };
 
   handleHotkeyGoToFavourites = () => {
     this.context.router.history.push('/favourites');
-  }
+  };
 
   handleHotkeyGoToPinned = () => {
     this.context.router.history.push('/pinned');
-  }
+  };
 
   handleHotkeyGoToProfile = () => {
     this.context.router.history.push(`/@${this.props.username}`);
-  }
+  };
 
   handleHotkeyGoToBlocked = () => {
     this.context.router.history.push('/blocks');
-  }
+  };
 
   handleHotkeyGoToMuted = () => {
     this.context.router.history.push('/mutes');
-  }
+  };
 
   handleHotkeyGoToRequests = () => {
     this.context.router.history.push('/follow_requests');
-  }
+  };
 
   render () {
     const { draggingOver } = this.state;

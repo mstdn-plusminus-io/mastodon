@@ -1,0 +1,44 @@
+version: '3'
+services:
+  web:
+    image: test
+    restart: always
+    env_file: .env
+    command: bash -c "rm -f /mastodon/tmp/pids/server.pid; bundle exec rails s -p 3000"
+    networks:
+      - default
+    healthcheck:
+      # prettier-ignore
+      test: ['CMD-SHELL', 'wget -q --spider --proxy=off localhost:3000/health || exit 1']
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./public/system:/mastodon/public/system
+
+  streaming:
+    image: test
+    restart: always
+    env_file: .env
+    command: node ./streaming
+    networks:
+      - default
+    healthcheck:
+      # prettier-ignore
+      test: ['CMD-SHELL', 'wget -q --spider --proxy=off localhost:4000/api/v1/streaming/health || exit 1']
+    ports:
+      - '4000:4000'
+
+  sidekiq:
+    image: test
+    restart: always
+    env_file: .env
+    command: bundle exec sidekiq
+    networks:
+      - default
+    volumes:
+      - ./public/system:/mastodon/public/system
+    healthcheck:
+      test: ['CMD-SHELL', "ps aux | grep '[s]idekiq\ 6' || false"]
+
+networks:
+  default:

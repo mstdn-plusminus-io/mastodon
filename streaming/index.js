@@ -127,7 +127,6 @@ const startWorker = async (workerId) => {
       database: process.env.DB_NAME || 'mastodon_development',
       host:     process.env.DB_HOST || pg.defaults.host,
       port:     process.env.DB_PORT || pg.defaults.port,
-      max:      10,
     },
 
     production: {
@@ -136,20 +135,19 @@ const startWorker = async (workerId) => {
       database: process.env.DB_NAME || 'mastodon_production',
       host:     process.env.DB_HOST || 'localhost',
       port:     process.env.DB_PORT || 5432,
-      max:      10,
     },
   };
-
-  if (!!process.env.DB_SSLMODE && process.env.DB_SSLMODE !== 'disable') {
-    pgConfigs.development.ssl = true;
-    pgConfigs.production.ssl = true;
-  }
 
   const app = express();
 
   app.set('trust proxy', process.env.TRUSTED_PROXY_IP ? process.env.TRUSTED_PROXY_IP.split(/(?:\s*,\s*|\s+)/) : 'loopback,uniquelocal');
 
-  const pgPool = new pg.Pool(Object.assign(pgConfigs[env], dbUrlToConfig(process.env.DATABASE_URL)));
+  const pgPool = new pg.Pool(Object.assign(pgConfigs[env], dbUrlToConfig(process.env.DATABASE_URL), {
+    max: process.env.DB_POOL || 10,
+    connectionTimeoutMillis: 15000,
+    ssl: !!process.env.DB_SSLMODE && process.env.DB_SSLMODE !== 'disable',
+  }));
+
   const server = http.createServer(app);
   const redisNamespace = process.env.REDIS_NAMESPACE || null;
 
@@ -274,7 +272,7 @@ const startWorker = async (workerId) => {
    */
   const allowCrossDomain = (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Authorization, Accept, Cache-Control');
+    res.header('Access-Control-Allow-Headers', 'Authorization, Accept, Cache-Control, X-Disconnect-After');
     res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
 
     next();
@@ -717,7 +715,7 @@ const startWorker = async (workerId) => {
 
             Object.keys(req.cachedFilters).forEach((key) => {
               req.cachedFilters[key].regexp = new RegExp(req.cachedFilters[key].keywords.map(([keyword, whole_word]) => {
-                let expr = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');;
+                let expr = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
                 if (whole_word) {
                   if (/^[\w]/.test(expr)) {
@@ -841,6 +839,23 @@ const startWorker = async (workerId) => {
     res.end(JSON.stringify({ error: 'Not found' }));
   };
 
+  /**
+   * @param {string | string[]} disconnectAfter
+   * @param {function} callback
+   */
+  const setDiconnectTimer = (disconnectAfter, callback) => {
+    if (Array.isArray(disconnectAfter)) {
+      disconnectAfter = disconnectAfter.shift();
+    }
+
+    if (disconnectAfter) {
+      const sec = parseFloat(disconnectAfter);
+      if (!isNaN(sec)) {
+        setTimeout(callback, sec * 1000);
+      }
+    }
+  };
+
   app.use(setRequestId);
   app.use(setRemoteAddress);
   app.use(allowCrossDomain);
@@ -850,6 +865,27 @@ const startWorker = async (workerId) => {
     res.end('OK');
   });
 
+  app.get('/metrics', (req, res) => server.getConnections((err, count) => {
+    res.writeHeader(200, { 'Content-Type': 'application/openmetrics-text; version=1.0.0; charset=utf-8' });
+    res.write('# TYPE connected_clients gauge\n');
+    res.write('# HELP connected_clients The number of clients connected to the streaming server\n');
+    res.write(`connected_clients ${count}.0\n`);
+    res.write('# TYPE connected_channels gauge\n');
+    res.write('# HELP connected_channels The number of Redis channels the streaming server is subscribed to\n');
+    res.write(`connected_channels ${Object.keys(subs).length}.0\n`);
+    res.write('# TYPE pg.pool.total_connections gauge \n');
+    res.write('# HELP pg.pool.total_connections The total number of clients existing within the pool\n');
+    res.write(`pg.pool.total_connections ${pgPool.totalCount}.0\n`);
+    res.write('# TYPE pg.pool.idle_connections gauge \n');
+    res.write('# HELP pg.pool.idle_connections The number of clients which are not checked out but are currently idle in the pool\n');
+    res.write(`pg.pool.idle_connections ${pgPool.idleCount}.0\n`);
+    res.write('# TYPE pg.pool.waiting_queries gauge \n');
+    res.write('# HELP pg.pool.waiting_queries The number of queued requests waiting on a client when all clients are checked out\n');
+    res.write(`pg.pool.waiting_queries ${pgPool.waitingCount}.0\n`);
+    res.write('# EOF\n');
+    res.end();
+  }));
+
   app.use(authenticationMiddleware);
   app.use(errorMiddleware);
 
@@ -857,6 +893,8 @@ const startWorker = async (workerId) => {
     channelNameToIds(req, channelNameFromPath(req), req.query).then(({ channelIds, options }) => {
       const onSend = streamToHttp(req, res);
       const onEnd = streamHttpEnd(req, subscriptionHeartbeat(channelIds));
+
+      setDiconnectTimer(req.params['X-Disconnect-After'], () => onEnd(channelIds.map(id => `${redisPrefix}${id}`)));
 
       streamFrom(channelIds, req, onSend, onEnd, options.needsFiltering);
     }).catch(err => {
@@ -1184,6 +1222,11 @@ const startWorker = async (workerId) => {
         stopHeartbeat();
       });
     };
+
+    setDiconnectTimer(location.query['x-disconnect-after'], () => {
+      ws.close();
+      onEnd();
+    });
 
     ws.on('close', onEnd);
     ws.on('error', onEnd);

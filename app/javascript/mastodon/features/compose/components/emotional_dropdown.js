@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Overlay from 'react-overlays/lib/Overlay';
+import Overlay from 'react-overlays/Overlay';
 import Motion from '../../ui/util/optional_motion';
 import spring from 'react-motion/lib/spring';
 import { supportsPassiveEvents } from 'detect-passive-events';
@@ -114,9 +114,9 @@ class EmotionalDropdownMenu extends React.PureComponent {
           // It should not be transformed when mounting because the resulting
           // size will be used to determine the coordinate of the menu by
           // react-overlays
-          <div className={`privacy-dropdown__dropdown ${placement}`} style={{ ...style, opacity: opacity, transform: mounted ? `scale(${scaleX}, ${scaleY})` : null }} role='listbox' ref={this.setRef}>
+          <div className={`privacy-dropdown__dropdown emoji-mart-scroll ${placement}`} style={{ ...style, opacity: opacity, transform: mounted ? `scale(${scaleX}, ${scaleY})` : null, paddingTop: 6 }} role='listbox' ref={this.setRef}>
             {items.map(item => (
-              <div role='option' tabIndex='0' key={item.value} data-index={item.value} onKeyDown={this.handleKeyDown} onClick={this.handleClick} className={classNames('privacy-dropdown__option', { active: item.value === value })} aria-selected={item.value === value} ref={item.value === value ? this.setFocusRef : null}>
+              <div role='option' tabIndex='0' key={item.value} data-index={item.value} onKeyDown={this.handleKeyDown} onClick={this.handleClick} className={classNames('privacy-dropdown__option', { active: item.value === value })} aria-selected={item.value === value} ref={item.value === value ? this.setFocusRef : null} style={{ borderRadius: 4 }}>
                 <div className='privacy-dropdown__option__content'>
                   <strong>{item.text}</strong>
                   {item.meta}
@@ -211,6 +211,14 @@ export default class EmotionalDropdown extends React.PureComponent {
     this.props.onSelect(value);
   }
 
+  setTargetRef = c => {
+    this.target = c;
+  }
+
+  findTarget = () => {
+    return this.target;
+  }
+
   componentWillMount () {
     const previewText = 'Lorem ipsum dolor sit amet,';
 
@@ -234,7 +242,7 @@ export default class EmotionalDropdown extends React.PureComponent {
 
     return (
       <div className={classNames('privacy-dropdown', placement, { active: open })} onKeyDown={this.handleKeyDown}>
-        <div className={classNames('privacy-dropdown__value')}>
+        <div className={classNames('privacy-dropdown__value')} ref={this.setTargetRef}>
           <TextIconButton
             className='privacy-dropdown__value-icon'
             label={'𝓐𝓪'}
@@ -247,14 +255,20 @@ export default class EmotionalDropdown extends React.PureComponent {
           />
         </div>
 
-        <Overlay show={open} placement={placement} target={this} container={container}>
-          <EmotionalDropdownMenu
-            items={this.options}
-            value={value}
-            onClose={this.handleClose}
-            onSelect={this.handleSelect}
-            placement={placement}
-          />
+        <Overlay show={open} placement={placement} target={this.findTarget} container={container} popperConfig={{ strategy: 'fixed' }}>
+          {({ props, placement })=> (
+            <div {...props} style={{ ...props.style, opacity: 1, pointerEvents: 'auto' }}>
+              <div className={`dropdown-animation ${placement}`}>
+                <EmotionalDropdownMenu
+                  items={this.options}
+                  value={value}
+                  onClose={this.handleClose}
+                  onSelect={this.handleSelect}
+                  placement={placement}
+                />
+              </div>
+            </div>
+          )}
         </Overlay>
       </div>
     );

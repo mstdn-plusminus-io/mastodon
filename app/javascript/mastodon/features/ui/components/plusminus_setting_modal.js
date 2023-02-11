@@ -4,6 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Button from 'mastodon/components/button';
 import { FormattedMessage } from 'react-intl';
+import { open, download } from '../util/file';
 
 const styles = {
   container: {
@@ -15,6 +16,14 @@ const styles = {
   title: {
     fontSize: '1.6rem',
     lineHeight: '2em',
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  buttonContainer: {
+    display: 'flex',
+  },
+  importButton: {
+    marginRight: '1rem',
   },
   main: {
     flex: 1,
@@ -147,23 +156,26 @@ export class PlusMinusSettingModal extends React.Component {
   };
 
   UNSAFE_componentWillMount() {
-    const currentSettings = Object.keys(localStorage).filter((key) => key.startsWith(localStorageKeyPrefix)).reduce((obj, key) => {
-      if (localStorage[key].startsWith('{') || localStorage[key].startsWith('[')) {
+    this.parseConfig(localStorage);
+  }
+
+  parseConfig(baseObj) {
+    const currentSettings = Object.keys(baseObj).filter((key) => key.startsWith(localStorageKeyPrefix)).reduce((obj, key) => {
+      if (baseObj[key].startsWith('{') || baseObj[key].startsWith('[')) {
         try {
-          obj[key.replace(localStorageKeyPrefix, '')] = JSON.parse(localStorage[key]);
+          obj[key.replace(localStorageKeyPrefix, '')] = JSON.parse(baseObj[key]);
         } catch (e) {
           // eslint-disable-next-line eqeqeq
-          if (localStorage[key] != null) {
-            obj[key.replace(localStorageKeyPrefix, '')] = localStorage[key];
+          if (baseObj[key] != null) {
+            obj[key.replace(localStorageKeyPrefix, '')] = baseObj[key];
           }
         }
       } else {
-        obj[key.replace(localStorageKeyPrefix, '')] = localStorage[key];
+        obj[key.replace(localStorageKeyPrefix, '')] = baseObj[key];
       }
-
       return obj;
     }, { ...this.state.config });
-    this.state = { config: currentSettings };
+    this.setState({ config: currentSettings });
   }
 
   componentDidMount() {
@@ -193,6 +205,7 @@ export class PlusMinusSettingModal extends React.Component {
       keyword_based_visibilities: [{ keyword: 'ここだけの話なんだけど', visibility: 'unlisted' }],
       emotional_button: 'hidden',
       post_half_modal: 'disabled',
+      quick_report: 'hidden',
     },
   };
 
@@ -206,6 +219,14 @@ export class PlusMinusSettingModal extends React.Component {
         <div style={styles.container}>
           <h1 style={styles.title}>
             plusminus設定 (β)
+            <div style={styles.buttonContainer}>
+              <div style={styles.importButton}>
+                <Button className='button-secondary' onClick={this.handleImport}>インポート</Button>
+              </div>
+              <div>
+                <Button className='button-secondary' onClick={this.handleExport}>エクスポート</Button>
+              </div>
+            </div>
           </h1>
 
           <div style={styles.main}>
@@ -333,6 +354,19 @@ export class PlusMinusSettingModal extends React.Component {
               <p style={styles.description}>
                 <a className={'link'} href='https://github.com/shibafu528/Yukari' target='_blank'>Yukari for Android</a>スタイルの日本語モールス符号をカタカナに変換して表示します<br />
                 英数モールス符号もデコードできますが、互換性はありません
+              </p>
+            </div>
+            <div style={styles.config}>
+              <label>
+                <input
+                  type='checkbox'
+                  checked={this.state.config.quick_report === 'visible'}
+                  onChange={(e) => this.updateConfig('quick_report', e.target.checked ? 'visible' : 'hidden')}
+                />
+                投稿下部のアクションボタンに通報ボタンを追加する
+              </label>
+              <p style={styles.description}>
+                通報をすばやく、簡単に行えるようになります
               </p>
             </div>
 
@@ -541,6 +575,33 @@ export class PlusMinusSettingModal extends React.Component {
 
   handleCancel() {
     this.props.onCancel();
+  }
+
+  convert = (obj = {}) => {
+    Object.keys(this.state.config).forEach((key) =>
+      obj[`${localStorageKeyPrefix}${key}`] = typeof this.state.config[key] === 'object' ? JSON.stringify(this.state.config[key]) : this.state.config[key],
+    );
+    return obj;
+  }
+
+  handleImport = async () => {
+    const text = await open('.json');
+    if (!text) {
+      return;
+    }
+
+    try {
+      const config = JSON.parse(text);
+      this.parseConfig(config);
+    } catch (e) {
+      console.error(e);
+      alert('JSONのパースに失敗しました');
+    }
+  }
+
+  handleExport = () => {
+    const config = JSON.stringify(this.convert());
+    download(`mastodon-plusminus-settings-${new Date().getTime()}.json`, config);
   }
 
   handleSave() {
