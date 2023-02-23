@@ -106,6 +106,13 @@ export default class ImageLoader extends PureComponent {
   }
 
   onZoom = (ref) => {
+    if (ref.state.scale < this.state.minScale) {
+      this.setState({
+        currentScale: this.state.minScale,
+      });
+      return;
+    }
+
     this.setState({
       currentScale: ref.state.scale,
     });
