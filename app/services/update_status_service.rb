@@ -72,7 +72,6 @@ class UpdateStatusService < BaseService
     max_media_attachments = ENV.fetch('MAX_MEDIA_ATTACHMENTS', 4).to_i
     raise Mastodon::ValidationError, I18n.t('media_attachments.validations.too_many') if @options[:media_ids].size > max_media_attachments || @options[:poll].present?
 
-    max_media_attachments = ENV.fetch('MAX_MEDIA_ATTACHMENTS', 4).to_i
     media_attachments = @status.account.media_attachments.where(status_id: [nil, @status.id]).where(scheduled_status_id: nil).where(id: @options[:media_ids].take(max_media_attachments).map(&:to_i)).to_a
 
     raise Mastodon::ValidationError, I18n.t('media_attachments.validations.images_and_video') if media_attachments.size > 1 && media_attachments.find(&:audio_or_video?)
