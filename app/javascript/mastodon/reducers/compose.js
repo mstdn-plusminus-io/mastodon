@@ -113,7 +113,19 @@ function statusToTextMentions(state, status) {
 function clearAll(state) {
   return state.withMutations(map => {
     map.set('id', null);
-    map.set('text', '');
+
+    if (localStorage.plusminus_config_live_mode === 'enabled') {
+      const text = state.get('text');
+      const hashTags = text.split(/\s/g).filter(w => w.startsWith('#')).join(' ');
+      if (hashTags.length > 0) {
+        map.set('text', ` ${hashTags}`);
+      } else {
+        map.set('text', '');
+      }
+    } else {
+      map.set('text', '');
+    }
+
     map.set('spoiler', false);
     map.set('spoiler_text', '');
     map.set('is_submitting', false);
