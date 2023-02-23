@@ -159,6 +159,7 @@ class ComposeForm extends ImmutablePureComponent {
       this.setState({
         maxCharacters: res.data.configuration.statuses.max_characters,
       });
+      this.props.onInitialize(res.data);
     }).catch(err => {
       console.error(err);
     });

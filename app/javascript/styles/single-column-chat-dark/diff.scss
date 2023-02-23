@@ -430,6 +430,7 @@
     .media-gallery,
     .status-card {
       display: flex !important;
+      flex-wrap: wrap;
       height: fit-content !important;
       margin-left: 56px;
       width: calc(100% - 56px) !important;

@@ -95,6 +95,10 @@ class Item extends React.PureComponent {
       height = 50;
     }
 
+    if (size > 4) {
+      height = 100 / Math.floor(size / 2);
+    }
+
     if (size === 2) {
       if (index === 0) {
         right = '2px';
@@ -113,16 +117,16 @@ class Item extends React.PureComponent {
       } else if (index > 1) {
         top = '2px';
       }
-    } else if (size === 4) {
-      if (index === 0 || index === 2) {
+    } else if (size >= 4) {
+      if (index % 2 === 0) {
         right = '2px';
       }
 
-      if (index === 1 || index === 3) {
+      if (index % 2 === 1) {
         left = '2px';
       }
 
-      if (index < 2) {
+      if (index < size - 2) {
         bottom = '2px';
       } else {
         top = '2px';
@@ -205,7 +209,7 @@ class Item extends React.PureComponent {
     }
 
     return (
-      <div className={classNames('media-gallery__item', { standalone })} key={attachment.get('id')} style={{ left: left, top: top, right: right, bottom: bottom, width: `${width}%`, height: `${height}%` }}>
+      <div className={classNames('media-gallery__item', { standalone })} data-index={index} data-total={size} key={attachment.get('id')} style={{ left: left, top: top, right: right, bottom: bottom, width: `${width}%`, height: `${height}%` }}>
         <Blurhash
           hash={attachment.get('blurhash')}
           dummy={!useBlurhash}
@@ -329,13 +333,13 @@ class MediaGallery extends React.PureComponent {
       style.height = height;
     }
 
-    const size     = media.take(4).size;
+    const size     = media.size;
     const uncached = media.every(attachment => attachment.get('type') === 'unknown');
 
     if (standalone && this.isFullSizeEligible()) {
       children = <Item standalone autoplay={autoplay} onClick={this.handleClick} attachment={media.get(0)} displayWidth={width} visible={visible} />;
     } else {
-      children = media.take(4).map((attachment, i) => <Item key={attachment.get('id')} autoplay={autoplay} onClick={this.handleClick} attachment={attachment} index={i} size={size} displayWidth={width} visible={visible || uncached} />);
+      children = media.map((attachment, i) => <Item key={attachment.get('id')} autoplay={autoplay} onClick={this.handleClick} attachment={attachment} index={i} size={size} displayWidth={width} visible={visible || uncached} />);
     }
 
     if (uncached) {

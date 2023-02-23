@@ -45,7 +45,7 @@ import {
   INIT_MEDIA_EDIT_MODAL,
   COMPOSE_CHANGE_MEDIA_DESCRIPTION,
   COMPOSE_CHANGE_MEDIA_FOCUS,
-  COMPOSE_SET_STATUS,
+  COMPOSE_SET_STATUS, COMPOSE_MAX_MEDIA_ATTACHMENTS,
 } from '../actions/compose';
 import { TIMELINE_DELETE } from '../actions/timelines';
 import { STORE_HYDRATE } from '../actions/store';
@@ -76,6 +76,7 @@ const initialState = ImmutableMap({
   thumbnailProgress: 0,
   media_attachments: ImmutableList(),
   pending_media_attachments: 0,
+  max_media_attachments: 0,
   poll: null,
   suggestion_token: null,
   suggestions: ImmutableList(),
@@ -138,6 +139,10 @@ function clearAll(state) {
     map.set('poll', null);
     map.set('idempotencyKey', uuid());
   });
+}
+
+function setMaxMediaAttachments(state, count) {
+  return state.withMutations(map => map.set('max_media_attachments', count));
 }
 
 function appendMedia(state, media, file) {
@@ -415,6 +420,8 @@ export default function compose(state = initialState, action) {
     return state.setIn(['media_modal', 'description'], action.description).setIn(['media_modal', 'dirty'], true);
   case COMPOSE_CHANGE_MEDIA_FOCUS:
     return state.setIn(['media_modal', 'focusX'], action.focusX).setIn(['media_modal', 'focusY'], action.focusY).setIn(['media_modal', 'dirty'], true);
+  case COMPOSE_MAX_MEDIA_ATTACHMENTS:
+    return setMaxMediaAttachments(state, action.count);
   case COMPOSE_MENTION:
     return state.withMutations(map => {
       map.update('text', text => [text.trim(), `@${action.account.get('acct')} `].filter((str) => str.length !== 0).join(' '));

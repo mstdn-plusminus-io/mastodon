@@ -73,6 +73,7 @@ export const INIT_MEDIA_EDIT_MODAL = 'INIT_MEDIA_EDIT_MODAL';
 
 export const COMPOSE_CHANGE_MEDIA_DESCRIPTION = 'COMPOSE_CHANGE_MEDIA_DESCRIPTION';
 export const COMPOSE_CHANGE_MEDIA_FOCUS       = 'COMPOSE_CHANGE_MEDIA_FOCUS';
+export const COMPOSE_MAX_MEDIA_ATTACHMENTS = 'COMPOSE_MAX_MEDIA_ATTACHMENTS';
 
 export const COMPOSE_SET_STATUS = 'COMPOSE_SET_STATUS';
 
@@ -249,7 +250,7 @@ export function submitComposeFail(error) {
 
 export function uploadCompose(files) {
   return function (dispatch, getState) {
-    const uploadLimit = 4;
+    const uploadLimit = getState().getIn(['compose', 'max_media_attachments']);
     const media  = getState().getIn(['compose', 'media_attachments']);
     const pending  = getState().getIn(['compose', 'pending_media_attachments']);
     const progress = new Array(files.length).fill(0);
@@ -268,7 +269,7 @@ export function uploadCompose(files) {
     dispatch(uploadComposeRequest());
 
     for (const [i, f] of Array.from(files).entries()) {
-      if (media.size + i > 3) break;
+      if (media.size + i > uploadLimit - 1) break;
 
       resizeImage(f).then(file => {
         const data = new FormData();
@@ -781,5 +782,12 @@ export function changePollSettings(expiresIn, isMultiple) {
     type: COMPOSE_POLL_SETTINGS_CHANGE,
     expiresIn,
     isMultiple,
+  };
+}
+
+export function setMaxMediaAttachments(count) {
+  return {
+    type: COMPOSE_MAX_MEDIA_ATTACHMENTS,
+    count,
   };
 }
