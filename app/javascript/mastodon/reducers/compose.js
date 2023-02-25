@@ -46,6 +46,8 @@ import {
   COMPOSE_CHANGE_MEDIA_DESCRIPTION,
   COMPOSE_CHANGE_MEDIA_FOCUS,
   COMPOSE_SET_STATUS,
+  COMPOSE_MAX_MEDIA_ATTACHMENTS,
+  COMPOSE_IMAGE_MATRIX_LIMIT,
 } from '../actions/compose';
 import { TIMELINE_DELETE } from '../actions/timelines';
 import { STORE_HYDRATE } from '../actions/store';
@@ -76,6 +78,8 @@ const initialState = ImmutableMap({
   thumbnailProgress: 0,
   media_attachments: ImmutableList(),
   pending_media_attachments: 0,
+  max_media_attachments: 0,
+  image_matrix_limit: 0,
   poll: null,
   suggestion_token: null,
   suggestions: ImmutableList(),
@@ -113,7 +117,19 @@ function statusToTextMentions(state, status) {
 function clearAll(state) {
   return state.withMutations(map => {
     map.set('id', null);
-    map.set('text', '');
+
+    if (localStorage.plusminus_config_live_mode === 'enabled') {
+      const text = state.get('text');
+      const hashTags = text.split(/\s/g).filter(w => w.startsWith('#')).join(' ');
+      if (hashTags.length > 0) {
+        map.set('text', ` ${hashTags}`);
+      } else {
+        map.set('text', '');
+      }
+    } else {
+      map.set('text', '');
+    }
+
     map.set('spoiler', false);
     map.set('spoiler_text', '');
     map.set('is_submitting', false);
@@ -126,6 +142,14 @@ function clearAll(state) {
     map.set('poll', null);
     map.set('idempotencyKey', uuid());
   });
+}
+
+function setMaxMediaAttachments(state, count) {
+  return state.withMutations(map => map.set('max_media_attachments', count));
+}
+
+function setImageMatrixLimit(state, pixels) {
+  return state.withMutations(map => map.set('image_matrix_limit', pixels));
 }
 
 function appendMedia(state, media, file) {
@@ -403,6 +427,10 @@ export default function compose(state = initialState, action) {
     return state.setIn(['media_modal', 'description'], action.description).setIn(['media_modal', 'dirty'], true);
   case COMPOSE_CHANGE_MEDIA_FOCUS:
     return state.setIn(['media_modal', 'focusX'], action.focusX).setIn(['media_modal', 'focusY'], action.focusY).setIn(['media_modal', 'dirty'], true);
+  case COMPOSE_MAX_MEDIA_ATTACHMENTS:
+    return setMaxMediaAttachments(state, action.count);
+  case COMPOSE_IMAGE_MATRIX_LIMIT:
+    return setImageMatrixLimit(state, action.pixels);
   case COMPOSE_MENTION:
     return state.withMutations(map => {
       map.update('text', text => [text.trim(), `@${action.account.get('acct')} `].filter((str) => str.length !== 0).join(' '));

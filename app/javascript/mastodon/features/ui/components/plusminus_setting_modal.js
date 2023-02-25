@@ -206,6 +206,7 @@ export class PlusMinusSettingModal extends React.Component {
       emotional_button: 'hidden',
       post_half_modal: 'disabled',
       quick_report: 'hidden',
+      live_mode_button: 'hidden',
     },
   };
 
@@ -556,6 +557,20 @@ export class PlusMinusSettingModal extends React.Component {
                 漢字/一部を除く記号は対象外です
               </p>
             </div>
+            <div style={styles.config}>
+              <label>
+                <input
+                  type='checkbox'
+                  checked={this.state.config.live_mode_button === 'visible'}
+                  onChange={(e) => this.updateConfig('live_mode_button', e.target.checked ? 'visible' : 'hidden')}
+                />
+                実況モードを切り替えるボタンを表示する
+              </label>
+              <p style={styles.description}>
+                投稿後もハッシュタグを投稿欄に残すことで、ハッシュタグを使った実況が行いやすくなります<br />
+                この設定を無効化すると、実況モードも自動的に無効化されます
+              </p>
+            </div>
           </div>
         </div>
 
@@ -608,6 +623,12 @@ export class PlusMinusSettingModal extends React.Component {
     Object.keys(this.state.config).forEach((key) =>
       localStorage[`${localStorageKeyPrefix}${key}`] = typeof this.state.config[key] === 'object' ? JSON.stringify(this.state.config[key]) : this.state.config[key],
     );
+
+    if (this.state.config.live_mode_button === 'hidden') {
+      // NOTE: 実況モードボタンが無効化されているので、実況モードも無効化する
+      localStorage[`${localStorageKeyPrefix}live_mode`] = 'disabled';
+    }
+
     location.reload();
   }
 

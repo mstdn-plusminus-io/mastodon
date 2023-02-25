@@ -430,9 +430,23 @@
     .media-gallery,
     .status-card {
       display: flex !important;
+      flex-wrap: wrap;
       height: fit-content !important;
       margin-left: 56px;
       width: calc(100% - 56px) !important;
+    }
+
+    .status-card-video {
+      width: 100% !important;
+      height: auto !important;
+      flex: 1 !important;
+      background: transparent !important;
+
+      iframe {
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 16/9;
+      }
     }
 
     .spoiler-button {
