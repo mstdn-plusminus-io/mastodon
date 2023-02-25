@@ -1,7 +1,7 @@
 import React from 'react';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
-import { is } from 'immutable';
+import { is, Range } from 'immutable';
 import IconButton from './icon_button';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
@@ -95,10 +95,6 @@ class Item extends React.PureComponent {
       height = 50;
     }
 
-    if (size > 4) {
-      height = 100 / Math.floor(size / 2);
-    }
-
     if (size === 2) {
       if (index === 0) {
         right = '2px';
@@ -117,16 +113,16 @@ class Item extends React.PureComponent {
       } else if (index > 1) {
         top = '2px';
       }
-    } else if (size >= 4) {
-      if (index % 2 === 0) {
+    } else if (size === 4) {
+      if (index === 0 || index === 2) {
         right = '2px';
       }
 
-      if (index % 2 === 1) {
+      if (index === 1 || index === 3) {
         left = '2px';
       }
 
-      if (index < size - 2) {
+      if (index < 2) {
         bottom = '2px';
       } else {
         top = '2px';
@@ -313,6 +309,11 @@ class MediaGallery extends React.PureComponent {
     return media.size === 1 && media.getIn([0, 'meta', 'small', 'aspect']);
   }
 
+  chunk(list, size) {
+    return Range(0, list.count(), size)
+      .map(start => list.reverse().slice(start, start + size).reverse()).reverse();
+  }
+
   render () {
     const { media, intl, sensitive, height, defaultWidth, standalone, autoplay } = this.props;
     const { visible } = this.state;
@@ -339,7 +340,15 @@ class MediaGallery extends React.PureComponent {
     if (standalone && this.isFullSizeEligible()) {
       children = <Item standalone autoplay={autoplay} onClick={this.handleClick} attachment={media.get(0)} displayWidth={width} visible={visible} />;
     } else {
-      children = media.map((attachment, i) => <Item key={attachment.get('id')} autoplay={autoplay} onClick={this.handleClick} attachment={attachment} index={i} size={size} displayWidth={width} visible={visible || uncached} />);
+      const chunks = this.chunk(media, 4);
+      children = chunks.map((chunk, index) => (
+        <div key={`${index}_${chunks.size}`} className='media-gallery' style={style} ref={this.handleRef}>
+          {
+            chunk.map((attachment, i) =>
+              <Item key={attachment.get('id')} autoplay={autoplay} onClick={this.handleClick} attachment={attachment} index={i} size={chunk.size} displayWidth={width} visible={visible || uncached} />)
+          }
+        </div>
+      ));
     }
 
     if (uncached) {
@@ -359,7 +368,7 @@ class MediaGallery extends React.PureComponent {
     }
 
     return (
-      <div className='media-gallery' style={style} ref={this.handleRef}>
+      <div className='media-gallery-wrapper' ref={this.handleRef}>
         <div className={classNames('spoiler-button', { 'spoiler-button--minified': visible && !uncached, 'spoiler-button--click-thru': uncached })}>
           {spoilerButton}
         </div>

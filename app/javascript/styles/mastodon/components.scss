@@ -1088,11 +1088,19 @@ body > [data-popper-placement] {
   opacity: 1;
   animation: fade 150ms linear;
 
+  .media-gallery-wrapper {
+    position: relative;
+  }
+
   .media-gallery,
   .video-player,
   .audio-player,
   .attachment-list {
     margin-top: 16px;
+  }
+
+  .media-gallery + .media-gallery {
+    margin-top: 4px;
   }
 
   &.light {
