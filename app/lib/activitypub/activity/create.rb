@@ -259,7 +259,7 @@ class ActivityPub::Activity::Create < ActivityPub::Activity
     as_array(@object['attachment']).each do |attachment|
       media_attachment_parser = ActivityPub::Parser::MediaAttachmentParser.new(attachment)
 
-      next if media_attachment_parser.remote_url.blank? || media_attachments.size >= 4
+      next if media_attachment_parser.remote_url.blank? || media_attachments.size >= ENV.fetch('MAX_MEDIA_ATTACHMENTS', 4).to_i
 
       begin
         media_attachment = MediaAttachment.create(
