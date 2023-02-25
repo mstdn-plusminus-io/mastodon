@@ -231,7 +231,7 @@ class ComposeForm extends ImmutablePureComponent {
   onSelectEmotional = (type) => {
     const e = {
       target: {
-        value: text2emotional(this.props.text, type),
+        value: this.props.text.split(' ').map(p => p.startsWith('@') || p.startsWith('#') ? p : text2emotional(p, type)).join(' '),
       },
     };
     this.handleChange(e);
