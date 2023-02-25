@@ -74,6 +74,7 @@ export const INIT_MEDIA_EDIT_MODAL = 'INIT_MEDIA_EDIT_MODAL';
 export const COMPOSE_CHANGE_MEDIA_DESCRIPTION = 'COMPOSE_CHANGE_MEDIA_DESCRIPTION';
 export const COMPOSE_CHANGE_MEDIA_FOCUS       = 'COMPOSE_CHANGE_MEDIA_FOCUS';
 export const COMPOSE_MAX_MEDIA_ATTACHMENTS = 'COMPOSE_MAX_MEDIA_ATTACHMENTS';
+export const COMPOSE_IMAGE_MATRIX_LIMIT = 'COMPOSE_IMAGE_MATRIX_LIMIT';
 
 export const COMPOSE_SET_STATUS = 'COMPOSE_SET_STATUS';
 
@@ -271,7 +272,7 @@ export function uploadCompose(files) {
     for (const [i, f] of Array.from(files).entries()) {
       if (media.size + i > uploadLimit - 1) break;
 
-      resizeImage(f).then(file => {
+      resizeImage(f, getState().getIn(['compose', 'image_matrix_limit'])).then(file => {
         const data = new FormData();
         data.append('file', file);
         // Account for disparity in size of original image and resized data
@@ -791,3 +792,11 @@ export function setMaxMediaAttachments(count) {
     count,
   };
 }
+
+export function setImageMatrixLimit(pixels) {
+  return {
+    type: COMPOSE_IMAGE_MATRIX_LIMIT,
+    pixels,
+  };
+}
+

@@ -9,7 +9,9 @@ import {
   changeComposeSpoilerText,
   insertEmojiCompose,
   uploadCompose,
-  changeComposeVisibility, setMaxMediaAttachments,
+  changeComposeVisibility,
+  setMaxMediaAttachments,
+  setImageMatrixLimit,
 } from '../../../actions/compose';
 
 const mapStateToProps = state => ({
@@ -35,6 +37,7 @@ let cachedKeywordVisibilities = null;
 const mapDispatchToProps = (dispatch) => ({
   onInitialize(instance) {
     dispatch(setMaxMediaAttachments(instance.configuration.statuses.max_media_attachments));
+    dispatch(setImageMatrixLimit(instance.configuration.media_attachments.image_matrix_limit));
   },
 
   onChange (text) {
