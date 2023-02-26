@@ -1,7 +1,5 @@
 import EXIF from 'exif-js';
 
-const MAX_IMAGE_PIXELS = 8294400; // 3840×2160px (4K)
-
 const _browser_quirks = {};
 
 // Some browsers will automatically draw images respecting their EXIF orientation
@@ -152,11 +150,11 @@ const processImage = (img, { width, height, orientation, type = 'image/png' }) =
   canvas.toBlob(resolve, type);
 });
 
-const resizeImage = (img, type = 'image/png') => new Promise((resolve, reject) => {
+const resizeImage = (img, maxImagePixels, type = 'image/png') => new Promise((resolve, reject) => {
   const { width, height } = img;
 
-  const newWidth  = Math.round(Math.sqrt(MAX_IMAGE_PIXELS * (width / height)));
-  const newHeight = Math.round(Math.sqrt(MAX_IMAGE_PIXELS * (height / width)));
+  const newWidth  = Math.round(Math.sqrt(maxImagePixels * (width / height)));
+  const newHeight = Math.round(Math.sqrt(maxImagePixels * (height / width)));
 
   checkCanvasReliability()
     .then(getOrientation(img, type))
@@ -170,19 +168,19 @@ const resizeImage = (img, type = 'image/png') => new Promise((resolve, reject) =
     .catch(reject);
 });
 
-export default inputFile => new Promise((resolve) => {
+export default (inputFile, maxImagePixels) => new Promise((resolve) => {
   if (!inputFile.type.match(/image.*/) || inputFile.type === 'image/gif') {
     resolve(inputFile);
     return;
   }
 
   loadImage(inputFile).then(img => {
-    if (img.width * img.height < MAX_IMAGE_PIXELS) {
+    if (img.width * img.height < maxImagePixels) {
       resolve(inputFile);
       return;
     }
 
-    resizeImage(img, inputFile.type)
+    resizeImage(img, maxImagePixels, inputFile.type)
       .then(resolve)
       .catch(() => resolve(inputFile));
   }).catch(() => resolve(inputFile));

@@ -5,8 +5,8 @@ require 'mime/types/columnar'
 module Attachmentable
   extend ActiveSupport::Concern
 
-  MAX_MATRIX_LIMIT = 16_777_216 # 4096x4096px or approx. 16MB
-  GIF_MATRIX_LIMIT = 921_600    # 1280x720px
+  MAX_MATRIX_LIMIT = ENV.fetch('MAX_ATTACHMENT_MATRIX_LIMIT', 16_777_216).to_i # default: 4096x4096px or approx. 16MB
+  GIF_MATRIX_LIMIT = MAX_MATRIX_LIMIT
 
   # For some file extensions, there exist different content
   # type variants, and browsers often send the wrong one,

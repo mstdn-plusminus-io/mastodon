@@ -106,6 +106,8 @@ class ActivityPub::Activity::Create < ActivityPub::Activity
   end
 
   def process_status_params
+    max_media_attachments = ENV.fetch('MAX_MEDIA_ATTACHMENTS', 4).to_i
+
     @status_parser = ActivityPub::Parser::StatusParser.new(@json, followers_collection: @account.followers_url)
 
     @params = begin
@@ -124,7 +126,7 @@ class ActivityPub::Activity::Create < ActivityPub::Activity
         visibility: @status_parser.visibility,
         thread: replied_to_status,
         conversation: conversation_from_uri(@object['conversation']),
-        media_attachment_ids: process_attachments.take(4).map(&:id),
+        media_attachment_ids: process_attachments.take(max_media_attachments).map(&:id),
         poll: process_poll,
       }
     end
@@ -257,7 +259,7 @@ class ActivityPub::Activity::Create < ActivityPub::Activity
     as_array(@object['attachment']).each do |attachment|
       media_attachment_parser = ActivityPub::Parser::MediaAttachmentParser.new(attachment)
 
-      next if media_attachment_parser.remote_url.blank? || media_attachments.size >= 4
+      next if media_attachment_parser.remote_url.blank? || media_attachments.size >= ENV.fetch('MAX_MEDIA_ATTACHMENTS', 4).to_i
 
       begin
         media_attachment = MediaAttachment.create(

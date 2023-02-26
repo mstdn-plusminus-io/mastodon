@@ -81,6 +81,7 @@ class ComposeForm extends ImmutablePureComponent {
 
   state = {
     maxCharacters: 5000,
+    liveMode: localStorage.plusminus_config_live_mode === 'enabled',
   };
 
   handleChange = (e) => {
@@ -158,6 +159,7 @@ class ComposeForm extends ImmutablePureComponent {
       this.setState({
         maxCharacters: res.data.configuration.statuses.max_characters,
       });
+      this.props.onInitialize(res.data);
     }).catch(err => {
       console.error(err);
     });
@@ -196,6 +198,7 @@ class ComposeForm extends ImmutablePureComponent {
       }).catch(console.error);
     } else if(prevProps.isSubmitting && !this.props.isSubmitting) {
       this.autosuggestTextarea.textarea.focus();
+      this.autosuggestTextarea.textarea.setSelectionRange(0, 0);
     } else if (this.props.spoiler !== prevProps.spoiler) {
       if (this.props.spoiler && (localStorage.plusminus_config_custom_spoiler_button === 'visible' && !JSON.parse(localStorage.plusminus_config_custom_spoiler_buttons).includes(this.props.spoilerText))) {
         this.spoilerText.input.focus();
@@ -228,7 +231,7 @@ class ComposeForm extends ImmutablePureComponent {
   onSelectEmotional = (type) => {
     const e = {
       target: {
-        value: text2emotional(this.props.text, type),
+        value: this.props.text.split(' ').map(p => p.startsWith('@') || p.startsWith('#') ? p : text2emotional(p, type)).join(' '),
       },
     };
     this.handleChange(e);
@@ -330,6 +333,19 @@ class ComposeForm extends ImmutablePureComponent {
               <ComposeExtensionButtonContainer
                 label={'・－'}
                 onClick={() => this.props.onChange(encodeMorse(this.props.text))}
+              />
+            )}
+            {localStorage.plusminus_config_live_mode_button === 'visible' && (
+              <ComposeExtensionButtonContainer
+                icon={'bullhorn'}
+                active={this.state.liveMode}
+                onClick={
+                  () => this.setState({ liveMode: !this.state.liveMode },
+                    () =>
+                      this.state.liveMode
+                        ? localStorage.plusminus_config_live_mode = 'enabled'
+                        : localStorage.plusminus_config_live_mode = 'disabled')
+                }
               />
             )}
             <LanguageDropdown />
