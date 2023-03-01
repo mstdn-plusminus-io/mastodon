@@ -178,6 +178,8 @@ module Mastodon
     # config.paths.add File.join('app', 'api'), glob: File.join('**', '*.rb')
     # config.autoload_paths += Dir[Rails.root.join('app', 'api', '*')]
 
+    config.active_record.has_many_inversing = false
+
     config.active_job.queue_adapter = :sidekiq
     config.action_mailer.deliver_later_queue_name = 'mailers'
 

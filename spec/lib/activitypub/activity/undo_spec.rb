@@ -174,5 +174,28 @@ RSpec.describe ActivityPub::Activity::Undo do
         expect(sender.favourited?(status)).to be false
       end
     end
+
+    context 'with EmojiReact' do
+      let(:status) { Fabricate(:status) }
+
+      let(:object_json) do
+        {
+          id: 'bar',
+          type: 'EmojiReact',
+          content: '✋',
+          actor: ActivityPub::TagManager.instance.uri_for(sender),
+          object: ActivityPub::TagManager.instance.uri_for(status),
+        }
+      end
+
+      before do
+        Fabricate(:reaction, account: sender, status: status, name: '✊')
+      end
+
+      it 'deletes reaction from sender to status' do
+        subject.perform
+        expect(sender.reacted?(status)).to be false
+      end
+    end
   end
 end

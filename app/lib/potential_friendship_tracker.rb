@@ -7,6 +7,7 @@ class PotentialFriendshipTracker
   WEIGHTS = {
     reply: 1,
     favourite: 10,
+    reaction: 10,
     reblog: 20,
   }.freeze
 

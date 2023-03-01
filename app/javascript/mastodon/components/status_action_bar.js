@@ -9,6 +9,7 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 import { me } from '../initial_state';
 import classNames from 'classnames';
 import { PERMISSION_MANAGE_USERS, PERMISSION_MANAGE_FEDERATION } from 'mastodon/permissions';
+import ReactionDropdownMenuContainer from '../containers/reaction_dropdown_menu_container';
 
 const messages = defineMessages({
   delete: { id: 'status.delete', defaultMessage: 'Delete' },
@@ -27,6 +28,7 @@ const messages = defineMessages({
   cancel_reblog_private: { id: 'status.cancel_reblog_private', defaultMessage: 'Unboost' },
   cannot_reblog: { id: 'status.cannot_reblog', defaultMessage: 'This post cannot be boosted' },
   favourite: { id: 'status.favourite', defaultMessage: 'Favourite' },
+  reaction: { id: 'status.reaction', defaultMessage: 'Reaction' },
   bookmark: { id: 'status.bookmark', defaultMessage: 'Bookmark' },
   removeBookmark: { id: 'status.remove_bookmark', defaultMessage: 'Remove bookmark' },
   open: { id: 'status.open', defaultMessage: 'Expand this status' },
@@ -67,6 +69,7 @@ class StatusActionBar extends ImmutablePureComponent {
     relationship: ImmutablePropTypes.map,
     onReply: PropTypes.func,
     onFavourite: PropTypes.func,
+    onReaction: PropTypes.func,
     onReblog: PropTypes.func,
     onDelete: PropTypes.func,
     onDirect: PropTypes.func,
@@ -371,6 +374,18 @@ class StatusActionBar extends ImmutablePureComponent {
         {localStorage.plusminus_config_quick_report === 'visible' && (
           <div className='status__action-bar__button report-icon'><IconButton title={intl.formatMessage(messages.report, { name: status.getIn(['account', 'username']) })} icon='flag' onClick={this.handleReport} /></div>
         )}
+
+        <div className='status__action-bar__dropdown'>
+          <ReactionDropdownMenuContainer
+            disabled={anonymousAccess}
+            status={status}
+            onReaction={this.props.onReaction}
+            icon='smile-o'
+            size={18}
+            direction='right'
+            title={intl.formatMessage(messages.reaction)}
+          />
+        </div>
 
         <div className='status__action-bar__dropdown'>
           <DropdownMenuContainer

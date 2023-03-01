@@ -78,6 +78,10 @@ export function Favourites () {
   return import(/* webpackChunkName: "features/favourites" */'../../favourites');
 }
 
+export function Reactions () {
+  return import(/* webpackChunkName: "features/reactions" */'../../reactions');
+}
+
 export function FollowRequests () {
   return import(/* webpackChunkName: "features/follow_requests" */'../../follow_requests');
 }
@@ -88,6 +92,10 @@ export function GenericNotFound () {
 
 export function FavouritedStatuses () {
   return import(/* webpackChunkName: "features/favourited_statuses" */'../../favourited_statuses');
+}
+
+export function ReactedStatuses () {
+  return import(/* webpackChunkName: "features/reacted_statuses" */'../../reacted_statuses');
 }
 
 export function FollowedTags () {

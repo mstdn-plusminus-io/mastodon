@@ -109,7 +109,7 @@ export const handlePush = (event) => {
         options.image   = undefined;
         options.actions = [actionExpand(preferred_locale)];
       } else if (['mention', 'status'].includes(notification.type)) {
-        options.actions = [actionReblog(preferred_locale), actionFavourite(preferred_locale)];
+        options.actions = [actionReblog(preferred_locale), actionFavourite(preferred_locale), actionReaction(preferred_locale)];
       }
 
       return notify(options);
@@ -145,6 +145,12 @@ const actionFavourite = preferred_locale => ({
   title: formatMessage('status.favourite', preferred_locale),
 });
 
+const actionReaction = preferred_locale => ({
+  action: 'reaction',
+  icon: '/web-push-icon_reaction.png',
+  title: formatMessage('status.reaction', preferred_locale),
+});
+
 const findBestClient = clients => {
   const focusedClient = clients.find(client => client.focused);
   const visibleClient = clients.find(client => client.visibilityState === 'visible');
@@ -157,7 +163,7 @@ const expandNotification = notification => {
 
   newNotification.body    = newNotification.data.hiddenBody;
   newNotification.image   = newNotification.data.hiddenImage;
-  newNotification.actions = [actionReblog(notification.data.preferred_locale), actionFavourite(notification.data.preferred_locale)];
+  newNotification.actions = [actionReblog(notification.data.preferred_locale), actionFavourite(notification.data.preferred_locale), actionReaction(notification.data.preferred_locale)];
 
   return self.registration.showNotification(newNotification.title, newNotification);
 };
@@ -192,6 +198,9 @@ export const handleNotificationClick = (event) => {
       } else if (event.action === 'favourite') {
         const { data } = event.notification;
         resolve(fetchFromApi(`/api/v1/statuses/${data.id}/favourite`, 'post', data.access_token).then(() => removeActionFromNotification(event.notification, 'favourite')));
+      } else if (event.action === 'reaction') {
+        const { data } = event.notification;
+        resolve(fetchFromApi(`/api/v1/statuses/${data.id}/reaction`, 'post', data.access_token).then(() => removeActionFromNotification(event.notification, 'reaction')));
       } else {
         reject(`Unknown action: ${event.action}`);
       }

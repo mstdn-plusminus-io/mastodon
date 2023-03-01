@@ -25,6 +25,7 @@ class Notification < ApplicationRecord
     'FollowRequest' => :follow_request,
     'Favourite'     => :favourite,
     'Poll'          => :poll,
+    'Reaction'      => :reaction,
   }.freeze
 
   TYPES = %i(
@@ -34,6 +35,7 @@ class Notification < ApplicationRecord
     follow
     follow_request
     favourite
+    reaction
     poll
     update
     admin.sign_up
@@ -45,6 +47,7 @@ class Notification < ApplicationRecord
     reblog: [status: :reblog],
     mention: [mention: :status],
     favourite: [favourite: :status],
+    reaction: [reaction: :status],
     poll: [poll: :status],
     update: :status,
     'admin.report': [report: :target_account],
@@ -59,6 +62,7 @@ class Notification < ApplicationRecord
   belongs_to :follow,         foreign_key: 'activity_id', optional: true
   belongs_to :follow_request, foreign_key: 'activity_id', optional: true
   belongs_to :favourite,      foreign_key: 'activity_id', optional: true
+  belongs_to :reaction,       foreign_key: 'activity_id', optional: true
   belongs_to :poll,           foreign_key: 'activity_id', optional: true
   belongs_to :report,         foreign_key: 'activity_id', optional: true
 
@@ -78,6 +82,8 @@ class Notification < ApplicationRecord
       status&.reblog
     when :favourite
       favourite&.status
+    when :reaction
+      reaction&.status
     when :mention
       mention&.status
     when :poll
@@ -129,6 +135,8 @@ class Notification < ApplicationRecord
           notification.status.reblog = cached_status
         when :favourite
           notification.favourite.status = cached_status
+        when :reaction
+          notification.reaction.status = cached_status
         when :mention
           notification.mention.status = cached_status
         when :poll
@@ -149,7 +157,7 @@ class Notification < ApplicationRecord
     return unless new_record?
 
     case activity_type
-    when 'Status', 'Follow', 'Favourite', 'FollowRequest', 'Poll', 'Report'
+    when 'Status', 'Follow', 'Favourite', 'Reaction', 'FollowRequest', 'Poll', 'Report'
       self.from_account_id = activity&.account_id
     when 'Mention'
       self.from_account_id = activity&.status&.account_id

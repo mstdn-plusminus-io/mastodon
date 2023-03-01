@@ -9,6 +9,10 @@ export const FAVOURITE_REQUEST = 'FAVOURITE_REQUEST';
 export const FAVOURITE_SUCCESS = 'FAVOURITE_SUCCESS';
 export const FAVOURITE_FAIL    = 'FAVOURITE_FAIL';
 
+export const REACTION_REQUEST = 'REACTION_REQUEST';
+export const REACTION_SUCCESS = 'REACTION_SUCCESS';
+export const REACTION_FAIL    = 'REACTION_FAIL';
+
 export const UNREBLOG_REQUEST = 'UNREBLOG_REQUEST';
 export const UNREBLOG_SUCCESS = 'UNREBLOG_SUCCESS';
 export const UNREBLOG_FAIL    = 'UNREBLOG_FAIL';
@@ -17,6 +21,10 @@ export const UNFAVOURITE_REQUEST = 'UNFAVOURITE_REQUEST';
 export const UNFAVOURITE_SUCCESS = 'UNFAVOURITE_SUCCESS';
 export const UNFAVOURITE_FAIL    = 'UNFAVOURITE_FAIL';
 
+export const UNREACTION_REQUEST = 'UNREACTION_REQUEST';
+export const UNREACTION_SUCCESS = 'UNREACTION_SUCCESS';
+export const UNREACTION_FAIL    = 'UNREACTION_FAIL';
+
 export const REBLOGS_FETCH_REQUEST = 'REBLOGS_FETCH_REQUEST';
 export const REBLOGS_FETCH_SUCCESS = 'REBLOGS_FETCH_SUCCESS';
 export const REBLOGS_FETCH_FAIL    = 'REBLOGS_FETCH_FAIL';
@@ -24,6 +32,10 @@ export const REBLOGS_FETCH_FAIL    = 'REBLOGS_FETCH_FAIL';
 export const FAVOURITES_FETCH_REQUEST = 'FAVOURITES_FETCH_REQUEST';
 export const FAVOURITES_FETCH_SUCCESS = 'FAVOURITES_FETCH_SUCCESS';
 export const FAVOURITES_FETCH_FAIL    = 'FAVOURITES_FETCH_FAIL';
+
+export const REACTIONS_FETCH_REQUEST = 'REACTIONS_FETCH_REQUEST';
+export const REACTIONS_FETCH_SUCCESS = 'REACTIONS_FETCH_SUCCESS';
+export const REACTIONS_FETCH_FAIL    = 'REACTIONS_FETCH_FAIL';
 
 export const PIN_REQUEST = 'PIN_REQUEST';
 export const PIN_SUCCESS = 'PIN_SUCCESS';
@@ -195,6 +207,82 @@ export function unfavouriteFail(status, error) {
   };
 }
 
+export function reaction(status, name) {
+  return function (dispatch, getState) {
+    dispatch(reactionRequest(status));
+
+    api(getState).post(`/api/v1/statuses/${status.get('id')}/reaction`, { name: name }).then(function (response) {
+      dispatch(importFetchedStatus(response.data));
+      dispatch(reactionSuccess(status));
+    }).catch(function (error) {
+      dispatch(reactionFail(status, error));
+    });
+  };
+}
+
+export function unreaction(status) {
+  return (dispatch, getState) => {
+    dispatch(unreactionRequest(status));
+
+    api(getState).post(`/api/v1/statuses/${status.get('id')}/unreaction`).then(response => {
+      dispatch(importFetchedStatus(response.data));
+      dispatch(unreactionSuccess(status));
+    }).catch(error => {
+      dispatch(unreactionFail(status, error));
+    });
+  };
+}
+
+export function reactionRequest(status) {
+  return {
+    type: REACTION_REQUEST,
+    status: status,
+    skipLoading: true,
+  };
+}
+
+export function reactionSuccess(status) {
+  return {
+    type: REACTION_SUCCESS,
+    status: status,
+    skipLoading: true,
+  };
+}
+
+export function reactionFail(status, error) {
+  return {
+    type: REACTION_FAIL,
+    status: status,
+    error: error,
+    skipLoading: true,
+  };
+}
+
+export function unreactionRequest(status) {
+  return {
+    type: UNREACTION_REQUEST,
+    status: status,
+    skipLoading: true,
+  };
+}
+
+export function unreactionSuccess(status) {
+  return {
+    type: UNREACTION_SUCCESS,
+    status: status,
+    skipLoading: true,
+  };
+}
+
+export function unreactionFail(status, error) {
+  return {
+    type: UNREACTION_FAIL,
+    status: status,
+    error: error,
+    skipLoading: true,
+  };
+}
+
 export function bookmark(status) {
   return function (dispatch, getState) {
     dispatch(bookmarkRequest(status));
@@ -333,6 +421,41 @@ export function fetchFavouritesSuccess(id, accounts) {
 export function fetchFavouritesFail(id, error) {
   return {
     type: FAVOURITES_FETCH_FAIL,
+    error,
+  };
+}
+
+export function fetchReactions(id) {
+  return (dispatch, getState) => {
+    dispatch(fetchReactionsRequest(id));
+
+    api(getState).get(`/api/v1/statuses/${id}/reacted_by`).then(response => {
+      dispatch(importFetchedAccounts(response.data));
+      dispatch(fetchReactionsSuccess(id, response.data));
+    }).catch(error => {
+      dispatch(fetchReactionsFail(id, error));
+    });
+  };
+}
+
+export function fetchReactionsRequest(id) {
+  return {
+    type: REACTIONS_FETCH_REQUEST,
+    id,
+  };
+}
+
+export function fetchReactionsSuccess(id, accounts) {
+  return {
+    type: REACTIONS_FETCH_SUCCESS,
+    id,
+    accounts,
+  };
+}
+
+export function fetchReactionsFail(id, error) {
+  return {
+    type: REACTIONS_FETCH_FAIL,
     error,
   };
 }

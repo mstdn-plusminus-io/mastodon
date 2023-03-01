@@ -6,9 +6,10 @@ class REST::StatusSerializer < ActiveModel::Serializer
   attributes :id, :created_at, :in_reply_to_id, :in_reply_to_account_id,
              :sensitive, :spoiler_text, :visibility, :language,
              :uri, :url, :replies_count, :reblogs_count,
-             :favourites_count, :edited_at
+             :favourites_count, :reactions_count, :edited_at
 
   attribute :favourited, if: :current_user?
+  attribute :reacted, if: :current_user?
   attribute :reblogged, if: :current_user?
   attribute :muted, if: :current_user?
   attribute :bookmarked, if: :current_user?
@@ -26,6 +27,7 @@ class REST::StatusSerializer < ActiveModel::Serializer
   has_many :ordered_mentions, key: :mentions
   has_many :tags
   has_many :emojis, serializer: REST::CustomEmojiSerializer
+  has_many :reactions, serializer: REST::StatusReactionSerializer
 
   has_one :preview_card, key: :card, serializer: REST::PreviewCardSerializer
   has_one :preloadable_poll, key: :poll, serializer: REST::PollSerializer
@@ -87,6 +89,18 @@ class REST::StatusSerializer < ActiveModel::Serializer
     else
       current_user.account.favourited?(object)
     end
+  end
+
+  def reacted
+    if instance_options && instance_options[:relationships]
+      instance_options[:relationships].reactions_map[object.id] || false
+    else
+      current_user.account.reacted?(object)
+    end
+  end
+
+  def reactions
+    object.reactions_hash(current_user&.account)
   end
 
   def reblogged

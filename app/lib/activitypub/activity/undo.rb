@@ -2,6 +2,8 @@
 
 class ActivityPub::Activity::Undo < ActivityPub::Activity
   def perform
+    @object['type'] = 'EmojiReact' if @object['type'].eql?('Like') && @object['content'].present?
+
     case @object['type']
     when 'Announce'
       undo_announce
@@ -13,6 +15,8 @@ class ActivityPub::Activity::Undo < ActivityPub::Activity
       undo_like
     when 'Block'
       undo_block
+    when 'EmojiReact'
+      undo_emoji_react
     when nil
       handle_reference
     end
@@ -120,6 +124,19 @@ class ActivityPub::Activity::Undo < ActivityPub::Activity
 
     if @account.blocking?(target_account)
       UnblockService.new.call(@account, target_account)
+    else
+      delete_later!(object_uri)
+    end
+  end
+
+  def undo_emoji_react
+    status = status_from_uri(target_uri)
+
+    return if status.nil? || !status.account.local?
+
+    if @account.reacted?(status)
+      reaction = status.reactions.where(account: @account).first
+      reaction&.destroy
     else
       delete_later!(object_uri)
     end

@@ -17,6 +17,7 @@ import Icon from 'mastodon/components/icon';
 import AnimatedNumber from 'mastodon/components/animated_number';
 import PictureInPicturePlaceholder from 'mastodon/components/picture_in_picture_placeholder';
 import EditedTimestamp from 'mastodon/components/edited_timestamp';
+import StatusReactionBar from '../../../containers/status_reaction_bar_container';
 
 const messages = defineMessages({
   public_short: { id: 'privacy.public.short', defaultMessage: 'Public' },
@@ -30,6 +31,7 @@ class DetailedStatus extends ImmutablePureComponent {
 
   static contextTypes = {
     router: PropTypes.object,
+    identity: PropTypes.object,
   };
 
   static propTypes = {
@@ -113,6 +115,7 @@ class DetailedStatus extends ImmutablePureComponent {
     const status = (this.props.status && this.props.status.get('reblog')) ? this.props.status.get('reblog') : this.props.status;
     const outerStyle = { boxSizing: 'border-box' };
     const { intl, compact, pictureInPicture } = this.props;
+    const { signedIn } = this.context.identity;
 
     if (!status) {
       return null;
@@ -123,6 +126,7 @@ class DetailedStatus extends ImmutablePureComponent {
     let reblogLink = '';
     let reblogIcon = 'retweet';
     let favouriteLink = '';
+    let reactionLink = '';
     let edited = '';
 
     if (this.props.measureHeight) {
@@ -249,6 +253,26 @@ class DetailedStatus extends ImmutablePureComponent {
       );
     }
 
+    if (this.context.router) {
+      reactionLink = (
+        <Link to={`/@${status.getIn(['account', 'acct'])}/${status.get('id')}/reactions`} className='detailed-status__link'>
+          <Icon id='smile-o' />
+          <span className='detailed-status__reactions'>
+            <AnimatedNumber value={status.get('reactions_count')} />
+          </span>
+        </Link>
+      );
+    } else {
+      reactionLink = (
+        <a href={`/interact/${status.get('id')}?type=reaction`} className='detailed-status__link' onClick={this.handleModalLink}>
+          <Icon id='smile-o' />
+          <span className='detailed-status__reactions'>
+            <AnimatedNumber value={status.get('reactions_count')} />
+          </span>
+        </a>
+      );
+    }
+
     if (status.get('edited_at')) {
       edited = (
         <React.Fragment>
@@ -275,10 +299,14 @@ class DetailedStatus extends ImmutablePureComponent {
 
           {media}
 
+          { signedIn && <div className='detailed-status-reaction-bar'>
+            <StatusReactionBar status={status} />
+          </div> }
+
           <div className='detailed-status__meta'>
             <a className='detailed-status__datetime' href={`/@${status.getIn(['account', 'acct'])}\/${status.get('id')}`} target='_blank' rel='noopener noreferrer'>
               <FormattedDate value={new Date(status.get('created_at'))} hour12={false} year='numeric' month='short' day='2-digit' hour='2-digit' minute='2-digit' />
-            </a>{edited}{visibilityLink}{applicationLink}{reblogLink} · {favouriteLink}
+            </a>{edited}{visibilityLink}{applicationLink}{reblogLink} · {favouriteLink} · {reactionLink}
           </div>
         </div>
       </div>

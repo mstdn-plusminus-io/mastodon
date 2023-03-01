@@ -6,6 +6,7 @@ import BundleContainer from '../containers/bundle_container';
 import BundleModalError from './bundle_modal_error';
 import ModalLoading from './modal_loading';
 import ActionsModal from './actions_modal';
+import ReactionModal from './reaction_modal';
 import MediaModal from './media_modal';
 import VideoModal from './video_modal';
 import BoostModal from './boost_modal';
@@ -39,6 +40,7 @@ const MODAL_COMPONENTS = {
   'BLOCK': BlockModal,
   'REPORT': ReportModal,
   'ACTIONS': () => Promise.resolve({ default: ActionsModal }),
+  'REACTION': () => Promise.resolve({ default: ReactionModal }),
   'EMBED': EmbedModal,
   'LIST_EDITOR': ListEditor,
   'FOCAL_POINT': () => Promise.resolve({ default: FocalPointModal }),
@@ -82,7 +84,7 @@ export default class ModalRoot extends React.PureComponent {
   };
 
   renderLoading = modalId => () => {
-    return ['MEDIA', 'VIDEO', 'BOOST', 'CONFIRM', 'ACTIONS'].indexOf(modalId) === -1 ? <ModalLoading /> : null;
+    return ['MEDIA', 'VIDEO', 'BOOST', 'CONFIRM', 'ACTIONS', 'REACTION'].indexOf(modalId) === -1 ? <ModalLoading /> : null;
   };
 
   renderError = (props) => {

@@ -18,6 +18,7 @@ filenames.forEach(filename => {
     'notification.follow': full['notification.follow'] || '',
     'notification.follow_request': full['notification.follow_request'] || '',
     'notification.mention': full['notification.mention'] || '',
+    'notification.reaction': full['notification.reaction'] || '',
     'notification.reblog': full['notification.reblog'] || '',
     'notification.poll': full['notification.poll'] || '',
     'notification.status': full['notification.status'] || '',
@@ -27,6 +28,7 @@ filenames.forEach(filename => {
     'status.show_more': full['status.show_more'] || '',
     'status.reblog': full['status.reblog'] || '',
     'status.favourite': full['status.favourite'] || '',
+    'status.reaction': full['status.reaction'] || '',
 
     'notifications.group': full['notifications.group'] || '',
   };

@@ -26,6 +26,8 @@
     .fields-row__column.fields-row__column-6.fields-group
       = f.input :keep_self_fav, wrapper: :with_label, label: t('statuses_cleanup.keep_self_fav'), hint: t('statuses_cleanup.keep_self_fav_hint')
     .fields-row__column.fields-row__column-6.fields-group
+      = f.input :keep_self_reaction, wrapper: :with_label, label: t('statuses_cleanup.keep_self_reaction'), hint: t('statuses_cleanup.keep_self_reaction_hint')
+    .fields-row__column.fields-row__column-6.fields-group
       = f.input :keep_self_bookmark, wrapper: :with_label, label: t('statuses_cleanup.keep_self_bookmark'), hint: t('statuses_cleanup.keep_self_bookmark_hint')
 
   .fields-row
@@ -39,6 +41,8 @@
   .fields-row
     .fields-row__column.fields-row__column-6.fields-group
       = f.input :min_favs, wrapper: :with_label, label: t('statuses_cleanup.min_favs'), hint: t('statuses_cleanup.min_favs_hint'), input_html: { min: 1, placeholder: t('statuses_cleanup.ignore_favs') }
+    .fields-row__column.fields-row__column-6.fields-group
+      = f.input :min_reactions, wrapper: :with_label, label: t('statuses_cleanup.min_reactions'), hint: t('statuses_cleanup.min_reactions_hint'), input_html: { min: 1, placeholder: t('statuses_cleanup.ignore_reactions') }
     .fields-row__column.fields-row__column-6.fields-group
       = f.input :min_reblogs, wrapper: :with_label, label: t('statuses_cleanup.min_reblogs'), hint: t('statuses_cleanup.min_reblogs_hint'), input_html: { min: 1, placeholder: t('statuses_cleanup.ignore_reblogs') }
 

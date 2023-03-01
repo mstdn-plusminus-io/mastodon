@@ -10,9 +10,11 @@ import {
 import {
   reblog,
   favourite,
+  reaction,
   bookmark,
   unreblog,
   unfavourite,
+  unreaction,
   unbookmark,
   pin,
   unpin,
@@ -110,6 +112,14 @@ const mapDispatchToProps = (dispatch, { intl, contextType }) => ({
       dispatch(unfavourite(status));
     } else {
       dispatch(favourite(status));
+    }
+  },
+
+  onReaction (status, name) {
+    if (status.get('reacted')) {
+      dispatch(unreaction(status));
+    } else {
+      dispatch(reaction(status, name));
     }
   },
 

@@ -28,6 +28,8 @@ class ActivityPub::Activity
     private
 
     def klass
+      @json['type'] = 'EmojiReact' if @json['type'].eql?('Like') && @json['content'].present?
+
       case @json['type']
       when 'Create'
         ActivityPub::Activity::Create
@@ -57,6 +59,8 @@ class ActivityPub::Activity
         ActivityPub::Activity::Remove
       when 'Move'
         ActivityPub::Activity::Move
+      when 'EmojiReact'
+        ActivityPub::Activity::EmojiReact
       end
     end
   end

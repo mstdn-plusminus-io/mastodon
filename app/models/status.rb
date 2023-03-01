@@ -61,6 +61,7 @@ class Status < ApplicationRecord
   belongs_to :reblog, foreign_key: 'reblog_of_id', class_name: 'Status', inverse_of: :reblogs, optional: true
 
   has_many :favourites, inverse_of: :status, dependent: :destroy
+  has_many :reactions, inverse_of: :status, dependent: :destroy
   has_many :bookmarks, inverse_of: :status, dependent: :destroy
   has_many :reblogs, foreign_key: 'reblog_of_id', class_name: 'Status', inverse_of: :reblog, dependent: :destroy
   has_many :reblogged_by_accounts, through: :reblogs, class_name: 'Account', source: :account
@@ -145,12 +146,14 @@ class Status < ApplicationRecord
     if preloaded.nil?
       ids += mentions.joins(:account).merge(Account.local).active.pluck(:account_id)
       ids += favourites.joins(:account).merge(Account.local).pluck(:account_id)
+      ids += reactions.joins(:account).merge(Account.local).pluck(:account_id)
       ids += reblogs.joins(:account).merge(Account.local).pluck(:account_id)
       ids += bookmarks.joins(:account).merge(Account.local).pluck(:account_id)
       ids += poll.votes.joins(:account).merge(Account.local).pluck(:account_id) if poll.present?
     else
       ids += preloaded.mentions[id] || []
       ids += preloaded.favourites[id] || []
+      ids += preloaded.reactions[id] || []
       ids += preloaded.reblogs[id] || []
       ids += preloaded.bookmarks[id] || []
       ids += preloaded.votes[id] || []
@@ -280,6 +283,25 @@ class Status < ApplicationRecord
     status_stat&.favourites_count || 0
   end
 
+  def reactions_count
+    status_stat&.reactions_count || 0
+  end
+
+  def reactions_hash(account = nil)
+    records = begin
+      scope = reactions.group(:status_id, :name, :custom_emoji_id).order(Arel.sql('MIN(created_at) ASC'))
+
+      if account.nil?
+        scope.select('name, custom_emoji_id, count(*) as count, false as me')
+      else
+        scope.select("name, custom_emoji_id, count(*) as count, exists(select 1 from reactions r where r.account_id = #{account.id} and r.status_id = reactions.status_id and r.name = reactions.name) as me")
+      end
+    end
+
+    ActiveRecord::Associations::Preloader.new.preload(records, :custom_emoji)
+    records
+  end
+
   def increment_count!(key)
     update_status_stat!(key => public_send(key) + 1)
   end
@@ -327,6 +349,10 @@ class Status < ApplicationRecord
 
     def favourites_map(status_ids, account_id)
       Favourite.select('status_id').where(status_id: status_ids).where(account_id: account_id).each_with_object({}) { |f, h| h[f.status_id] = true }
+    end
+
+    def reactions_map(status_ids, account_id)
+      Reaction.select('status_id').where(status_id: status_ids).where(account_id: account_id).each_with_object({}) { |f, h| h[f.status_id] = true }
     end
 
     def bookmarks_map(status_ids, account_id)

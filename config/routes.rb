@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     /lists/(*any)
     /notifications
     /favourites
+    /reactions
     /bookmarks
     /pinned
     /start
@@ -437,11 +438,15 @@ Rails.application.routes.draw do
         scope module: :statuses do
           resources :reblogged_by, controller: :reblogged_by_accounts, only: :index
           resources :favourited_by, controller: :favourited_by_accounts, only: :index
+          resources :reacted_by, controller: :reacted_by_accounts, only: :index
           resource :reblog, only: :create
           post :unreblog, to: 'reblogs#destroy'
 
           resource :favourite, only: :create
           post :unfavourite, to: 'favourites#destroy'
+
+          resource :reaction, only: :create
+          post :unreaction, to: 'reactions#destroy'
 
           resource :bookmark, only: :create
           post :unbookmark, to: 'bookmarks#destroy'
@@ -513,6 +518,7 @@ Rails.application.routes.draw do
       resources :blocks,       only: [:index]
       resources :mutes,        only: [:index]
       resources :favourites,   only: [:index]
+      resources :reactions,    only: [:index]
       resources :bookmarks,    only: [:index]
       resources :reports,      only: [:create]
       resources :trends,       only: [:index], controller: 'trends/tags'

@@ -279,6 +279,44 @@ RSpec.describe Account, type: :model do
     end
   end
 
+  describe '#reacted?' do
+    let(:original_status) do
+      author = Fabricate(:account, username: 'original')
+      Fabricate(:status, account: author)
+    end
+
+    subject { Fabricate(:account) }
+
+    context 'when the status is a reblog of another status' do
+      let(:original_reblog) do
+        author = Fabricate(:account, username: 'original_reblogger')
+        Fabricate(:status, reblog: original_status, account: author)
+      end
+
+      it 'is true when this account has reacted it' do
+        Fabricate(:reaction, status: original_reblog, account: subject, name: '✋')
+
+        expect(subject.reacted?(original_status)).to eq true
+      end
+
+      it 'is false when this account has not reacted it' do
+        expect(subject.reacted?(original_status)).to eq false
+      end
+    end
+
+    context 'when the status is an original status' do
+      it 'is true when this account has reacted it' do
+        Fabricate(:reaction, status: original_status, account: subject, name: '✋')
+
+        expect(subject.reacted?(original_status)).to eq true
+      end
+
+      it 'is false when this account has not reacted it' do
+        expect(subject.reacted?(original_status)).to eq false
+      end
+    end
+  end
+
   describe '#reblogged?' do
     let(:original_status) do
       author = Fabricate(:account, username: 'original')

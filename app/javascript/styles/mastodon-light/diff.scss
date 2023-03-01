@@ -264,6 +264,38 @@ html {
   background: $white;
 }
 
+.detailed-status-reaction-bar {
+  background: $white;
+}
+
+.reaction-dropdown-menu__picker {
+  width: 300px;
+  height: 380px;
+
+  .reaction-picker__menu {
+    .loading-indicator {
+      margin-top: auto;
+    }
+
+    .emoji-mart-bar {
+      &:first-child {
+        border-bottom-width: 1px;
+        background: white;
+      }
+    }
+
+    .emoji-mart-category-label {
+      span {
+        background: white;
+      }
+    }
+
+    .emoji-mart-scroll {
+      background: white;
+    }
+  }
+}
+
 // Change the background colors of status__content__spoiler-link
 .reply-indicator__content .status__content__spoiler-link,
 .status__content .status__content__spoiler-link {
@@ -354,6 +386,7 @@ html {
 
 // Change the background colors of modals
 .actions-modal,
+.reaction-modal,
 .boost-modal,
 .confirmation-modal,
 .mute-modal,
@@ -369,11 +402,15 @@ html {
 .announcements,
 .picture-in-picture__header,
 .picture-in-picture__footer,
+.status-reaction-bar__item,
 .reactions-bar__item {
   background: $white;
   border: 1px solid lighten($ui-base-color, 8%);
 }
 
+.status-reaction-bar__item:hover,
+.status-reaction-bar__item:focus,
+.status-reaction-bar__item:active,
 .reactions-bar__item:hover,
 .reactions-bar__item:focus,
 .reactions-bar__item:active,
@@ -383,6 +420,7 @@ html {
   background-color: $ui-base-color;
 }
 
+.status-reaction-bar__item.active,
 .reactions-bar__item.active {
   background-color: mix($white, $ui-highlight-color, 80%);
   border-color: mix(lighten($ui-base-color, 8%), $ui-highlight-color, 80%);

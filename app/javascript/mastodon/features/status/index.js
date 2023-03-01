@@ -13,7 +13,9 @@ import ActionBar from './components/action_bar';
 import Column from '../ui/components/column';
 import {
   favourite,
+  reaction,
   unfavourite,
+  unreaction,
   bookmark,
   unbookmark,
   reblog,
@@ -251,6 +253,19 @@ class Status extends ImmutablePureComponent {
         accountId: status.getIn(['account', 'id']),
         url: status.get('url'),
       }));
+    }
+  };
+
+  handleReactionClick = (status, name) => {
+    const { dispatch } = this.props;
+    const { signedIn } = this.context.identity;
+
+    if (signedIn) {
+      if (status.get('reacted')) {
+        dispatch(unreaction(status));
+      } else {
+        dispatch(reaction(status, name));
+      }
     }
   };
 
@@ -651,6 +666,7 @@ class Status extends ImmutablePureComponent {
                   status={status}
                   onReply={this.handleReplyClick}
                   onFavourite={this.handleFavouriteClick}
+                  onReaction={this.handleReactionClick}
                   onReblog={this.handleReblogClick}
                   onBookmark={this.handleBookmarkClick}
                   onDelete={this.handleDeleteClick}
