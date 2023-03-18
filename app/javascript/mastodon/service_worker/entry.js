@@ -44,7 +44,7 @@ registerRoute(
 );
 
 registerRoute(
-  ({ request }) => request.destination === 'image',
+  ({ request }) => request.destination === 'image' && !self.location.search.includes('disable-remote-media-cache=true'),
   new CacheFirst({
     cacheName: `m${CACHE_NAME_PREFIX}media`,
     plugins: [
@@ -91,3 +91,14 @@ self.addEventListener('fetch', function(event) {
 
 self.addEventListener('push', handlePush);
 self.addEventListener('notificationclick', handleNotificationClick);
+
+self.addEventListener('message', function (messageEvent) {
+  console.debug('MESSAGE RECEIVED:', messageEvent.data);
+
+  const { type, payload } = messageEvent.data;
+  switch (type) {
+  case 'DISABLE_MEDIA_CACHE':
+    cacheImage = payload !== 'true';
+    break;
+  }
+});
