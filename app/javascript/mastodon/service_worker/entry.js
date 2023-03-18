@@ -1,4 +1,5 @@
 import { ExpirationPlugin } from 'workbox-expiration';
+import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 import { precacheAndRoute } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
 import { CacheFirst } from 'workbox-strategies';
@@ -43,10 +44,13 @@ registerRoute(
 );
 
 registerRoute(
-  ({ request }) => request.destination === 'image',
+  ({ request }) => request.destination === 'image' && !self.location.search.includes('disable-remote-media-cache=true'),
   new CacheFirst({
     cacheName: `m${CACHE_NAME_PREFIX}media`,
     plugins: [
+      new CacheableResponsePlugin({
+        statuses: [0, 200],
+      }),
       new ExpirationPlugin({
         maxAgeSeconds: 7 * 24 * 60 * 60, // 1 week
         maxEntries: 256,
@@ -87,3 +91,14 @@ self.addEventListener('fetch', function(event) {
 
 self.addEventListener('push', handlePush);
 self.addEventListener('notificationclick', handleNotificationClick);
+
+self.addEventListener('message', function (messageEvent) {
+  console.debug('MESSAGE RECEIVED:', messageEvent.data);
+
+  const { type, payload } = messageEvent.data;
+  switch (type) {
+  case 'DISABLE_MEDIA_CACHE':
+    cacheImage = payload !== 'true';
+    break;
+  }
+});
