@@ -187,6 +187,10 @@ module ApplicationHelper
     ENV['S3_ALIAS_HOST'].present? || ENV['S3_CLOUDFRONT_HOST'].present?
   end
 
+  def plusminus_disable_remote_media_cache
+    ENV['DISABLE_REMOTE_MEDIA_CACHE'].present?
+  end
+
   def quote_wrap(text, line_width: 80, break_sequence: "\n")
     text = word_wrap(text, line_width: line_width - 2, break_sequence: break_sequence)
     text.split("\n").map { |line| "> #{line}" }.join("\n")
