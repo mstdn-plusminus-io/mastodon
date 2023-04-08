@@ -57,7 +57,7 @@
 
     .columns-area__panels__main {
       margin-left: 220px;
-      margin-bottom: 55px;
+      margin-bottom: 90px;
     }
 
     /* スクロール読み込み修正ここまで */
@@ -249,14 +249,38 @@
       overflow-y: visible !important;
       position: relative !important;
 
+      .compose-form__container {
+        flex: 1;
+      }
+
+      .spoiler-input.spoiler-input--visible + .compose-form__autosuggest-wrapper {
+        border-top-left-radius: 0 !important;
+        border-top-right-radius: 0 !important;
+      }
+
+      .spoiler-input input,
+      .compose-form__autosuggest-wrapper {
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+      }
+
+      .compose-form__buttons-wrapper {
+        border-top-left-radius: 0 !important;
+        border-top-right-radius: 0 !important;
+      }
+
       .compose-form__input-wrapper {
         flex: 1 !important;
         display: flex !important;
         flex-direction: column !important;
 
         .spoiler-input {
-          margin-bottom: 10px !important;
-          width: calc(100% - 10px) !important;
+          margin-bottom: 0 !important;
+          width: 100% !important;
+
+          input {
+            background-color: rgb(255, 255, 240);
+          }
         }
       }
     }
@@ -297,11 +321,6 @@
       height: 40px !important;
     }
 
-    /* CW入力部分が詰まるのを直す */
-    .spoiler-input {
-      margin-right: 10px !important;
-    }
-
     /* リプライ元表示・公開垢の鍵トゥート警告とかの水色のアレを固定幅にする */
     .reply-indicator,
     .compose-form__warning {
@@ -316,11 +335,6 @@
       min-height: 40px !important;
       flex: 1 !important;
       border-radius: 4px !important;
-    }
-
-    /* 入力欄の右マージンを追加 */
-    .compose-form__autosuggest-wrapper {
-      margin-right: 10px !important;
     }
 
     /* emojiサジェストを上に表示する */

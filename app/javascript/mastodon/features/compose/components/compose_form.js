@@ -257,27 +257,53 @@ class ComposeForm extends ImmutablePureComponent {
 
         <ReplyIndicatorContainer />
 
-        <div className='compose-form__input-wrapper'>
-          <div className={`spoiler-input ${this.props.spoiler ? 'spoiler-input--visible' : ''}`} ref={this.setRef} aria-hidden={!this.props.spoiler}>
-            <AutosuggestInput
-              placeholder={intl.formatMessage(messages.spoiler_placeholder)}
-              value={this.props.spoilerText}
-              onChange={this.handleChangeSpoilerText}
-              onKeyDown={this.handleKeyDown}
-              disabled={!this.props.spoiler}
-              ref={this.setSpoilerText}
+        <div className='compose-form__container'>
+          <div className='compose-form__input-wrapper'>
+            <div className={`spoiler-input ${this.props.spoiler ? 'spoiler-input--visible' : ''}`} ref={this.setRef} aria-hidden={!this.props.spoiler}>
+              <AutosuggestInput
+                placeholder={intl.formatMessage(messages.spoiler_placeholder)}
+                value={this.props.spoilerText}
+                onChange={this.handleChangeSpoilerText}
+                onKeyDown={this.handleKeyDown}
+                disabled={!this.props.spoiler}
+                ref={this.setSpoilerText}
+                suggestions={this.props.suggestions}
+                onFocus={this.handleFocus}
+                onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+                onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+                onSuggestionSelected={this.onSuggestionSelected}
+                onPaste={onPaste}
+                autoFocus={autoFocus}
+                searchTokens={[':']}
+                id='cw-spoiler-input'
+                className='spoiler-input__input'
+                lang={this.props.lang}
+                spellCheck
+              >
+                <EmojiPickerDropdown onPickEmoji={this.handleEmojiPick} />
+
+                <div className='compose-form__modifiers'>
+                  <UploadFormContainer />
+                  <PollFormContainer />
+                </div>
+              </AutosuggestInput>
+            </div>
+
+            <AutosuggestTextarea
+              ref={this.setAutosuggestTextarea}
+              placeholder={intl.formatMessage(messages.placeholder)}
+              disabled={disabled}
+              value={this.props.text}
+              onChange={this.handleChange}
               suggestions={this.props.suggestions}
               onFocus={this.handleFocus}
+              onKeyDown={this.handleKeyDown}
               onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
               onSuggestionsClearRequested={this.onSuggestionsClearRequested}
               onSuggestionSelected={this.onSuggestionSelected}
               onPaste={onPaste}
               autoFocus={autoFocus}
-              searchTokens={[':']}
-              id='cw-spoiler-input'
-              className='spoiler-input__input'
               lang={this.props.lang}
-              spellCheck
             >
               <EmojiPickerDropdown onPickEmoji={this.handleEmojiPick} />
 
@@ -285,74 +311,50 @@ class ComposeForm extends ImmutablePureComponent {
                 <UploadFormContainer />
                 <PollFormContainer />
               </div>
-            </AutosuggestInput>
+            </AutosuggestTextarea>
           </div>
 
-          <AutosuggestTextarea
-            ref={this.setAutosuggestTextarea}
-            placeholder={intl.formatMessage(messages.placeholder)}
-            disabled={disabled}
-            value={this.props.text}
-            onChange={this.handleChange}
-            suggestions={this.props.suggestions}
-            onFocus={this.handleFocus}
-            onKeyDown={this.handleKeyDown}
-            onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-            onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-            onSuggestionSelected={this.onSuggestionSelected}
-            onPaste={onPaste}
-            autoFocus={autoFocus}
-            lang={this.props.lang}
-          >
-            <EmojiPickerDropdown onPickEmoji={this.handleEmojiPick} />
-
-            <div className='compose-form__modifiers'>
-              <UploadFormContainer />
-              <PollFormContainer />
+          <div className='compose-form__buttons-wrapper'>
+            <div className='compose-form__buttons'>
+              <UploadButtonContainer />
+              <PollButtonContainer />
+              <PrivacyDropdownContainer disabled={this.props.isEditing} />
+              <SpoilerButtonContainer />
+              {localStorage.plusminus_config_custom_spoiler_button === 'visible' && (
+                <>
+                  {JSON.parse(localStorage.plusminus_config_custom_spoiler_buttons).map((buttonText, index) => (
+                    <CustomSpoilerButtonContainer key={index} preset={buttonText} value={this.props.spoilerText} onChange={this.handleChangeSpoilerText} />
+                  ))}
+                </>
+              )}
+              {localStorage.plusminus_config_emotional_button === 'visible' && (
+                <EmotionalDropdownContainer onSelect={this.onSelectEmotional} />
+              )}
+              {localStorage.plusminus_config_encode_morse === 'enabled' && (
+                <ComposeExtensionButtonContainer
+                  label={'・－'}
+                  onClick={() => this.props.onChange(encodeMorse(this.props.text))}
+                />
+              )}
+              {localStorage.plusminus_config_live_mode_button === 'visible' && (
+                <ComposeExtensionButtonContainer
+                  icon={'bullhorn'}
+                  active={this.state.liveMode}
+                  onClick={
+                    () => this.setState({ liveMode: !this.state.liveMode },
+                      () =>
+                        this.state.liveMode
+                          ? localStorage.plusminus_config_live_mode = 'enabled'
+                          : localStorage.plusminus_config_live_mode = 'disabled')
+                  }
+                />
+              )}
+              <LanguageDropdown />
             </div>
-          </AutosuggestTextarea>
-        </div>
 
-        <div className='compose-form__buttons-wrapper'>
-          <div className='compose-form__buttons'>
-            <UploadButtonContainer />
-            <PollButtonContainer />
-            <PrivacyDropdownContainer disabled={this.props.isEditing} />
-            <SpoilerButtonContainer />
-            {localStorage.plusminus_config_custom_spoiler_button === 'visible' && (
-              <>
-                {JSON.parse(localStorage.plusminus_config_custom_spoiler_buttons).map((buttonText, index) => (
-                  <CustomSpoilerButtonContainer key={index} preset={buttonText} value={this.props.spoilerText} onChange={this.handleChangeSpoilerText} />
-                ))}
-              </>
-            )}
-            {localStorage.plusminus_config_emotional_button === 'visible' && (
-              <EmotionalDropdownContainer onSelect={this.onSelectEmotional} />
-            )}
-            {localStorage.plusminus_config_encode_morse === 'enabled' && (
-              <ComposeExtensionButtonContainer
-                label={'・－'}
-                onClick={() => this.props.onChange(encodeMorse(this.props.text))}
-              />
-            )}
-            {localStorage.plusminus_config_live_mode_button === 'visible' && (
-              <ComposeExtensionButtonContainer
-                icon={'bullhorn'}
-                active={this.state.liveMode}
-                onClick={
-                  () => this.setState({ liveMode: !this.state.liveMode },
-                    () =>
-                      this.state.liveMode
-                        ? localStorage.plusminus_config_live_mode = 'enabled'
-                        : localStorage.plusminus_config_live_mode = 'disabled')
-                }
-              />
-            )}
-            <LanguageDropdown />
-          </div>
-
-          <div className='character-counter__wrapper'>
-            <CharacterCounter max={this.state.maxCharacters} text={this.getFulltextForCharacterCounting()} />
+            <div className='character-counter__wrapper'>
+              <CharacterCounter max={this.state.maxCharacters} text={this.getFulltextForCharacterCounting()} />
+            </div>
           </div>
         </div>
 
