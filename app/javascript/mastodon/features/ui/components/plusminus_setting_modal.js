@@ -113,7 +113,7 @@ const styles = {
     background: 'transparent',
     color: 'inherit',
     fontSize: 'inherit',
-    cursor: 'initial',
+    cursor: 'text',
   },
 };
 
@@ -252,7 +252,7 @@ export class PlusMinusSettingModal extends React.Component {
         <div style={styles.container}>
           <h1 style={styles.title}>
             <div>
-              plusminus設定 (<button style={styles.developerMode} onClick={this.onClickDeveloperModeButton}>β</button>)
+              plusminus設定 (<button style={styles.developerMode} onClick={this.onClickDeveloperModeButton}>β</button>{this.state.config.developer_mode === 'enabled' && '!'})
             </div>
             <div style={styles.buttonContainer}>
               <div style={styles.importButton}>
