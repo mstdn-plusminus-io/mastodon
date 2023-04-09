@@ -842,6 +842,14 @@ body > [data-popper-placement] {
 
 .status__content {
   clear: both;
+
+  + .media-gallery-wrapper {
+    position: relative;
+  }
+
+  + .media-gallery-wrapper .media-gallery + .media-gallery {
+    margin-top: 0;
+  }
 }
 
 .status__content,

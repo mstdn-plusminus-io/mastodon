@@ -37,11 +37,11 @@ class Header extends React.PureComponent {
     location: PropTypes.object,
   };
 
-  openComposeHalfModal() {
+  openComposeHalfModal = () => {
     document.documentElement.classList.add('show-compose-half-modal');
   }
 
-  closeComposeHalfModal() {
+  closeComposeHalfModal = () => {
     document.documentElement.classList.remove('show-compose-half-modal');
   }
 
@@ -64,8 +64,8 @@ class Header extends React.PureComponent {
         <>
           {useHalfModal ? (
             <>
-              <div className={'compose-half-modal'}><ComposeFormContainer showClose onClose={() => this.closeComposeHalfModal()} /></div>
-              <div className={`button ${isBottomRightButton ? 'bottom_right' : ''}`} onClick={() => this.openComposeHalfModal()}>
+              <div className={'compose-half-modal'}><ComposeFormContainer showClose onClose={this.closeComposeHalfModal} /></div>
+              <div className={`button ${isBottomRightButton ? 'bottom_right' : ''}`} onClick={this.openComposeHalfModal} onKeyUp={this.openComposeHalfModal}>
                 {buttonInner}
               </div>
             </>
