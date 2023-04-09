@@ -15,6 +15,7 @@ import 'github-markdown-css';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { decodeMorse } from '../utils/morse';
+import { decodeAme } from 'mastodon/utils/kaiwai';
 
 const codeFanceRegex = /\<p>```(.*?)<br\/?>(.*?)```\<\/p>/g;
 const lineBreakRegex = /<br\/?>/g;
@@ -261,6 +262,10 @@ class StatusContent extends React.PureComponent {
     this.node = c;
   };
 
+  onClickSearchButton = (keyword) => () => {
+    window.open(`https://google.com/search?q=${keyword}`);
+  }
+
   renderContent = (content) => {
     if (localStorage.plusminus_config_decode_morse === 'enabled') {
       if (content.__html.includes('－') || content.__html.includes('・') || content.__html.includes('.') || content.__html.includes('_')) {
@@ -269,6 +274,13 @@ class StatusContent extends React.PureComponent {
         decodeMorse(el);
         content.__html = el.innerHTML;
       }
+    }
+
+    if (localStorage.plusminus_config_decode_ame === 'enabled') {
+      const el = document.createElement('div');
+      el.innerHTML = content.__html;
+      decodeAme(el);
+      content.__html = el.innerHTML;
     }
 
     let inner;
@@ -355,7 +367,7 @@ class StatusContent extends React.PureComponent {
         if (line.match(searchRegex)) {
           const keyword = line.replace(searchRegex, '').trim();
           searchBox.push(
-            <button key={index} className='plusminus-searchbox__container' onClick={() => window.open(`https://google.com/search?q=${keyword}`)}>
+            <button key={index} className='plusminus-searchbox__container' onClick={this.onClickSearchButton(keyword)}>
               <input type='text' value={keyword} readOnly />
               <div>検索</div>
             </button>,

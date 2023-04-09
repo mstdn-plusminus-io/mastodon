@@ -30,7 +30,7 @@ class CustomSpoilerButtonContainer extends React.Component {
     onChange: PropTypes.func.isRequired,
   };
 
-  onClick() {
+  onClick = () => {
     const e = {
       target: {
         value: '',
@@ -48,12 +48,12 @@ class CustomSpoilerButtonContainer extends React.Component {
       e.target.value = this.props.preset;
       this.props.onChange(e);
     }
-  }
+  };
 
   render() {
     const label = [...this.props.preset].slice(0, 2).join('');
     const active = this.props.cwActive && this.props.value === this.props.preset;
-    return <TextIconButton {...this.props} label={label} active={active} onClick={() => this.onClick()} />;
+    return <TextIconButton {...this.props} label={label} active={active} onClick={this.onClick} />;
   }
 
 }

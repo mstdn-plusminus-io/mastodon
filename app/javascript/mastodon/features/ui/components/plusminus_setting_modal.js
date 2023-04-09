@@ -107,6 +107,14 @@ const styles = {
     minWidth: '25px',
     minHeight: '25px',
   },
+  developerMode: {
+    border: 0,
+    padding: 0,
+    background: 'transparent',
+    color: 'inherit',
+    fontSize: 'inherit',
+    cursor: 'text',
+  },
 };
 
 const localStorageKeyPrefix = 'plusminus_config_';
@@ -137,10 +145,14 @@ export default class PlusMinusSettingModalLoader extends React.Component {
     });
   }
 
+  onClickCancel = () => {
+    this.setState({ open: false });
+  };
+
   render() {
     if (this.state.open) {
       return (
-        <PlusMinusSettingModal onCancel={() => this.setState({ open: false })} />
+        <PlusMinusSettingModal onCancel={this.onClickCancel} />
       );
     }
     return <></>;
@@ -187,6 +199,7 @@ export class PlusMinusSettingModal extends React.Component {
   }
 
   state = {
+    developerModeButtonClicked: 0,
     config: {
       timestamp: 'relative',
       content: 'plain',
@@ -207,6 +220,9 @@ export class PlusMinusSettingModal extends React.Component {
       post_half_modal: 'disabled',
       quick_report: 'hidden',
       live_mode_button: 'hidden',
+      developer_mode: 'disabled',
+      decode_ame: 'disabled',
+      encode_ame: 'disabled',
     },
   };
 
@@ -214,12 +230,30 @@ export class PlusMinusSettingModal extends React.Component {
     this.setState({ config: { ...this.state.config, [key]: value } });
   }
 
+  onClickDeveloperModeButton = () => {
+    if (this.state.config.developer_mode === 'enabled') {
+      return;
+    }
+
+    this.setState({
+      developerModeButtonClicked: this.state.developerModeButtonClicked+1,
+    }, () => {
+      if (this.state.developerModeButtonClicked === 7) {
+        localStorage[`${localStorageKeyPrefix}developer_mode`] = 'enabled';
+        alert('開発者モードを有効化しました。リロードします。');
+        location.reload();
+      }
+    });
+  };
+
   render() {
     return (
       <div className={'plusminus-config__root'}>
         <div style={styles.container}>
           <h1 style={styles.title}>
-            plusminus設定 (β)
+            <div>
+              plusminus設定 (<button style={styles.developerMode} onClick={this.onClickDeveloperModeButton}>β</button>{this.state.config.developer_mode === 'enabled' && '!'})
+            </div>
             <div style={styles.buttonContainer}>
               <div style={styles.importButton}>
                 <Button className='button-secondary' onClick={this.handleImport}>インポート</Button>
@@ -357,6 +391,16 @@ export class PlusMinusSettingModal extends React.Component {
                 英数モールス符号もデコードできますが、互換性はありません
               </p>
             </div>
+            {this.state.config.developer_mode === 'enabled' && <div style={styles.config}>
+              <label>
+                <input
+                  type='checkbox'
+                  checked={this.state.config.decode_ame === 'enabled'}
+                  onChange={(e) => this.updateConfig('decode_ame', e.target.checked ? 'enabled' : 'disabled')}
+                />
+                ᕂᕙᕸᕵᖋᕂᖁᕸᖓᕋᖓᖒᕧᕓーᕩᕙᖋ
+              </label>
+            </div>}
             <div style={styles.config}>
               <label>
                 <input
@@ -557,6 +601,16 @@ export class PlusMinusSettingModal extends React.Component {
                 漢字/一部を除く記号は対象外です
               </p>
             </div>
+            {this.state.config.developer_mode === 'enabled' && <div style={styles.config}>
+              <label>
+                <input
+                  type='checkbox'
+                  checked={this.state.config.encode_ame === 'enabled'}
+                  onChange={(e) => this.updateConfig('encode_ame', e.target.checked ? 'enabled' : 'disabled')}
+                />
+                ᕂᕙᕸᕵᖋᕂᖁᕸᖓᕋᖓᖒᕊᕓᕪᕆᕼᕟᖓᖒᕲᖇᕆᕘᕙᖋ
+              </label>
+            </div>}
             <div style={styles.config}>
               <label>
                 <input
@@ -576,11 +630,11 @@ export class PlusMinusSettingModal extends React.Component {
 
         <div style={styles.actionBar}>
           <div style={styles.cancelButton}>
-            <Button onClick={() => this.handleCancel()} className='button-secondary'>
+            <Button onClick={this.handleCancel} className='button-secondary'>
               <FormattedMessage id='confirmation_modal.cancel' defaultMessage='Cancel' />
             </Button>
           </div>
-          <Button onClick={() => this.handleSave()}>
+          <Button onClick={this.handleSave}>
             <FormattedMessage id='compose_form.save_changes' defaultMessage='Save' />
           </Button>
         </div>
@@ -588,16 +642,16 @@ export class PlusMinusSettingModal extends React.Component {
     );
   }
 
-  handleCancel() {
+  handleCancel = () => {
     this.props.onCancel();
-  }
+  };
 
   convert = (obj = {}) => {
     Object.keys(this.state.config).forEach((key) =>
       obj[`${localStorageKeyPrefix}${key}`] = typeof this.state.config[key] === 'object' ? JSON.stringify(this.state.config[key]) : this.state.config[key],
     );
     return obj;
-  }
+  };
 
   handleImport = async () => {
     const text = await open('.json');
@@ -612,14 +666,14 @@ export class PlusMinusSettingModal extends React.Component {
       console.error(e);
       alert('JSONのパースに失敗しました');
     }
-  }
+  };
 
   handleExport = () => {
     const config = JSON.stringify(this.convert());
     download(`mastodon-plusminus-settings-${new Date().getTime()}.json`, config);
-  }
+  };
 
-  handleSave() {
+  handleSave = () => {
     Object.keys(this.state.config).forEach((key) =>
       localStorage[`${localStorageKeyPrefix}${key}`] = typeof this.state.config[key] === 'object' ? JSON.stringify(this.state.config[key]) : this.state.config[key],
     );
@@ -630,6 +684,6 @@ export class PlusMinusSettingModal extends React.Component {
     }
 
     location.reload();
-  }
+  };
 
 }

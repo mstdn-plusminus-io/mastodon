@@ -184,7 +184,7 @@ export const decodeMorse = (node) => {
       }
       return code;
     }).join('');
-    if (replaced > 1) {
+    if (replaced > 2) {
       node.nodeValue = `≪${kana}≫`;
     }
   } else {
