@@ -463,15 +463,10 @@
       }
     }
 
-    .spoiler-button {
-      max-width: 25% !important;
-      height: 120px !important;
-      min-width: 25% !important;
-    }
-
     .spoiler-button.spoiler-button--minified {
       position: absolute !important;
       height: 0 !important;
+      left: 64px !important;
     }
 
     .media-gallery__item {
