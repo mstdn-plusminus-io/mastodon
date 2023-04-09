@@ -314,6 +314,11 @@
       display: block;
     }
 
+    .compose-form__container {
+      max-height: 66dvh;
+      overflow-y: auto;
+    }
+
     /* CW入力部分とか画像投稿ボタンとかの高さを固定する */
     .spoiler-input,
     .spoiler-input *,
