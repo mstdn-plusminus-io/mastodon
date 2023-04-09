@@ -145,10 +145,14 @@ export default class PlusMinusSettingModalLoader extends React.Component {
     });
   }
 
+  onClickCancel = () => {
+    this.setState({ open: false });
+  };
+
   render() {
     if (this.state.open) {
       return (
-        <PlusMinusSettingModal onCancel={() => this.setState({ open: false })} />
+        <PlusMinusSettingModal onCancel={this.onClickCancel} />
       );
     }
     return <></>;
@@ -626,11 +630,11 @@ export class PlusMinusSettingModal extends React.Component {
 
         <div style={styles.actionBar}>
           <div style={styles.cancelButton}>
-            <Button onClick={() => this.handleCancel()} className='button-secondary'>
+            <Button onClick={this.handleCancel} className='button-secondary'>
               <FormattedMessage id='confirmation_modal.cancel' defaultMessage='Cancel' />
             </Button>
           </div>
-          <Button onClick={() => this.handleSave()}>
+          <Button onClick={this.handleSave}>
             <FormattedMessage id='compose_form.save_changes' defaultMessage='Save' />
           </Button>
         </div>
@@ -638,16 +642,16 @@ export class PlusMinusSettingModal extends React.Component {
     );
   }
 
-  handleCancel() {
+  handleCancel = () => {
     this.props.onCancel();
-  }
+  };
 
   convert = (obj = {}) => {
     Object.keys(this.state.config).forEach((key) =>
       obj[`${localStorageKeyPrefix}${key}`] = typeof this.state.config[key] === 'object' ? JSON.stringify(this.state.config[key]) : this.state.config[key],
     );
     return obj;
-  }
+  };
 
   handleImport = async () => {
     const text = await open('.json');
@@ -662,14 +666,14 @@ export class PlusMinusSettingModal extends React.Component {
       console.error(e);
       alert('JSONのパースに失敗しました');
     }
-  }
+  };
 
   handleExport = () => {
     const config = JSON.stringify(this.convert());
     download(`mastodon-plusminus-settings-${new Date().getTime()}.json`, config);
-  }
+  };
 
-  handleSave() {
+  handleSave = () => {
     Object.keys(this.state.config).forEach((key) =>
       localStorage[`${localStorageKeyPrefix}${key}`] = typeof this.state.config[key] === 'object' ? JSON.stringify(this.state.config[key]) : this.state.config[key],
     );
@@ -680,6 +684,6 @@ export class PlusMinusSettingModal extends React.Component {
     }
 
     location.reload();
-  }
+  };
 
 }

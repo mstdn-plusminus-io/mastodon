@@ -238,6 +238,26 @@ class ComposeForm extends ImmutablePureComponent {
     this.handleChange(e);
   };
 
+  onClickEncodeMorse = () => {
+    this.props.onChange(encodeMorse(this.props.text));
+  };
+
+  onClickEncodeAme = () => {
+    this.props.onChange(encodeAme(this.props.text));
+  };
+
+  onClickEncodeLiveMode = () => {
+    this.setState({ liveMode: !this.state.liveMode },
+      () =>
+        this.state.liveMode
+          ? localStorage.plusminus_config_live_mode = 'enabled'
+          : localStorage.plusminus_config_live_mode = 'disabled');
+  };
+
+  onClickCloseModal = () => {
+    this.props.onClose();
+  };
+
   render () {
     const { intl, onPaste, autoFocus } = this.props;
     const disabled = this.props.isSubmitting;
@@ -334,26 +354,20 @@ class ComposeForm extends ImmutablePureComponent {
               {localStorage.plusminus_config_encode_morse === 'enabled' && (
                 <ComposeExtensionButtonContainer
                   label={'・－'}
-                  onClick={() => this.props.onChange(encodeMorse(this.props.text))}
+                  onClick={this.onClickEncodeMorse}
                 />
               )}
               {localStorage.plusminus_config_encode_ame === 'enabled' && (
                 <ComposeExtensionButtonContainer
                   label={'ᕓᕈ'}
-                  onClick={() => this.props.onChange(encodeAme(this.props.text))}
+                  onClick={this.onClickEncodeAme}
                 />
               )}
               {localStorage.plusminus_config_live_mode_button === 'visible' && (
                 <ComposeExtensionButtonContainer
                   icon={'bullhorn'}
                   active={this.state.liveMode}
-                  onClick={
-                    () => this.setState({ liveMode: !this.state.liveMode },
-                      () =>
-                        this.state.liveMode
-                          ? localStorage.plusminus_config_live_mode = 'enabled'
-                          : localStorage.plusminus_config_live_mode = 'disabled')
-                  }
+                  onClick={this.onClickEncodeLiveMode}
                 />
               )}
               <LanguageDropdown />
@@ -372,7 +386,7 @@ class ComposeForm extends ImmutablePureComponent {
                 <Button
                   className={'button-secondary'}
                   text={intl.formatMessage({ id: 'bundle_modal_error.close', defaultMessage: 'Close' })}
-                  onClick={() => this.props.onClose()}
+                  onClick={this.onClickCloseModal}
                   block
                 />
               )}
