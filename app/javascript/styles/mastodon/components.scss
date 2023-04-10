@@ -2275,6 +2275,7 @@ a.account__display-name {
       display: flex;
       justify-content: flex-end;
       min-width: 285px;
+      min-height: 100dvh;
 
       &--start {
         justify-content: flex-start;
