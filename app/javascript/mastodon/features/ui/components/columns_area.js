@@ -23,6 +23,7 @@ import ComposePanel from './compose_panel';
 import NavigationPanel from './navigation_panel';
 import { supportsPassiveEvents } from 'detect-passive-events';
 import { scrollRight } from '../../../scroll';
+import ComposeHalfModal from './compose_half_modal';
 
 const componentMap = {
   'COMPOSE': Compose,
@@ -156,6 +157,7 @@ export default class ColumnsArea extends ImmutablePureComponent {
               <NavigationPanel />
             </div>
           </div>
+          <ComposeHalfModal />
         </div>
       );
     }

@@ -273,7 +273,7 @@ class ComposeForm extends ImmutablePureComponent {
     }
 
     return (
-      <form className='compose-form' onSubmit={this.handleSubmit}>
+      <form className='compose-form' onSubmit={this.handleSubmit} style={this.props.style}>
         <WarningContainer />
 
         <ReplyIndicatorContainer />
