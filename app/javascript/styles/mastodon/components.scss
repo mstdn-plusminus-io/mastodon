@@ -729,6 +729,10 @@ body > [data-popper-placement] {
     .character-counter__wrapper {
       align-self: center;
       margin-right: 4px;
+
+      .compose-form__publish-button-wrapper {
+        display: none;
+      }
     }
   }
 
@@ -2423,14 +2427,24 @@ $ui-header-height: 55px;
   overflow: hidden;
 }
 
+.character-counter__wrapper .compose-form__publish-button-wrapper {
+  display: none;
+}
+
 .compose-half-modal {
   display: none;
-  position: fixed;
-  bottom: 0;
+  position: absolute;
   left: 0;
   right: 0;
-  background: $ui-base-color;
   z-index: 1;
+
+  .compose-form {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    background: $ui-base-color;
+  }
 
   .compose-form__publish-button-wrapper {
     display: flex;
@@ -2443,38 +2457,56 @@ $ui-header-height: 55px;
   }
 }
 
-html.show-compose-half-modal {
-  .compose-half-modal {
-    display: block;
-    max-height: 100dvh;
-    overflow: auto;
-  }
-
-  .compose-half-modal,
-  .compose-half-modal * {
-    touch-action: auto;
-  }
-
-  .columns-area__panels {
-    filter: brightness(0.5);
-
-    .navigation-panel {
-      position: sticky;
-      top: 0;
+@media screen and (max-width: (600px + (285px * 1) + (10px * 1))) {
+  html.show-compose-half-modal {
+    .ui__header__links .button {
+      display: none !important;
     }
-  }
 
-  .columns-area__panels,
-  .columns-area__panels * {
-    pointer-events: none !important;
-  }
+    .compose-half-modal {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+    }
 
-  .autosuggest-textarea__textarea {
-    resize: none;
-  }
+    .compose-half-modal,
+    .compose-half-modal * {
+      touch-action: auto;
+    }
 
-  .compose-form__uploads-wrapper:empty {
-    display: none;
+    .columns-area__panels__pane,
+    .columns-area__panels__main {
+      filter: brightness(0.5);
+      pointer-events: none !important;
+    }
+
+    .columns-area__panels {
+      .navigation-panel {
+        position: sticky;
+        top: 0;
+      }
+    }
+
+    .autosuggest-textarea__textarea {
+      resize: none;
+    }
+
+    .compose-form__uploads-wrapper:empty {
+      display: none;
+    }
+
+    // .scrollable {
+    //   position: relative;
+    //   height: 100%;
+    //   overflow: hidden;
+    //   contain: size;
+
+    //   > * {
+    //     position: relative;
+    //   }
+    // }
   }
 }
 
