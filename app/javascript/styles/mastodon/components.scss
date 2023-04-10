@@ -2447,38 +2447,40 @@ $ui-header-height: 55px;
   }
 }
 
-html.show-compose-half-modal {
-  .compose-half-modal {
-    display: block;
-    max-height: 100dvh;
-    overflow: auto;
-  }
-
-  .compose-half-modal,
-  .compose-half-modal * {
-    touch-action: auto;
-  }
-
-  .columns-area__panels {
-    filter: brightness(0.5);
-
-    .navigation-panel {
-      position: sticky;
-      top: 0;
+@media screen and (max-width: (600px + (285px * 1) + (10px * 1))) {
+  html.show-compose-half-modal {
+    .compose-half-modal {
+      display: block;
+      max-height: 100dvh;
+      overflow: auto;
     }
-  }
 
-  .columns-area__panels,
-  .columns-area__panels * {
-    pointer-events: none !important;
-  }
+    .compose-half-modal,
+    .compose-half-modal * {
+      touch-action: auto;
+    }
 
-  .autosuggest-textarea__textarea {
-    resize: none;
-  }
+    .columns-area__panels {
+      filter: brightness(0.5);
 
-  .compose-form__uploads-wrapper:empty {
-    display: none;
+      .navigation-panel {
+        position: sticky;
+        top: 0;
+      }
+    }
+
+    .columns-area__panels,
+    .columns-area__panels * {
+      pointer-events: none !important;
+    }
+
+    .autosuggest-textarea__textarea {
+      resize: none;
+    }
+
+    .compose-form__uploads-wrapper:empty {
+      display: none;
+    }
   }
 }
 
