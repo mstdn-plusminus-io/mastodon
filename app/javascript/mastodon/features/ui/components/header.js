@@ -8,7 +8,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { openModal } from 'mastodon/actions/modal';
 import Icon from 'mastodon/components/icon';
-import ComposeFormContainer from '../../compose/containers/compose_form_container';
 
 const Account = connect(state => ({
   account: state.getIn(['accounts', me]),
@@ -38,12 +37,17 @@ class Header extends React.PureComponent {
   };
 
   openComposeHalfModal = () => {
-    document.documentElement.classList.add('show-compose-half-modal');
-  }
+    // const scrollChildren = document.querySelector('.scrollable > div');
+    // if (scrollChildren) {
+    //   const { pageTop } = window.visualViewport;
+    //   scrollChildren.style.top = `${-pageTop}px`;
+    //   scrollChildren.dataset.pageTop = pageTop;
+    // }
 
-  closeComposeHalfModal = () => {
-    document.documentElement.classList.remove('show-compose-half-modal');
-  }
+    setTimeout(() => {
+      document.documentElement.classList.add('show-compose-half-modal');
+    }, 0);
+  };
 
   render () {
     const { signedIn } = this.context.identity;
@@ -64,7 +68,6 @@ class Header extends React.PureComponent {
         <>
           {useHalfModal ? (
             <>
-              <div className={'compose-half-modal'}><ComposeFormContainer showClose onClose={this.closeComposeHalfModal} /></div>
               <div className={`button ${isBottomRightButton ? 'bottom_right' : ''}`} onClick={this.openComposeHalfModal} onKeyUp={this.openComposeHalfModal}>
                 {buttonInner}
               </div>

@@ -273,7 +273,7 @@ class ComposeForm extends ImmutablePureComponent {
     }
 
     return (
-      <form className='compose-form' onSubmit={this.handleSubmit}>
+      <form className='compose-form' onSubmit={this.handleSubmit} style={this.props.style}>
         <WarningContainer />
 
         <ReplyIndicatorContainer />
@@ -375,6 +375,13 @@ class ComposeForm extends ImmutablePureComponent {
 
             <div className='character-counter__wrapper'>
               <CharacterCounter max={this.state.maxCharacters} text={this.getFulltextForCharacterCounting()} />
+              <div className='compose-form__publish-button-wrapper'>
+                <Button
+                  type='submit'
+                  disabled={!this.canSubmit()}
+                  block
+                />
+              </div>
             </div>
           </div>
         </div>
