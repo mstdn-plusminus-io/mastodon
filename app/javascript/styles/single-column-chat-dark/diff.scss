@@ -1,6 +1,10 @@
 // UserCSSで動確するとき用
 // @import "../mastodon/variables.scss";
 
+.character-counter__wrapper .compose-form__publish-button-wrapper {
+  display: none;
+}
+
 @media screen and (min-width: (600px + (285px * 1) + (10px * 1))) {
   ::-webkit-scrollbar-thumb {
     border-right: 2px solid transparent !important;
@@ -671,5 +675,29 @@
     .status .video-player {
       max-height: 66vh !important;
     }
+  }
+
+  .character-counter__wrapper {
+    height: 30px;
+    margin-right: -4px !important;
+    display: flex;
+    align-items: center;
+
+    .character-counter {
+      margin-right: 0.5em;
+    }
+
+    .compose-form__publish-button-wrapper {
+      display: block;
+      height: 100%;
+
+      button {
+        height: 100%;
+      }
+    }
+  }
+
+  .compose-form__publish {
+    display: none !important;
   }
 }

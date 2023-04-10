@@ -2423,6 +2423,10 @@ $ui-header-height: 55px;
   overflow: hidden;
 }
 
+.character-counter__wrapper .compose-form__publish-button-wrapper {
+  display: none;
+}
+
 .compose-half-modal {
   display: none;
   position: fixed;
