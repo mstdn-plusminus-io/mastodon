@@ -3,6 +3,10 @@
 
 .character-counter__wrapper .compose-form__publish-button-wrapper {
   display: none;
+
+  @media screen and (min-width: $no-gap-breakpoint) {
+    display: block !important;
+  }
 }
 
 @media screen and (min-width: (600px + (285px * 1) + (10px * 1))) {

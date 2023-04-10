@@ -729,6 +729,10 @@ body > [data-popper-placement] {
     .character-counter__wrapper {
       align-self: center;
       margin-right: 4px;
+
+      .compose-form__publish-button-wrapper {
+        display: none;
+      }
     }
   }
 
