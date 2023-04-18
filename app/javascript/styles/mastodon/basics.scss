@@ -337,7 +337,6 @@ article {
 
   img[src^="/emoji"],
   img[src*="/custom_emojis/images/"] {
-    width: 20px !important;
     height: 20px !important;
     background-color: transparent !important;
   }
@@ -361,5 +360,18 @@ article {
     .syntax-highlighter * {
       background-color: transparent !important;
     }
+  }
+}
+
+img[src^="/emoji"],
+img[src*="/custom_emojis/images/"] {
+  width: auto !important;
+}
+
+.jumbomoji {
+  img[src^="/emoji"],
+  img[src*="/custom_emojis/images/"] {
+    height: 36px !important;
+    margin: 4px 0 0 0 !important;
   }
 }
