@@ -16,6 +16,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { decodeMorse } from '../utils/morse';
 import { decodeAme } from 'mastodon/utils/kaiwai';
+import { komifloLinkify } from 'mastodon/utils/komiflo';
 
 const codeFanceRegex = /\<p>```(.*?)<br\/?>(.*?)```\<\/p>/g;
 const lineBreakRegex = /<br\/?>/g;
@@ -276,11 +277,32 @@ class StatusContent extends React.PureComponent {
       }
     }
 
+    if (localStorage.plusminus_config_komiflo_linkify === 'enabled') {
+      if (content.__html.includes('comics/')) {
+        const el = document.createElement('div');
+        el.innerHTML = content.__html;
+        komifloLinkify(el);
+        content.__html = el.innerHTML;
+      }
+    }
+
     if (localStorage.plusminus_config_decode_ame === 'enabled') {
       const el = document.createElement('div');
       el.innerHTML = content.__html;
       decodeAme(el);
       content.__html = el.innerHTML;
+    }
+
+    let isJumbomoji = false;
+    if (localStorage.plusminus_config_jumbomoji === 'enabled') {
+      const el = document.createElement('div');
+      el.innerHTML = content.__html;
+      if (el.innerText.trim() === '' && el.innerHTML.includes('title=":')) {
+        const emojis = el.innerHTML.split('title=":').length - 1;
+        if (emojis > 0 && emojis <= 23) {
+          isJumbomoji = true;
+        }
+      }
     }
 
     let inner;
@@ -298,7 +320,7 @@ class StatusContent extends React.PureComponent {
       const markdown = turndownService.turndown(html).replaceAll('␚', ' ');
       inner = (
         <ReactMarkdown
-          className={'markdown-body'}
+          className={`markdown-body ${isJumbomoji ? 'jumbomoji' : ''}`}
           children={markdown}
           remarkPlugins={[remarkGfm]}
           components={{
@@ -356,7 +378,7 @@ class StatusContent extends React.PureComponent {
           }}
         />);
     } else {
-      inner = <div dangerouslySetInnerHTML={content} />;
+      inner = <div className={isJumbomoji ? 'jumbomoji' : ''} dangerouslySetInnerHTML={content} />;
     }
 
     let searchBox = [];

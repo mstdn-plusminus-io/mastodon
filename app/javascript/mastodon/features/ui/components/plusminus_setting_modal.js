@@ -223,6 +223,8 @@ export class PlusMinusSettingModal extends React.Component {
       developer_mode: 'disabled',
       decode_ame: 'disabled',
       encode_ame: 'disabled',
+      komiflo_linkify: 'disabled',
+      jumbomoji: 'disabled',
     },
   };
 
@@ -359,6 +361,17 @@ export class PlusMinusSettingModal extends React.Component {
               <label>
                 <input
                   type='checkbox'
+                  checked={this.state.config.jumbomoji === 'enabled'}
+                  onChange={(e) => this.updateConfig('jumbomoji', e.target.checked ? 'enabled' : 'disabled')}
+                />
+                Jumbomojiを有効にする
+              </label>
+              <p style={styles.description}>Slackのように、絵文字のみの投稿の場合は絵文字を大きく表示します</p>
+            </div>
+            <div style={styles.config}>
+              <label>
+                <input
+                  type='checkbox'
                   checked={this.state.config.post_page_link === 'visible'}
                   onChange={(e) => this.updateConfig('post_page_link', e.target.checked ? 'visible' : 'hidden')}
                 />
@@ -391,6 +404,16 @@ export class PlusMinusSettingModal extends React.Component {
                 英数モールス符号もデコードできますが、互換性はありません
               </p>
             </div>
+            {this.state.config.developer_mode === 'enabled' && <div style={styles.config}>
+              <label>
+                <input
+                  type='checkbox'
+                  checked={this.state.config.komiflo_linkify === 'enabled'}
+                  onChange={(e) => this.updateConfig('komiflo_linkify', e.target.checked ? 'enabled' : 'disabled')}
+                />
+                comics/xxxxxx の文字列をKomifloのリンクに置き換える
+              </label>
+            </div>}
             {this.state.config.developer_mode === 'enabled' && <div style={styles.config}>
               <label>
                 <input
