@@ -455,13 +455,19 @@
     }
 
     /* TL内の画像が異様に伸びないように固定する */
+    .media-gallery-wrapper {
+      margin-left: 56px;
+      margin-top: 16px;
+      width: calc(100% - 56px) !important;
+    }
+    .media-gallery {
+      margin-top: 0 !important;
+    }
     .media-gallery,
     .status-card {
       display: flex !important;
       flex-wrap: wrap;
       height: fit-content !important;
-      margin-left: 56px;
-      width: calc(100% - 56px) !important;
     }
 
     .status-card-video {
@@ -480,7 +486,7 @@
     .spoiler-button.spoiler-button--minified {
       position: absolute !important;
       height: 0 !important;
-      left: 64px !important;
+      left: 8px !important;
     }
 
     .media-gallery__item {

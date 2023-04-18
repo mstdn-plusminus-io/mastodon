@@ -849,6 +849,8 @@ body > [data-popper-placement] {
 
   + .media-gallery-wrapper {
     position: relative;
+    display: flex;
+    flex-direction: column;
   }
 
   + .media-gallery-wrapper .media-gallery + .media-gallery {
