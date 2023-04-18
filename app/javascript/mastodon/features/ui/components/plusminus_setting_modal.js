@@ -224,6 +224,7 @@ export class PlusMinusSettingModal extends React.Component {
       decode_ame: 'disabled',
       encode_ame: 'disabled',
       komiflo_linkify: 'disabled',
+      jumbomoji: 'disabled',
     },
   };
 
@@ -355,6 +356,17 @@ export class PlusMinusSettingModal extends React.Component {
                 Markdownをレンダリング（実験的）
               </label>
               <p style={styles.description}><a className={'link'} href='https://github.com/mixmark-io/turndown' target='_blank'>turndown</a>と<a className={'link'} href='https://github.com/remarkjs/react-markdown' target='_blank'>react-markdown</a>を使用してMarkdownをレンダリングします<br />投稿のHTMLに依存するため、スペースや改行などが正しく反映されるとは限りません</p>
+            </div>
+            <div style={styles.config}>
+              <label>
+                <input
+                  type='checkbox'
+                  checked={this.state.config.jumbomoji === 'enabled'}
+                  onChange={(e) => this.updateConfig('jumbomoji', e.target.checked ? 'enabled' : 'disabled')}
+                />
+                Jumbomojiを有効にする
+              </label>
+              <p style={styles.description}>Slackのように、絵文字のみの投稿の場合は絵文字を大きく表示します</p>
             </div>
             <div style={styles.config}>
               <label>

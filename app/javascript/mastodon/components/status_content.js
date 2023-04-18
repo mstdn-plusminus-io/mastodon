@@ -283,7 +283,6 @@ class StatusContent extends React.PureComponent {
         el.innerHTML = content.__html;
         komifloLinkify(el);
         content.__html = el.innerHTML;
-        console.log("content.__html", content.__html);
       }
     }
 
@@ -292,6 +291,18 @@ class StatusContent extends React.PureComponent {
       el.innerHTML = content.__html;
       decodeAme(el);
       content.__html = el.innerHTML;
+    }
+
+    let isJumbomoji = false;
+    if (localStorage.plusminus_config_jumbomoji === 'enabled') {
+      const el = document.createElement('div');
+      el.innerHTML = content.__html;
+      if (el.innerText.trim() === '' && el.innerHTML.includes('title=":')) {
+        const emojis = el.innerHTML.split('title=":').length - 1;
+        if (emojis > 0 && emojis <= 23) {
+          isJumbomoji = true;
+        }
+      }
     }
 
     let inner;
@@ -309,7 +320,7 @@ class StatusContent extends React.PureComponent {
       const markdown = turndownService.turndown(html).replaceAll('␚', ' ');
       inner = (
         <ReactMarkdown
-          className={'markdown-body'}
+          className={`markdown-body ${isJumbomoji ? 'jumbomoji' : ''}`}
           children={markdown}
           remarkPlugins={[remarkGfm]}
           components={{
@@ -367,7 +378,7 @@ class StatusContent extends React.PureComponent {
           }}
         />);
     } else {
-      inner = <div dangerouslySetInnerHTML={content} />;
+      inner = <div className={isJumbomoji ? 'jumbomoji' : ''} dangerouslySetInnerHTML={content} />;
     }
 
     let searchBox = [];
