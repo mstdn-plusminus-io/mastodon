@@ -13,7 +13,7 @@ module Mastodon
     end
 
     def patch
-      2
+      3
     end
 
     def flags
@@ -25,7 +25,7 @@ module Mastodon
     end
 
     def revision
-      4
+      1
     end
 
     def to_a
