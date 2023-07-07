@@ -32,7 +32,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            plusminusio/mastodon
+            plusminusio/mastodon:latest
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
@@ -47,7 +47,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            plusminusio/mastodon
+            plusminusio/mastodon:latest-arm64
           tags: |
             type=semver,pattern={{version}}-arm64
             type=semver,pattern={{major}}.{{minor}}-arm64
