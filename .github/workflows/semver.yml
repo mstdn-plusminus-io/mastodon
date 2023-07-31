@@ -86,8 +86,8 @@ jobs:
           flavor: |
             latest=false
           tags: |
-            type=semver,pattern={{version}},suffix=arm64
-            type=semver,pattern={{major}}.{{minor}},suffix=arm64
+            type=semver,pattern={{version}},suffix=-arm64
+            type=semver,pattern={{major}}.{{minor}},suffix=-arm64
 
       - uses: docker/build-push-action@v3
         with:
