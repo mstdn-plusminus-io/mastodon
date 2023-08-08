@@ -5313,9 +5313,9 @@ a.status-card {
   display: flex;
 }
 
-.video-modal .video-player {
-  max-height: 80vh;
+.video-modal__container {
   max-width: 100vw;
+  max-height: 100vh;
 }
 
 .audio-modal__container {
@@ -6334,7 +6334,7 @@ a.status-card {
   box-sizing: border-box;
   margin-top: 8px;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: 4px;
   position: relative;
   width: 100%;
   min-height: 64px;
@@ -6349,7 +6349,7 @@ a.status-card {
   box-sizing: border-box;
   display: block;
   position: relative;
-  border-radius: 8px;
+  border-radius: 4px;
   overflow: hidden;
 
   &--tall {
@@ -6435,7 +6435,7 @@ a.status-card {
   box-sizing: border-box;
   position: relative;
   background: darken($ui-base-color, 8%);
-  border-radius: 8px;
+  border-radius: 4px;
   padding-bottom: 44px;
   width: 100%;
 
@@ -6502,7 +6502,7 @@ a.status-card {
   position: relative;
   background: $base-shadow-color;
   max-width: 100%;
-  border-radius: 8px;
+  border-radius: 4px;
   box-sizing: border-box;
   color: $white;
   display: flex;
@@ -6519,6 +6519,8 @@ a.status-card {
 
   video {
     display: block;
+    max-width: 100vw;
+    max-height: 80vh;
     z-index: 1;
   }
 
@@ -6526,12 +6528,19 @@ a.status-card {
     width: 100% !important;
     height: 100% !important;
     margin: 0;
-    aspect-ratio: auto !important;
 
     video {
+      max-width: 100% !important;
+      max-height: 100% !important;
       width: 100% !important;
       height: 100% !important;
       outline: 0;
+    }
+  }
+
+  &.inline {
+    video {
+      object-fit: contain;
     }
   }
 

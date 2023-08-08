@@ -683,6 +683,7 @@ sk:
       body: Mastodon je prekladaný dobrovoľníkmi.
       guide_link_text: Prispievať môže každý.
     sensitive_content: Chúlostivý obsah
+    toot_layout: Rozloženie príspevkov
   application_mailer:
     notification_preferences: Zmeň emailové voľby
     settings: 'Zmeň emailové voľby: %{link}'

@@ -12,7 +12,6 @@ class PictureInPicturePlaceholder extends PureComponent {
 
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
-    aspectRatio: PropTypes.string,
   };
 
   handleClick = () => {
@@ -21,10 +20,8 @@ class PictureInPicturePlaceholder extends PureComponent {
   };
 
   render () {
-    const { aspectRatio } = this.props;
-
     return (
-      <div className='picture-in-picture-placeholder' style={{ aspectRatio }} role='button' tabIndex={0} onClick={this.handleClick}>
+      <div className='picture-in-picture-placeholder' role='button' tabIndex={0} onClick={this.handleClick}>
         <Icon id='window-restore' />
         <FormattedMessage id='picture_in_picture.restore' defaultMessage='Put it back' />
       </div>

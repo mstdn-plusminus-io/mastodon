@@ -1009,6 +1009,7 @@ he:
       guide_link: https://crowdin.com/project/mastodon
       guide_link_text: כולם יכולים לתרום.
     sensitive_content: תוכן רגיש
+    toot_layout: פריסת הודעה
   application_mailer:
     notification_preferences: שינוי העדפות דוא"ל
     salutation: "%{name},"
