@@ -119,8 +119,6 @@ ms:
       removed_header_msg: Berjaya membuang imej pengepala %{username}
       resend_confirmation:
         already_confirmed: Pengguna ini telah disahkan
-        send: Hantar semula e-mel pengesahan
-        success: E-mel pengesahan telah berjaya dihantar!
       reset: Tetapkan semula
       reset_password: Tetapkan semula kata laluan
       resubscribe: Langgan semula
@@ -666,7 +664,6 @@ ms:
           approved: Kelulusan diperlukan untuk pendaftaran
           none: Tiada siapa boleh mendaftar
           open: Sesiapapun boleh mendaftar
-      title: Tetapan Pelayan
     site_uploads:
       delete: Hapuskan fail yang dimuat naik
       destroyed_msg: Muat naik tapak berjaya dihapuskan!
@@ -754,7 +751,6 @@ ms:
     view_profile: Lihat profil
     view_status: Lihat hantaran
   auth:
-    change_password: Kata laluan
     delete_account: Padam akaun
     description:
       prefix_sign_up: Daftar pada Mastodon hari ini!
@@ -771,14 +767,6 @@ ms:
       account_status: Status akaun
       view_strikes: Lihat pelanggaran yang lepas terhadap akaun anda
     use_security_key: Gunakan kunci keselamatan
-  authorize_follow:
-    follow: Ikut
-    follow_request: 'Anda telah menghantar permintaan mengikut kepada:'
-    post_follow:
-      close: Atau anda boleh tutup tetingkap ini.
-      return: Tunjukkan profil pengguna
-      web: Pergi ke web
-    title: Ikuti %{acct}
   challenge:
     confirm: Teruskan
     invalid_password: Kata laluan tidak sah
@@ -921,7 +909,6 @@ ms:
       android: Android
       ios: iOS
       linux: Linux
-      other: platform tidak dikenali
     title: Sesi
   settings:
     account: Akaun
@@ -946,7 +933,6 @@ ms:
     edited_at_html: Disunting %{date}
     poll:
       vote: Undi
-    sign_in_to_participate: Daftar masuk untuk menyertai perbualan
     visibilities:
       direct: Terus
       private: Pengikut sahaja
@@ -971,9 +957,7 @@ ms:
       '63113904': 2 tahun
       '7889238': 3 bulan
     min_favs: Simpan hantaran digemarkan sekurang-kurangnya
-    min_favs_hint: Tidak memadamkan mana-mana hantaran anda yang telah menerima sekurang-kurangnya jumlah gemaran ini. Biarkan kosong untuk memadamkan hantaran tanpa mengira nombor gemaran
   stream_entries:
-    pinned: Hantaran disemat
     sensitive_content: Kandungan sensitif
   strikes:
     errors:
