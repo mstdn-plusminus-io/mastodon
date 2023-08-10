@@ -17,11 +17,11 @@ module Mastodon
     end
 
     def flags
-      ENV.fetch('MASTODON_VERSION_FLAGS', '-beta1')
+      ''
     end
 
     def suffix
-      '-plusminus.'
+      '-plusminus.beta'
     end
 
     def revision

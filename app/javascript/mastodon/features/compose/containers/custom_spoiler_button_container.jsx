@@ -59,4 +59,4 @@ class CustomSpoilerButtonContainer extends React.Component {
 
 }
 
-export default connect(mapStateToProps)(injectIntl(CustomSpoilerButtonContainer));
+export default injectIntl(connect(mapStateToProps)(CustomSpoilerButtonContainer));

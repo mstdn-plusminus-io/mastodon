@@ -1,9 +1,12 @@
 /* eslint-disable react/jsx-no-bind */
 
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
+
+import { injectIntl, FormattedMessage } from 'react-intl';
+
 import Button from 'mastodon/components/button';
-import { FormattedMessage } from 'react-intl';
+
 import { open, download } from '../util/file';
 
 const styles = {
@@ -119,7 +122,7 @@ const styles = {
 
 const localStorageKeyPrefix = 'plusminus_config_';
 
-export default class PlusMinusSettingModalLoader extends React.Component {
+class PlusMinusSettingModalLoader extends React.Component {
 
   constructor() {
     super();
@@ -161,7 +164,7 @@ export default class PlusMinusSettingModalLoader extends React.Component {
 }
 
 
-export class PlusMinusSettingModal extends React.Component {
+class PlusMinusSettingModal extends React.Component {
 
   static propTypes = {
     onCancel: PropTypes.func.isRequired,
@@ -710,3 +713,5 @@ export class PlusMinusSettingModal extends React.Component {
   };
 
 }
+
+export default injectIntl(PlusMinusSettingModalLoader);

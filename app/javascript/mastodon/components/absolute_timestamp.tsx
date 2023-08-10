@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import { Component } from 'react';
 
 import { injectIntl } from 'react-intl';
+import type { IntlShape } from 'react-intl';
 
 const dateFormatOptions = {
   hour12: false,
@@ -10,16 +11,24 @@ const dateFormatOptions = {
   day: '2-digit',
   hour: '2-digit',
   minute: '2-digit',
-};
+} as const;
 
-class AbsoluteTimestamp extends React.PureComponent {
+interface Props {
+  intl: IntlShape;
+  timestamp: string;
+}
+interface States {
+  now: number;
+}
 
+// eslint-disable-next-line react/prefer-stateless-function
+class AbsoluteTimestamp extends Component<Props, States> {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     timestamp: PropTypes.string.isRequired,
   };
 
-  render () {
+  render() {
     const { timestamp, intl } = this.props;
 
     const date = new Date(timestamp);
@@ -30,12 +39,16 @@ class AbsoluteTimestamp extends React.PureComponent {
     }
 
     return (
-      <time dateTime={timestamp} title={intl.formatDate(date, dateFormatOptions)}>
+      <time
+        dateTime={timestamp}
+        title={intl.formatDate(date, dateFormatOptions)}
+      >
         {timeString}
       </time>
     );
   }
-
 }
 
-export default injectIntl(AbsoluteTimestamp);
+const AbsoluteTimestampWithIntl = injectIntl(AbsoluteTimestamp as any);
+
+export { AbsoluteTimestampWithIntl as AbsoluteTimestamp };

@@ -26,6 +26,7 @@ import initialState, { me, owner, singleUserMode, trendsEnabled, trendsAsLanding
 
 import BundleColumnError from './components/bundle_column_error';
 import Header from './components/header';
+import PlusMinusSettingModal from './components/plusminus_setting_modal';
 import UploadArea from './components/upload_area';
 import ColumnsAreaContainer from './containers/columns_area_container';
 import LoadingBarContainer from './containers/loading_bar_container';

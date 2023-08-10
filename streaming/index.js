@@ -924,6 +924,7 @@ const startServer = async () => {
 
     if (typeof attachCloseHandler === 'function') {
       attachCloseHandler(ids.map(id => `${redisPrefix}${id}`), listener);
+      setDiconnectTimer(req.params['X-Disconnect-After'], () => attachCloseHandler(ids.map(id => `${redisPrefix}${id}`), listener));
     }
 
     return listener;
@@ -1018,6 +1019,23 @@ const startServer = async () => {
     res.end(JSON.stringify({ error: 'Not found' }));
   };
 
+  /**
+     * @param {string | string[]} disconnectAfter
+     * @param {function} callback
+     */
+  const setDiconnectTimer = (disconnectAfter, callback) => {
+    if (Array.isArray(disconnectAfter)) {
+      disconnectAfter = disconnectAfter.shift();
+    }
+
+    if (disconnectAfter) {
+      const sec = parseFloat(disconnectAfter);
+      if (!isNaN(sec)) {
+        setTimeout(callback, sec * 1000);
+      }
+    }
+  };
+
   const api = express.Router();
 
   app.use(api);
@@ -1033,8 +1051,6 @@ const startServer = async () => {
     channelNameToIds(req, channelNameFromPath(req), req.query).then(({ channelIds, options }) => {
       const onSend = streamToHttp(req, res);
       const onEnd = streamHttpEnd(req, subscriptionHeartbeat(channelIds));
-
-      setDiconnectTimer(req.params['X-Disconnect-After'], () => onEnd(channelIds.map(id => `${redisPrefix}${id}`)));
 
       streamFrom(channelIds, req, onSend, onEnd, options.needsFiltering);
     }).catch(err => {

@@ -9348,3 +9348,93 @@ noscript {
     }
   }
 }
+
+.compose-half-modal {
+  display: none;
+}
+
+@media screen and (max-width: (600px + (285px * 1) + (10px * 1))) {
+  html.show-compose-half-modal {
+    .ui__header__links .button {
+      display: none !important;
+    }
+
+    .compose-half-modal {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+    }
+
+    .compose-half-modal,
+    .compose-half-modal * {
+      touch-action: auto;
+    }
+
+    .columns-area__panels__pane,
+    .columns-area__panels__main {
+      filter: brightness(0.5);
+      pointer-events: none !important;
+    }
+
+    .columns-area__panels {
+      .navigation-panel {
+        position: sticky;
+        top: 0;
+      }
+    }
+
+    .autosuggest-textarea__textarea {
+      resize: none;
+    }
+
+    .compose-form__uploads-wrapper:empty {
+      display: none;
+    }
+
+    // .scrollable {
+    //   position: relative;
+    //   height: 100%;
+    //   overflow: hidden;
+    //   contain: size;
+
+    //   > * {
+    //     position: relative;
+    //   }
+    // }
+  }
+}
+
+.plusminus-config__root {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: darken($ui-base-color, 4%);
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  font-size: initial;
+  color: $primary-text-color;
+  overflow: auto;
+
+  a.link {
+    color: $highlight-text-color;
+  }
+
+  @media screen and (max-width: $no-gap-breakpoint) {
+    .custom-cw-input__wrapper {
+      input,
+      select {
+        flex: auto !important;
+        width: 100%;
+      }
+    }
+    .custom-cw-input-button__wrapper,
+    .custom-cw-input-button__wrapper-order-button {
+      flex: 0;
+    }
+  }
+}
