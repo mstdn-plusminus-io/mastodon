@@ -10,11 +10,18 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 import { length } from 'stringz';
 
 import { Icon }  from 'mastodon/components/icon';
+import { encodeAme } from 'mastodon/utils/kaiwai';
 
+import api from '../../../api';
 import AutosuggestInput from '../../../components/autosuggest_input';
 import AutosuggestTextarea from '../../../components/autosuggest_textarea';
 import Button from '../../../components/button';
+import { text2emotional } from '../../../utils/emotional';
+import { encodeMorse } from '../../../utils/morse';
+import ComposeExtensionButtonContainer from '../containers/compose_extension_button_container';
+import CustomSpoilerButtonContainer from '../containers/custom_spoiler_button_container';
 import EmojiPickerDropdown from '../containers/emoji_picker_dropdown_container';
+import EmotionalDropdownContainer from '../containers/emotional_dropdown_container';
 import LanguageDropdown from '../containers/language_dropdown_container';
 import PollButtonContainer from '../containers/poll_button_container';
 import PollFormContainer from '../containers/poll_form_container';
@@ -27,12 +34,6 @@ import WarningContainer from '../containers/warning_container';
 import { countableText } from '../util/counter';
 
 import CharacterCounter from './character_counter';
-import ComposeExtensionButtonContainer from '../containers/compose_extension_button_container';
-import { encodeMorse } from '../../../utils/morse';
-import EmotionalDropdownContainer from '../containers/emotional_dropdown_container';
-import { text2emotional } from '../../../utils/emotional';
-import api from '../../../api';
-import { encodeAme } from 'mastodon/utils/kaiwai';
 
 const allowedAroundShortCode = '><\u0085\u0020\u00a0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u202f\u205f\u3000\u2028\u2029\u0009\u000a\u000b\u000c\u000d';
 
@@ -315,6 +316,10 @@ class ComposeForm extends ImmutablePureComponent {
                 spellCheck
               >
                 <EmojiPickerDropdown onPickEmoji={this.handleEmojiPick} />
+              </AutosuggestInput>
+            </div>
+          </div>
+        </div>
 
         <div className={classNames('compose-form__highlightable', { active: highlighted })}>
           <AutosuggestTextarea
@@ -346,7 +351,7 @@ class ComposeForm extends ImmutablePureComponent {
               <PollButtonContainer />
               <PrivacyDropdownContainer disabled={this.props.isEditing} />
               <SpoilerButtonContainer />
-　　　　　　　　{localStorage.plusminus_config_custom_spoiler_button === 'visible' && (
+              {localStorage.plusminus_config_custom_spoiler_button === 'visible' && (
                 <>
                   {JSON.parse(localStorage.plusminus_config_custom_spoiler_buttons).map((buttonText, index) => (
                     <CustomSpoilerButtonContainer key={index} preset={buttonText} value={this.props.spoilerText} onChange={this.handleChangeSpoilerText} />

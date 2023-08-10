@@ -1,3 +1,4 @@
+import 'github-markdown-css';
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -9,22 +10,21 @@ import { Link } from 'react-router-dom';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 
-import { Icon }  from 'mastodon/components/icon';
-import PollContainer from 'mastodon/containers/poll_container';
-import Icon from 'mastodon/components/icon';
-import { autoPlayGif, languages as preloadedLanguages } from 'mastodon/initial_state';
-import TurndownService from 'turndown';
-import { gfm as turndownPluginGfm } from 'turndown-plugin-gfm';
 import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import 'github-markdown-css';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { decodeMorse } from '../utils/morse';
+import remarkGfm from 'remark-gfm';
+import TurndownService from 'turndown';
+import { gfm as turndownPluginGfm } from 'turndown-plugin-gfm';
+
+import { Icon }  from 'mastodon/components/icon';
+import PollContainer from 'mastodon/containers/poll_container';
+import { autoPlayGif, languages as preloadedLanguages } from 'mastodon/initial_state';
 import { decodeAme } from 'mastodon/utils/kaiwai';
 import { komifloLinkify } from 'mastodon/utils/komiflo';
+import { decodeMorse } from 'mastodon/utils/morse';
 
-const codeFanceRegex = /\<p>```(.*?)<br\/?>(.*?)```\<\/p>/g;
+const codeFanceRegex = /<p>```(.*?)<br\/?>(.*?)```<\/p>/g;
 const lineBreakRegex = /<br\/?>/g;
 const languageRegex = /language-(\w+)/;
 const searchRegex = /\[?(検索|Search)\]?$/;
@@ -331,10 +331,10 @@ class StatusContent extends PureComponent {
       inner = (
         <ReactMarkdown
           className={`markdown-body ${isJumbomoji ? 'jumbomoji' : ''}`}
-          children={markdown}
           remarkPlugins={[remarkGfm]}
           components={{
             br: () => '',
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             pre: ({ node, inline, className, children, ...props }) => {
               if (children[0].props?.node?.tagName === 'code') {
                 if (children[0].props?.className?.includes('language')) {
@@ -362,12 +362,13 @@ class StatusContent extends PureComponent {
                 return (
                   <SyntaxHighlighter
                     className='syntax-highlighter'
-                    children={String(children).replace(/\n$/, '')}
                     style={oneDark}
                     language={match[1]}
                     PreTag='div'
                     {...props}
-                  />
+                  >
+                    {String(children).replace(/\n$/, '')}
+                  </SyntaxHighlighter>
                 );
               };
               return (
@@ -376,17 +377,21 @@ class StatusContent extends PureComponent {
                 </code>
               );
             },
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             img: ({ node, inline, className, children, ...props }) => {
               const emojiClassName = [className];
               if (node.properties?.src?.includes('/emoji/')) {
                 emojiClassName.push('emojione');
               }
               return (
+                // eslint-disable-next-line jsx-a11y/alt-text
                 <img className={emojiClassName.join(' ')} {...node.properties} />
               );
             },
           }}
-        />);
+        >
+          {markdown}
+        </ReactMarkdown>);
     } else {
       inner = <div className={isJumbomoji ? 'jumbomoji' : ''} dangerouslySetInnerHTML={content} />;
     }

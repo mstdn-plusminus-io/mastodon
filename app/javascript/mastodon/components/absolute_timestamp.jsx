@@ -1,6 +1,7 @@
-import React from 'react';
-import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
+import React from 'react';
+
+import { injectIntl } from 'react-intl';
 
 const dateFormatOptions = {
   hour12: false,
@@ -11,7 +12,6 @@ const dateFormatOptions = {
   minute: '2-digit',
 };
 
-export default @injectIntl
 class AbsoluteTimestamp extends React.PureComponent {
 
   static propTypes = {
@@ -37,3 +37,5 @@ class AbsoluteTimestamp extends React.PureComponent {
   }
 
 }
+
+export default injectIntl(AbsoluteTimestamp);

@@ -1,9 +1,12 @@
-import { connect } from 'react-redux';
-import TextIconButton from '../components/text_icon_button';
-import { changeComposeSpoilerness, changeComposeSpoilerText } from '../../../actions/compose';
-import { injectIntl, defineMessages } from 'react-intl';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
+
+import { injectIntl, defineMessages } from 'react-intl';
+
+import { connect } from 'react-redux';
+
+import { changeComposeSpoilerness } from '../../../actions/compose';
+import TextIconButton from '../components/text_icon_button';
 
 const messages = defineMessages({
   marked: { id: 'compose_form.spoiler.marked', defaultMessage: 'Text is hidden behind warning' },
@@ -17,8 +20,6 @@ const mapStateToProps = (state, { intl, value }) => ({
   ariaControls: 'cw-spoiler-input',
 });
 
-export default @injectIntl
-@connect(mapStateToProps)
 class CustomSpoilerButtonContainer extends React.Component {
 
   static propTypes = {
@@ -57,3 +58,5 @@ class CustomSpoilerButtonContainer extends React.Component {
   }
 
 }
+
+export default connect(mapStateToProps)(injectIntl(CustomSpoilerButtonContainer));

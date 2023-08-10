@@ -1,7 +1,8 @@
-import TextIconButton from '../components/text_icon_button';
-import IconButton from '../../../components/icon_button';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
+
+import { IconButton } from '../../../components/icon_button';
+import TextIconButton from '../components/text_icon_button';
 
 const iconStyle = {
   height: null,

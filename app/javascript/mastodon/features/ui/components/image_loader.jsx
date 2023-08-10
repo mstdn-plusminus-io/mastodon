@@ -5,7 +5,8 @@ import classNames from 'classnames';
 
 import { LoadingBar } from 'react-redux-loading-bar';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
-import IconButton from '../../../components/icon_button';
+
+import { IconButton } from '../../../components/icon_button';
 
 export default class ImageLoader extends PureComponent {
 
