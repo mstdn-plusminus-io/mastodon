@@ -9,6 +9,10 @@
   }
 }
 
+.compose-form__buttons + .right-side .compose-form__publish {
+  display: none;
+}
+
 @media screen and (min-width: (600px + (285px * 1) + (10px * 1))) {
   ::-webkit-scrollbar-thumb {
     border-right: 2px solid transparent !important;
@@ -248,8 +252,7 @@
     .compose-form {
       flex: 1 !important;
       display: flex !important;
-      flex-direction: row !important;
-      align-items: flex-end !important;
+      flex-direction: column !important;
       background: #17191f !important;
       min-height: 40px !important;
       box-sizing: content-box !important;
@@ -425,6 +428,15 @@
       margin-left: 10px !important;
     }
 
+    /* 下カラムのを投稿ボタンを一旦消して */
+    .compose-form__publish {
+      display: none;
+    }
+    /* 文字数カウンター右側のを復帰させる */
+    .compose-form__buttons + .right-side .compose-form__publish {
+      display: block;
+    }
+
     /* トゥートボタンの文字を消してFontAwesomeに置き換える */
     .compose-form__publish-button-wrapper {
       position: relative !important;
@@ -443,8 +455,9 @@
 
     .compose-form__publish button {
       font-size: 0 !important;
-      width: 40px !important;
-      height: 40px !important;
+      width: 34px !important;
+      height: 34px !important;
+      padding: 0 !important;
       display: block !important;
     }
 
@@ -500,7 +513,7 @@
     /* 絵文字ピッカーのボタンが画像アップロードなどで隠れるやつの修正 */
     .emoji-picker-dropdown {
       top: unset !important;
-      bottom: 0.75em !important;
+      bottom: 0.5em !important;
     }
 
     /* 絵文字ピッカーが初回のみ吹き飛ぶやつの修正 */
@@ -679,6 +692,10 @@
       right: 0 !important;
     }
 
+    .media-gallery {
+      aspect-ratio: auto !important;
+    }
+
     .media-gallery .media-gallery__item {
       inset: auto !important;
     }
@@ -706,9 +723,5 @@
         height: 100%;
       }
     }
-  }
-
-  .compose-form__publish {
-    display: none !important;
   }
 }

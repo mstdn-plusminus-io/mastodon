@@ -271,10 +271,37 @@ class ComposeForm extends ImmutablePureComponent {
     this.props.onClose();
   };
 
+  renderPublish = ({ intl, publishText }) => {
+    return (
+      <div className='compose-form__publish'>
+        <div className='compose-form__publish-button-wrapper'>
+          <div>
+            {this.props.showClose && this.props.onClose && (
+              <Button
+                className={'button-secondary'}
+                text={intl.formatMessage({ id: 'bundle_modal_error.close', defaultMessage: 'Close' })}
+                onClick={this.onClickCloseModal}
+                block
+              />
+            )}
+          </div>
+          <Button
+            type='submit'
+            text={publishText}
+            disabled={!this.canSubmit()}
+            block
+          />
+        </div>
+      </div>
+    );
+  }
+
   render () {
     const { intl, onPaste, autoFocus } = this.props;
     const { highlighted } = this.state;
     const disabled = this.props.isSubmitting;
+    const isSingleColumnChatDark = document.body.classList.contains('theme-single-column-chat-dark');
+    const isEnabledHalfModal = localStorage.plusminus_config_post_half_modal === 'enabled';
 
     let publishText = '';
 
@@ -314,9 +341,7 @@ class ComposeForm extends ImmutablePureComponent {
                 className='spoiler-input__input'
                 lang={this.props.lang}
                 spellCheck
-              >
-                <EmojiPickerDropdown onPickEmoji={this.handleEmojiPick} />
-              </AutosuggestInput>
+              />
             </div>
           </div>
         </div>
@@ -341,9 +366,9 @@ class ComposeForm extends ImmutablePureComponent {
             <div className='compose-form__modifiers'>
               <UploadFormContainer />
               <PollFormContainer />
+              <EmojiPickerDropdown onPickEmoji={this.handleEmojiPick} placement={(isEnabledHalfModal || isSingleColumnChatDark) ? 'top' : 'bottom'} />
             </div>
           </AutosuggestTextarea>
-          <EmojiPickerDropdown onPickEmoji={this.handleEmojiPick} />
 
           <div className='compose-form__buttons-wrapper'>
             <div className='compose-form__buttons'>
@@ -383,32 +408,15 @@ class ComposeForm extends ImmutablePureComponent {
               <LanguageDropdown />
             </div>
 
-            <div className='character-counter__wrapper'>
-              <CharacterCounter max={this.state.maxCharacters} text={this.getFulltextForCharacterCounting()} />
+            <div className='right-side' style={{ display: 'flex' }}>
+              <div className='character-counter__wrapper'>
+                <CharacterCounter max={this.state.maxCharacters} text={this.getFulltextForCharacterCounting()} />
+              </div>
+              {isSingleColumnChatDark && this.renderPublish({ intl, publishText })}
             </div>
           </div>
         </div>
-
-        <div className='compose-form__publish'>
-          <div className='compose-form__publish-button-wrapper'>
-            <div>
-              {this.props.showClose && this.props.onClose && (
-                <Button
-                  className={'button-secondary'}
-                  text={intl.formatMessage({ id: 'bundle_modal_error.close', defaultMessage: 'Close' })}
-                  onClick={this.onClickCloseModal}
-                  block
-                />
-              )}
-            </div>
-            <Button
-              type='submit'
-              text={publishText}
-              disabled={!this.canSubmit()}
-              block
-            />
-          </div>
-        </div>
+        {this.renderPublish({ intl, publishText })}
       </form>
     );
   }

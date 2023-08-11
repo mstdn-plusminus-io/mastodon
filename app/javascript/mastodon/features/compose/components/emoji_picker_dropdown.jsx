@@ -322,6 +322,7 @@ class EmojiPickerDropdown extends PureComponent {
     onSkinTone: PropTypes.func.isRequired,
     skinTone: PropTypes.number.isRequired,
     button: PropTypes.node,
+    placement: PropTypes.string,
   };
 
   state = {
@@ -393,7 +394,7 @@ class EmojiPickerDropdown extends PureComponent {
           />}
         </div>
 
-        <Overlay show={active} placement={'bottom'} target={this.findTarget} popperConfig={{ strategy: 'fixed' }}>
+        <Overlay show={active} placement={this.props.placement || 'bottom'} target={this.findTarget} popperConfig={{ strategy: 'fixed' }}>
           {({ props, placement })=> (
             <div {...props} style={{ ...props.style, width: 299 }}>
               <div className={`dropdown-animation ${placement}`}>
