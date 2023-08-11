@@ -16,7 +16,7 @@ import ColumnHeader from 'mastodon/components/column_header';
 import ConversationsListContainer from './containers/conversations_list_container';
 
 const messages = defineMessages({
-  title: { id: 'column.direct', defaultMessage: 'Private mentions' },
+  title: { id: 'column.direct', defaultMessage: 'Direct messages' },
 });
 
 class DirectTimeline extends PureComponent {
@@ -98,7 +98,7 @@ class DirectTimeline extends PureComponent {
           onLoadMore={this.handleLoadMore}
           prepend={<div className='follow_requests-unlocked_explanation'><span><FormattedMessage id='compose_form.encryption_warning' defaultMessage='Posts on Mastodon are not end-to-end encrypted. Do not share any dangerous information over Mastodon.' /> <a href='/terms' target='_blank'><FormattedMessage id='compose_form.direct_message_warning_learn_more' defaultMessage='Learn more' /></a></span></div>}
           alwaysPrepend
-          emptyMessage={<FormattedMessage id='empty_column.direct' defaultMessage="You don't have any private mentions yet. When you send or receive one, it will show up here." />}
+          emptyMessage={<FormattedMessage id='empty_column.direct' defaultMessage="You don't have any Direct messages yet. When you send or receive one, it will show up here." />}
         />
 
         <Helmet>

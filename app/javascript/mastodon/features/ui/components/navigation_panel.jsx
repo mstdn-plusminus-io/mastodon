@@ -22,7 +22,7 @@ const messages = defineMessages({
   notifications: { id: 'tabs_bar.notifications', defaultMessage: 'Notifications' },
   explore: { id: 'explore.title', defaultMessage: 'Explore' },
   firehose: { id: 'column.firehose', defaultMessage: 'Live feeds' },
-  direct: { id: 'navigation_bar.direct', defaultMessage: 'Private mentions' },
+  direct: { id: 'navigation_bar.direct', defaultMessage: 'Direct messages' },
   favourites: { id: 'navigation_bar.favourites', defaultMessage: 'Favorites' },
   bookmarks: { id: 'navigation_bar.bookmarks', defaultMessage: 'Bookmarks' },
   lists: { id: 'navigation_bar.lists', defaultMessage: 'Lists' },
@@ -99,7 +99,7 @@ class NavigationPanel extends Component {
 
         {signedIn && (
           <>
-            <ColumnLink transparent to='/conversations' icon='at' text={intl.formatMessage(messages.direct)} />
+            <ColumnLink transparent to='/conversations' icon='envelope' text={intl.formatMessage(messages.direct)} />
             <ColumnLink transparent to='/bookmarks' icon='bookmark' text={intl.formatMessage(messages.bookmarks)} />
             <ColumnLink transparent to='/favourites' icon='star' text={intl.formatMessage(messages.favourites)} />
             <ColumnLink transparent to='/lists' icon='list-ul' text={intl.formatMessage(messages.lists)} />
