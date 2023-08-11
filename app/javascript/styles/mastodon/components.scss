@@ -9351,6 +9351,28 @@ noscript {
 
 .compose-half-modal {
   display: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 1;
+
+  .compose-form {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    background: $ui-base-color;
+  }
+
+  .compose-form__publish-button-wrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    button {
+      width: auto;
+    }
+  }
 }
 
 @media screen and (max-width: (600px + (285px * 1) + (10px * 1))) {
@@ -9365,6 +9387,16 @@ noscript {
       top: 0;
       left: 0;
       right: 0;
+
+      .autosuggest-textarea {
+        max-height: 50dvh;
+        overflow: auto;
+      }
+
+      .compose-form__uploads-wrapper {
+        flex-wrap: nowrap;
+        overflow: auto;
+      }
     }
 
     .compose-half-modal,

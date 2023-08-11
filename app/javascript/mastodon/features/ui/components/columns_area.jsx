@@ -24,10 +24,10 @@ import {
 
 import BundleColumnError from './bundle_column_error';
 import ColumnLoading from './column_loading';
+import ComposeHalfModal from './compose_half_modal';
 import ComposePanel from './compose_panel';
 import DrawerLoading from './drawer_loading';
 import NavigationPanel from './navigation_panel';
-import ComposeHalfModal from './compose_half_modal';
 
 const componentMap = {
   'COMPOSE': Compose,

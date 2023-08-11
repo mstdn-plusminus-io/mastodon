@@ -1,7 +1,9 @@
 /* eslint-disable react/jsx-no-bind */
 
-import { throttle } from 'lodash';
 import React from 'react';
+
+import { throttle } from 'lodash';
+
 import ComposeFormContainer from '../../compose/containers/compose_form_container';
 
 export default class ComposeHalfModal extends React.Component {

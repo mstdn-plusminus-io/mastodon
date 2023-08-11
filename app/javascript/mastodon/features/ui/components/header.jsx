@@ -58,6 +58,19 @@ class Header extends PureComponent {
     dispatchServer();
   }
 
+  openComposeHalfModal = () => {
+    // const scrollChildren = document.querySelector('.scrollable > div');
+    // if (scrollChildren) {
+    //   const { pageTop } = window.visualViewport;
+    //   scrollChildren.style.top = `${-pageTop}px`;
+    //   scrollChildren.dataset.pageTop = pageTop;
+    // }
+
+    setTimeout(() => {
+      document.documentElement.classList.add('show-compose-half-modal');
+    }, 0);
+  };
+
   render () {
     const { signedIn } = this.context.identity;
     const { location, openClosedRegistrationsModal, signupUrl, intl } = this.props;
@@ -65,10 +78,25 @@ class Header extends PureComponent {
     let content;
 
     if (signedIn) {
+      const isBottomRightButton = localStorage.plusminus_config_post_button_location === 'bottom_right';
+      const useHalfModal = localStorage.plusminus_config_post_half_modal === 'enabled';
+      const buttonInner = (
+        <>
+          {isBottomRightButton && <Icon id='send' fixedWidth />}
+          {!isBottomRightButton && <FormattedMessage id='compose_form.publish' defaultMessage='Publish' /> }
+        </>
+      );
       content = (
         <>
-          {location.pathname !== '/search' && <Link to='/search' className='button button-secondary' aria-label={intl.formatMessage(messages.search)}><Icon id='search' /></Link>}
-          {location.pathname !== '/publish' && <Link to='/publish' className='button button-secondary'><FormattedMessage id='compose_form.publish_form' defaultMessage='New post' /></Link>}
+          {useHalfModal ? (
+            <div className={`button ${isBottomRightButton ? 'bottom_right' : ''}`} onClick={this.openComposeHalfModal} onKeyUp={this.openComposeHalfModal}>
+              {buttonInner}
+            </div>
+          ) : location.pathname !== '/publish' && (
+            <Link to='/publish' className={`button ${isBottomRightButton ? 'bottom_right' : ''}`}>
+              {buttonInner}
+            </Link>
+          )}
           <Account />
         </>
       );
