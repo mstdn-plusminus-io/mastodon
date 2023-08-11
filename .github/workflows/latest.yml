@@ -7,7 +7,7 @@ on:
     tags:
       - v*
 
-concurrency: 
+concurrency:
   group: build-${{ github.ref }}
 
 jobs:
@@ -30,13 +30,13 @@ jobs:
           username: mohemohe
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - uses: docker/build-push-action@v3
+      - uses: docker/build-push-action@v4
         with:
           push: true
           file: latest.Dockerfile
           tags: plusminusio/mastodon:latest
 
-      - uses: docker/build-push-action@v3
+      - uses: docker/build-push-action@v4
         with:
           push: true
           file: latest-arm64.Dockerfile
