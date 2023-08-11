@@ -9,11 +9,11 @@ module Mastodon
     end
 
     def minor
-      1
+      2
     end
 
     def patch
-      6
+      0
     end
 
     def flags
@@ -21,7 +21,7 @@ module Mastodon
     end
 
     def suffix
-      '-plusminus.'
+      '-plusminus.beta'
     end
 
     def revision
