@@ -206,3 +206,5 @@ gem 'net-http', '~> 0.3.2'
 gem 'rubyzip', '~> 2.3'
 
 gem 'hcaptcha', '~> 7.1'
+
+gem "mimemagic", "~> 0.4.3"
