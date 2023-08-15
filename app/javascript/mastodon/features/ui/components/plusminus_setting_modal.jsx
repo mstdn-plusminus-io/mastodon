@@ -228,6 +228,7 @@ class PlusMinusSettingModal extends React.Component {
       encode_ame: 'disabled',
       komiflo_linkify: 'disabled',
       jumbomoji: 'disabled',
+      filter_media_only_toots: 'disabled',
     },
   };
 
@@ -438,6 +439,19 @@ class PlusMinusSettingModal extends React.Component {
               </label>
               <p style={styles.description}>
                 通報をすばやく、簡単に行えるようになります
+              </p>
+            </div>
+            <div style={styles.config}>
+              <label>
+                <input
+                  type='checkbox'
+                  checked={this.state.config.filter_media_only_toots === 'enabled'}
+                  onChange={(e) => this.updateConfig('filter_media_only_toots', e.target.checked ? 'enabled' : 'disabled')}
+                />
+                <code>🖼️</code> から始まる名前のリストのトゥートをメディアでフィルタする
+              </label>
+              <p style={styles.description}>
+                名前が <code>🖼️</code> から始まるリストTLの表示対象を、メディアが添付されているものだけに絞り込みます
               </p>
             </div>
 
