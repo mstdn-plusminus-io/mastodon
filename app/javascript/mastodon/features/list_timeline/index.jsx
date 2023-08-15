@@ -228,6 +228,7 @@ class ListTimeline extends PureComponent {
           onLoadMore={this.handleLoadMore}
           emptyMessage={<FormattedMessage id='empty_column.list' defaultMessage='There is nothing in this list yet. When members of this list post new statuses, they will appear here.' />}
           bindToDocument={!multiColumn}
+          mediaOnly={title.trim().startsWith("🖼️") && localStorage.plusminus_config_filter_media_only_toots === "enabled"}
         />
 
         <Helmet>

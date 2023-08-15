@@ -27,6 +27,7 @@ class Item extends PureComponent {
     lang: PropTypes.string,
     standalone: PropTypes.bool,
     index: PropTypes.number.isRequired,
+    actualIndex: PropTypes.number,
     size: PropTypes.number.isRequired,
     onClick: PropTypes.func.isRequired,
     displayWidth: PropTypes.number,
@@ -67,7 +68,7 @@ class Item extends PureComponent {
   }
 
   handleClick = (e) => {
-    const { index, onClick } = this.props;
+    const { index, actualIndex, onClick } = this.props;
 
     if (e.button === 0 && !(e.ctrlKey || e.metaKey)) {
       if (this.hoverToPlay()) {
@@ -75,7 +76,7 @@ class Item extends PureComponent {
         e.target.currentTime = 0;
       }
       e.preventDefault();
-      onClick(index);
+      onClick(actualIndex || index);
     }
 
     e.stopPropagation();
@@ -320,12 +321,12 @@ class MediaGallery extends PureComponent {
     if (standalone && this.isFullSizeEligible()) {
       children = <Item standalone autoplay={autoplay} onClick={this.handleClick} attachment={media.get(0)} lang={lang} displayWidth={width} visible={visible} />;
     } else {
-      const chunks = this.chunk(media, 4);
+      const chunks = this.chunk(media.map((attachment, index) => attachment.set('actualIndex', index)), 4);
       children = chunks.map((chunk, index) => (
         <div key={`${index}_${chunks.size}`} className='media-gallery' style={style} ref={this.handleRef}>
           {
             chunk.map((attachment, i) =>
-              <Item key={attachment.get('id')} autoplay={autoplay} onClick={this.handleClick} attachment={attachment} index={i} lang={lang} size={chunk.size} displayWidth={width} visible={visible || uncached} />)
+              <Item key={attachment.get('id')} autoplay={autoplay} onClick={this.handleClick} attachment={attachment} index={i} actualIndex={attachment.get('actualIndex')} lang={lang} size={chunk.size} displayWidth={width} visible={visible || uncached} />)
           }
         </div>
       ));
