@@ -9,10 +9,11 @@ import StatusList from '../../../components/status_list';
 import { me } from '../../../initial_state';
 
 const makeGetStatusIds = (pending = false) => createSelector([
-  (state, { type }) => state.getIn(['settings', type], ImmutableMap()),
-  (state, { type }) => state.getIn(['timelines', type, pending ? 'pendingItems' : 'items'], ImmutableList()),
+  (state, _, { type }) => state.getIn(['settings', type], ImmutableMap()),
+  (state, _, { type }) => state.getIn(['timelines', type, pending ? 'pendingItems' : 'items'], ImmutableList()),
   (state)           => state.get('statuses'),
-], (columnSettings, statusIds, statuses) => {
+  (_, props) => props,
+], (columnSettings, statusIds, statuses, props) => {
   return statusIds.filter(id => {
     if (id === null) return true;
 
@@ -29,6 +30,14 @@ const makeGetStatusIds = (pending = false) => createSelector([
       showStatus = showStatus && (statusForId.get('in_reply_to_id') === null || statusForId.get('in_reply_to_account_id') === me);
     }
 
+    if (props.mediaOnly === true) {
+      if (statusForId.get('reblog')) {
+        showStatus = showStatus && statuses.get(statusForId.get('reblog')).get('media_attachments')?.size > 0;
+      } else {
+        showStatus = showStatus && statusForId.get('media_attachments')?.size > 0;
+      }
+    }
+
     return showStatus;
   });
 });
@@ -37,13 +46,13 @@ const makeMapStateToProps = () => {
   const getStatusIds = makeGetStatusIds();
   const getPendingStatusIds = makeGetStatusIds(true);
 
-  const mapStateToProps = (state, { timelineId }) => ({
-    statusIds: getStatusIds(state, { type: timelineId }),
-    lastId:    state.getIn(['timelines', timelineId, 'items'])?.last(),
-    isLoading: state.getIn(['timelines', timelineId, 'isLoading'], true),
-    isPartial: state.getIn(['timelines', timelineId, 'isPartial'], false),
-    hasMore:   state.getIn(['timelines', timelineId, 'hasMore']),
-    numPending: getPendingStatusIds(state, { type: timelineId }).size,
+  const mapStateToProps = (state, props) => ({
+    statusIds: getStatusIds(state, props, { type: props.timelineId }),
+    lastId:    state.getIn(['timelines', props.timelineId, 'items'])?.last(),
+    isLoading: state.getIn(['timelines', props.timelineId, 'isLoading'], true),
+    isPartial: state.getIn(['timelines', props.timelineId, 'isPartial'], false),
+    hasMore:   state.getIn(['timelines', props.timelineId, 'hasMore']),
+    numPending: getPendingStatusIds(state, props, { type: props.timelineId }).size,
   });
 
   return mapStateToProps;

@@ -300,6 +300,7 @@ class ComposeForm extends ImmutablePureComponent {
     const { intl, onPaste, autoFocus } = this.props;
     const { highlighted } = this.state;
     const disabled = this.props.isSubmitting;
+    const isSingleColumn = document.body.classList.contains('layout-single-column');
     const isSingleColumnChatDark = document.body.classList.contains('theme-single-column-chat-dark');
     const isEnabledHalfModal = localStorage.plusminus_config_post_half_modal === 'enabled';
 
@@ -366,7 +367,7 @@ class ComposeForm extends ImmutablePureComponent {
             <div className='compose-form__modifiers'>
               <UploadFormContainer />
               <PollFormContainer />
-              <EmojiPickerDropdown onPickEmoji={this.handleEmojiPick} placement={(isEnabledHalfModal || isSingleColumnChatDark) ? 'top' : 'bottom'} />
+              <EmojiPickerDropdown onPickEmoji={this.handleEmojiPick} placement={(isEnabledHalfModal && isSingleColumn) ? 'top' : 'bottom'} />
             </div>
           </AutosuggestTextarea>
 
