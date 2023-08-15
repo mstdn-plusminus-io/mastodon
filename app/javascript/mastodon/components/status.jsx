@@ -327,6 +327,13 @@ class Status extends ImmutablePureComponent {
     this.node = c;
   };
 
+  openExternalLink = href => e => {
+    e.preventDefault();
+    e.stopPropagation();
+    window.open(href, '_blank');
+    return false;
+  }
+
   render () {
     const { intl, hidden, featured, unread, showThread, scrollKey, pictureInPicture, previousId, nextInReplyToId, rootId } = this.props;
 
@@ -566,7 +573,7 @@ class Status extends ImmutablePureComponent {
                   {timestamp}{status.get('edited_at') && <abbr title={intl.formatMessage(messages.edited, { date: intl.formatDate(status.get('edited_at'), { hour12: false, year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit' }) })}> *</abbr>}
                 </a>
                 {localStorage.plusminus_config_post_page_link === 'visible' && (
-                  <a href={status.get('url')} className='status__link_icon' target='_blank' rel='noopener noreferrer'>
+                  <a href={status.get('url')} onClick={this.openExternalLink(status.get('url'))} className='status__link_icon' target='_blank' rel='noopener noreferrer'>
                     <span><Icon id='external-link' title='external-link' /></span>
                   </a>
                 )}
