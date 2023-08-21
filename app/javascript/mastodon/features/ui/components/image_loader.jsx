@@ -154,11 +154,9 @@ export default class ImageLoader extends PureComponent {
     return (
       <div className={className}>
         {loading && (
-          <>
-            <div className='loading-bar__container'>
-              <LoadingBar className='loading-bar' loading={1} />
-            </div>
-          </>
+          <div className='loading-bar__container'>
+            <LoadingBar className='loading-bar' loading={1} />
+          </div>
         )}
         <TransformWrapper
           minScale={this.state.minScale}
@@ -206,7 +204,7 @@ export default class ImageLoader extends PureComponent {
                     size={40}
                   />
                 </div>
-                <div style={{ opacity: 0.8 }}>
+                <div className='media-modal__navigation-size' style={{ opacity: 0.8 }}>
                   <div>
                     {this.img.naturalWidth} x {this.img.naturalHeight} px
                   </div>

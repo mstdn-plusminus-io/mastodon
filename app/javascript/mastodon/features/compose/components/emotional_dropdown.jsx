@@ -1,12 +1,16 @@
-import React from 'react';
 import PropTypes from 'prop-types';
-import Overlay from 'react-overlays/Overlay';
-import Motion from '../../ui/util/optional_motion';
-import spring from 'react-motion/lib/spring';
-import { supportsPassiveEvents } from 'detect-passive-events';
+import React from 'react';
+
 import classNames from 'classnames';
-import TextIconButton from './text_icon_button';
+
+import { supportsPassiveEvents } from 'detect-passive-events';
+import spring from 'react-motion/lib/spring';
+import Overlay from 'react-overlays/Overlay';
+
 import { text2emotional } from '../../../utils/emotional';
+import Motion from '../../ui/util/optional_motion';
+
+import TextIconButton from './text_icon_button';
 
 const listenerOptions = supportsPassiveEvents ? { passive: true } : false;
 
@@ -26,8 +30,9 @@ class EmotionalDropdownMenu extends React.PureComponent {
   };
 
   handleDocumentClick = e => {
-    if (this.node && !this.node.contains(e.target)) {
+    if (this.node && !this.node.contains(e.target) && this.state.mounted) {
       this.props.onClose();
+      e.stopPropagation();
     }
   }
 
@@ -88,7 +93,7 @@ class EmotionalDropdownMenu extends React.PureComponent {
     document.addEventListener('click', this.handleDocumentClick, false);
     document.addEventListener('touchend', this.handleDocumentClick, listenerOptions);
     if (this.focusedItem) this.focusedItem.focus({ preventScroll: true });
-    this.setState({ mounted: true });
+    requestAnimationFrame(() => this.setState({ mounted: true }));
   }
 
   componentWillUnmount () {
@@ -240,6 +245,8 @@ export default class EmotionalDropdown extends React.PureComponent {
     const { value, container } = this.props;
     const { open, placement } = this.state;
 
+    console.log("open:", open);
+
     return (
       <div className={classNames('privacy-dropdown', placement, { active: open })} onKeyDown={this.handleKeyDown}>
         <div className={classNames('privacy-dropdown__value')} ref={this.setTargetRef}>
@@ -261,7 +268,7 @@ export default class EmotionalDropdown extends React.PureComponent {
               <div className={`dropdown-animation ${placement}`}>
                 <EmotionalDropdownMenu
                   items={this.options}
-                  value={value}
+                  value={value || ""}
                   onClose={this.handleClose}
                   onSelect={this.handleSelect}
                   placement={placement}
