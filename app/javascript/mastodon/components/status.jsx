@@ -24,6 +24,7 @@ import AttachmentList from './attachment_list';
 import { Avatar } from './avatar';
 import { AvatarOverlay } from './avatar_overlay';
 import { DisplayName } from './display_name';
+import { getHashtagBarForStatus } from './hashtag_bar';
 import { RelativeTimestamp } from './relative_timestamp';
 import StatusActionBar from './status_action_bar';
 import StatusContent from './status_content';
@@ -542,6 +543,7 @@ class Status extends ImmutablePureComponent {
 
     const visibilityIcon = visibilityIconInfo[status.get('visibility')];
 
+    const {statusContentProps, hashtagBar} = getHashtagBarForStatus(status);
     let timestamp;
     if (localStorage.plusminus_config_timestamp === 'absolute') {
       timestamp = <AbsoluteTimestamp timestamp={status.get('created_at')} />;
@@ -588,9 +590,12 @@ class Status extends ImmutablePureComponent {
               onTranslate={this.handleTranslate}
               collapsible
               onCollapsedToggle={this.handleCollapsedToggle}
+              {...statusContentProps}
             />
 
             {media}
+
+            {hashtagBar}
 
             <StatusActionBar scrollKey={scrollKey} status={status} account={account} onFilter={matchedFilters ? this.handleFilterClick : null} {...other} />
           </div>
