@@ -9492,3 +9492,12 @@ noscript {
 .media-gallery {
   margin-top: 0 !important;
 }
+
+.media-modal__navigation i,
+.media-modal__navigation-size,
+.media-modal__overlay .icon-button__counter {
+  filter: drop-shadow(1px 1px 0 #282c37)
+          drop-shadow(-1px 1px 0 #282c37)
+          drop-shadow(1px -1px 0 #282c37)
+          drop-shadow(-1px -1px 0 #282c37);
+}
