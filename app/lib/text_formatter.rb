@@ -66,6 +66,19 @@ class TextFormatter
     rescue Addressable::URI::InvalidURIError, IDN::Idna::IdnaError
       h(url)
     end
+
+    def full_link(url, rel_me: false)
+      url = Addressable::URI.parse(url).to_s
+      rel = rel_me ? (DEFAULT_REL + %w(me)) : DEFAULT_REL
+
+      prefix      = url.match(URL_PREFIX_REGEX).to_s
+
+      <<~HTML.squish.html_safe # rubocop:disable Rails/OutputSafety
+        <a href="#{h(url)}" target="_blank" rel="#{rel.join(' ')}" translate="no">#{h(url)}</a>
+      HTML
+    rescue Addressable::URI::InvalidURIError, IDN::Idna::IdnaError
+      h(url)
+    end
   end
 
   private
@@ -90,7 +103,11 @@ class TextFormatter
   end
 
   def link_to_url(entity)
-    TextFormatter.shortened_link(entity[:url], rel_me: with_rel_me?)
+    if entity[:url].include?("komiflo.com")
+      TextFormatter.full_link(entity[:url], rel_me: with_rel_me?)
+    else
+      TextFormatter.shortened_link(entity[:url], rel_me: with_rel_me?)
+    end
   end
 
   def link_to_hashtag(entity)

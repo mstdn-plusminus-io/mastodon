@@ -1,10 +1,13 @@
-const regex = /(https:\/\/)?(komiflo\.com\/)?(comics\/\d+)/g;
+const regex = /(https:\/\/){0,1}?(komiflo\.com\/){0,1}?(comics\/\d+)\/{0,1}(read\/page\/\d+){0,1}/g;
 
 export const komifloLinkify = (node) => {
   if (node.nodeType === node.TEXT_NODE) {
     const text = node.nodeValue;
-    const replaced = text.replace(regex, function(s, p1, p2, p3) {
-      return `<a href="https://komiflo.com/${p3}" alt="${p3}">https://komiflo.com/${p3}</a>`;
+    const replaced = text.replace(regex, function(s, p1, p2, p3, p4) {
+      if (p4) {
+        return ` <a href="https://komiflo.com/${p3}/${p4}" alt="${p3}">https://komiflo.com/${p3}/${p4}</a> `;
+      }
+      return ` <a href="https://komiflo.com/${p3}" alt="komiflo:${p3}">https://komiflo.com/${p3}</a> `;
     });
 
     const span = document.createElement('span');
