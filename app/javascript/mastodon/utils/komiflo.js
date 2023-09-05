@@ -5,7 +5,7 @@ export const komifloLinkify = (node) => {
     const text = node.nodeValue;
     const replaced = text.replace(regex, function(s, p1, p2, p3, p4) {
       if (p4) {
-        return ` <a href="https://komiflo.com/${p3}/${p4}" alt="${p3}">https://komiflo.com/${p3}/${p4}</a> `;
+        return ` <a href="https://komiflo.com/${p3}/${p4}" alt="komiflo:${p3}">https://komiflo.com/${p3}/${p4}</a> `;
       }
       return ` <a href="https://komiflo.com/${p3}" alt="komiflo:${p3}">https://komiflo.com/${p3}</a> `;
     });

@@ -1,5 +1,7 @@
 FROM ruby:3.2-slim-bullseye
 
+ARG MASTODON_VERSION_METADATA=""
+
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install Node.js
@@ -49,6 +51,7 @@ ENV NODE_ENV="production"
 # Tell rails to serve static files
 ENV RAILS_SERVE_STATIC_FILES="true"
 ENV BIND="0.0.0.0"
+ENV MASTODON_VERSION_METADATA="${MASTODON_VERSION_METADATA}"
 
 ENV NODE_OPTIONS="--openssl-legacy-provider"
 
