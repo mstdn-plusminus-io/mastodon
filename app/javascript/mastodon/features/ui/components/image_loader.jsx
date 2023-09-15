@@ -151,6 +151,12 @@ export default class ImageLoader extends PureComponent {
 
     const zoomButtonState = this.state.currentScale >= 1.0 ? 'compress' : 'expand';
 
+    let maxScale = parseInt(localStorage.plusminus_config_max_image_scale);
+    if (isNaN(maxScale)) {
+      maxScale = 400;
+    }
+    maxScale /= 100;
+
     return (
       <div className={className}>
         {loading && (
@@ -160,6 +166,7 @@ export default class ImageLoader extends PureComponent {
         )}
         <TransformWrapper
           minScale={this.state.minScale}
+          maxScale={maxScale}
           initialScale={1}
           limitToBounds
           centerZoomedOut

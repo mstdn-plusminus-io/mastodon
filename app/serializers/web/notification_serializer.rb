@@ -25,6 +25,7 @@ class Web::NotificationSerializer < ActiveModel::Serializer
   end
 
   def icon
+    return object.from_account.avatar_remote_url if ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true' && object.from_account.avatar_remote_url
     full_asset_url(object.from_account.avatar_static_url)
   end
 

@@ -21,11 +21,11 @@ module Mastodon
     end
 
     def revision
-      6
+      1
     end
 
     def default_prerelease
-      'beta'
+      'rc'
     end
 
     def prerelease
