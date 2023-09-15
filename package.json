@@ -28,7 +28,7 @@
     "typecheck": "tsc --noEmit",
     "watch": "foreman start",
     "docker:dev": "docker compose -f docker-compose.develop.yml",
-    "bootstrap": "gem install foreman && bundle install",
+    "bootstrap": "yarn --pure-lockfile && gem install foreman && bundle install --redownload",
     "db:migrate": "bundle exec rails db:migrate"
   },
   "repository": {
