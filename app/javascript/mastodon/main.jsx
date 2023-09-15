@@ -45,7 +45,7 @@ function main() {
         console.error(err);
       }
 
-      if (registration) {
+      if (registration && 'Notification' in window && Notification.permission === 'granted') {
         const registerPushNotifications = await import('mastodon/actions/push_notifications');
 
         store.dispatch(registerPushNotifications.register());
