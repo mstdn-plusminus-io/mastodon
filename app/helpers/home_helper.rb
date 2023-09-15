@@ -23,7 +23,11 @@ module HomeHelper
                   else
                     link_to(path || ActivityPub::TagManager.instance.url_for(account), class: 'account__display-name') do
                       content_tag(:div, class: 'account__avatar-wrapper') do
-                        image_tag(full_asset_url(current_account&.user&.setting_auto_play_gif ? account.avatar_original_url : account.avatar_static_url), class: 'account__avatar', width: 46, height: 46)
+                        if ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true' && account.avatar_remote_url
+                          image_tag(account.avatar_remote_url, class: 'account__avatar', width: 46, height: 46)
+                        else
+                          image_tag(full_asset_url(current_account&.user&.setting_auto_play_gif ? account.avatar_original_url : account.avatar_static_url), class: 'account__avatar', width: 46, height: 46)
+                        end
                       end +
                         content_tag(:span, class: 'display-name') do
                           content_tag(:bdi) do
