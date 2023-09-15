@@ -127,10 +127,7 @@ class MediaModal extends ImmutablePureComponent {
     return this.state.index !== null ? this.state.index : this.props.index;
   }
 
-  toggleNavigation = () => {
-    this.setState(prevState => ({
-      navigationHidden: !prevState.navigationHidden,
-    }));
+  nop = () => {
   };
 
   render () {
@@ -157,7 +154,7 @@ class MediaModal extends ImmutablePureComponent {
             alt={description}
             lang={lang}
             key={image.get('url')}
-            onClick={this.toggleNavigation}
+            onClick={this.nop}
             navigationHidden={this.state.navigationHidden || index !== i}
           />
         );

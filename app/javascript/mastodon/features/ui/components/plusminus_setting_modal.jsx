@@ -229,6 +229,7 @@ class PlusMinusSettingModal extends React.Component {
       komiflo_linkify: 'disabled',
       jumbomoji: 'disabled',
       filter_media_only_toots: 'disabled',
+      max_image_scale: 200,
     },
   };
 
@@ -453,6 +454,22 @@ class PlusMinusSettingModal extends React.Component {
               <p style={styles.description}>
                 名前が <code>🖼️</code> から始まるリストTLの表示対象を、メディアが添付されているものだけに絞り込みます
               </p>
+            </div>
+            <div style={styles.config}>
+              <label>
+                画像プレビューの拡大倍率制限:&nbsp;
+                <input
+                  type='number'
+                  value={this.state.config.max_image_scale}
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value || '0');
+                    if (!isNaN(value)) {
+                      this.updateConfig('max_image_scale', value);
+                    }
+                  }}
+                />
+                %
+              </label>
             </div>
 
             <div style={styles.section}>
