@@ -544,7 +544,7 @@ class Status extends ImmutablePureComponent {
     const visibilityIcon = visibilityIconInfo[status.get('visibility')];
 
     const {statusContentProps, hashtagBar} = getHashtagBarForStatus(status);
-    const expanded = !status.get('hidden')
+    const expanded = !status.get('hidden') || status.get('spoiler_text').length === 0;
     let timestamp;
     if (localStorage.plusminus_config_timestamp === 'absolute') {
       timestamp = <AbsoluteTimestamp timestamp={status.get('created_at')} />;
