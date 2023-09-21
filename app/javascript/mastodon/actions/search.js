@@ -48,7 +48,7 @@ export function submitSearch(type) {
 
     api(getState).get('/api/v2/search', {
       params: {
-        q: value,
+        q: setLibraryIfNeeded(value),
         resolve: signedIn,
         limit: 11,
         type,
@@ -91,6 +91,13 @@ export function fetchSearchFail(error) {
     type: SEARCH_FETCH_FAIL,
     error,
   };
+}
+
+function setLibraryIfNeeded(value) {
+  if (!value.includes("in:all")) {
+    value = "in:library " + value;
+  }
+  return value;
 }
 
 export const expandSearch = type => (dispatch, getState) => {
