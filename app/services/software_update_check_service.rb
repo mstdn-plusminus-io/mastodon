@@ -27,7 +27,7 @@ class SoftwareUpdateCheckService < BaseService
   end
 
   def api_url
-    ENV.fetch('UPDATE_CHECK_URL', 'https://api.joinmastodon.org/update-check')
+    ENV.fetch('UPDATE_CHECK_URL', 'https://join.plusminus.io/api/update-check')
   end
 
   def version

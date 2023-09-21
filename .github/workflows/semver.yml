@@ -3,7 +3,10 @@ name: build latest image
 on:
   push:
     tags:
-      - v*
+      - 'v*'
+      - '!*alpha*'
+      - '!*beta*'
+      - '!*rc*'
 
 concurrency:
   group: build-${{ github.ref }}

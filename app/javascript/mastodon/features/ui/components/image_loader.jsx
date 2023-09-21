@@ -172,6 +172,7 @@ export default class ImageLoader extends PureComponent {
           centerZoomedOut
           centerOnInit
           onZoom={this.onZoom}
+          onZoomStop={this.onZoom}
         >
           {({ state, zoomToElement, centerView, ...transformProps }) => {
             this.transformState = state;
