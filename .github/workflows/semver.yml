@@ -1,4 +1,4 @@
-name: build latest image
+name: build semver image
 
 on:
   push:
