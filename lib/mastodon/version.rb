@@ -21,11 +21,11 @@ module Mastodon
     end
 
     def revision
-      3
+      1
     end
 
     def default_prerelease
-      'rc'
+      ''
     end
 
     def prerelease
