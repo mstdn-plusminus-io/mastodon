@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - next
+    tags:
+      - '!*'
 
 concurrency:
   group: build-${{ github.ref }}
