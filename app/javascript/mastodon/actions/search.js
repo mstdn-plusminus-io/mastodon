@@ -154,6 +154,10 @@ export const openURL = (value, history, onFailure) => (dispatch, getState) => {
   const signedIn = !!getState().getIn(['meta', 'me']);
 
   if (!signedIn) {
+    if (onFailure) {
+      onFailure();
+    }
+
     return;
   }
 

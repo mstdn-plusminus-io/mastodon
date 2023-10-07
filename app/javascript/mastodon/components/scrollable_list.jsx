@@ -73,7 +73,7 @@ class ScrollableList extends PureComponent {
       const clientHeight = this.getClientHeight();
       const offset = scrollHeight - scrollTop - clientHeight;
 
-      if (400 > offset && this.props.onLoadMore && this.props.hasMore && !this.props.isLoading && !document.documentElement.classList.contains('show-compose-half-modal')) {
+      if (scrollTop > 0 && offset < 400 && this.props.onLoadMore && this.props.hasMore && !this.props.isLoading && !document.documentElement.classList.contains('show-compose-half-modal')) {
         this.props.onLoadMore();
       }
 
