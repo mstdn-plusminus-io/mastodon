@@ -1406,20 +1406,18 @@ const startServer = async () => {
   };
 
   wss.on('connection', (ws, req) => {
-    // Note: url.parse could throw, which would terminate the connection, so we
-    // increment the connected clients metric straight away when we establish
-    // the connection, without waiting:
-    connectedClients.labels({ type: 'websocket' }).inc();
+    const location = url.parse(req.url, true);
 
-    // Setup request properties:
     req.requestId = uuid.v4();
     req.remoteAddress = ws._socket.remoteAddress;
 
-    // Setup connection keep-alive state:
     ws.isAlive = true;
+
     ws.on('pong', () => {
       ws.isAlive = true;
     });
+
+    connectedClients.labels({ type: 'websocket' }).inc();
 
     /**
      * @type {WebSocketSession}
@@ -1430,23 +1428,21 @@ const startServer = async () => {
       subscriptions: {},
     };
 
-    ws.on('close', function onWebsocketClose() {
+    const onEnd = () => {
       const subscriptions = Object.keys(session.subscriptions);
 
       subscriptions.forEach(channelIds => {
         removeSubscription(session.subscriptions, channelIds.split(';'), req)
       });
 
-      // Decrement the metrics for connected clients:
-      connectedClients.labels({ type: 'websocket' }).dec();
+      if (session.socket) {
+        connectedClients.labels({ type: 'websocket' }).dec();
+      }
 
       // ensure garbage collection:
       session.socket = null;
       session.request = null;
       session.subscriptions = {};
-    });
-
-      connectedClients.labels({ type: 'websocket' }).dec();
     };
 
     setDiconnectTimer(location.query['x-disconnect-after'], () => {
@@ -1459,7 +1455,7 @@ const startServer = async () => {
 
     ws.on('message', (data, isBinary) => {
       if (isBinary) {
-        log.warn('websocket', 'Received binary data, closing connection');
+        log.warn('socket', 'Received binary data, closing connection');
         ws.close(1003, 'The mastodon streaming server does not support binary messages');
         return;
       }
@@ -1482,10 +1478,7 @@ const startServer = async () => {
 
     subscribeWebsocketToSystemChannel(session);
 
-    // Parse the URL for the connection arguments (if supplied), url.parse can throw:
-    const location = req.url && url.parse(req.url, true);
-
-    if (location && location.query.stream) {
+    if (location.query.stream) {
       subscribeWebsocketToChannel(session, firstParam(location.query.stream), location.query);
     }
   });
