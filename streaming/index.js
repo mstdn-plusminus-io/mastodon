@@ -1435,12 +1435,14 @@ const startServer = async () => {
         removeSubscription(session.subscriptions, channelIds.split(';'), req)
       });
 
+      if (session.socket) {
+        connectedClients.labels({ type: 'websocket' }).dec();
+      }
+
       // ensure garbage collection:
       session.socket = null;
       session.request = null;
       session.subscriptions = {};
-
-      connectedClients.labels({ type: 'websocket' }).dec();
     };
 
     setDiconnectTimer(location.query['x-disconnect-after'], () => {
