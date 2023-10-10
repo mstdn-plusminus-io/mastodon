@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [4.2.1] - UNRELEASED
+## [4.2.1] - 2023-10-10
 
 ### Added
 
@@ -16,6 +16,8 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fix duplicate reports being sent when reporting some remote posts ([ClearlyClaire](https://github.com/mastodon/mastodon/pull/27355))
+- Fix clicking on already-opened thread post scrolling to the top of the thread ([ClearlyClaire](https://github.com/mastodon/mastodon/pull/27331), [ClearlyClaire](https://github.com/mastodon/mastodon/pull/27338), [ClearlyClaire](https://github.com/mastodon/mastodon/pull/27350))
 - Fix some remote posts getting truncated ([ClearlyClaire](https://github.com/mastodon/mastodon/pull/27307))
 - Fix some cases of infinite scroll code trying to fetch inaccessible posts in a loop ([ClearlyClaire](https://github.com/mastodon/mastodon/pull/27286))
 - Fix `Vary` headers not being set on some redirects ([ClearlyClaire](https://github.com/mastodon/mastodon/pull/27272))
