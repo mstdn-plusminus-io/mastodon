@@ -1430,7 +1430,7 @@ const startServer = async () => {
       subscriptions: {},
     };
 
-    ws.on('close', function onWebsocketClose() {
+    const onEnd = () => {
       const subscriptions = Object.keys(session.subscriptions);
 
       subscriptions.forEach(channelIds => {
