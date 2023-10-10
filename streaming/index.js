@@ -1447,11 +1447,6 @@ const startServer = async () => {
       session.subscriptions = {};
     };
 
-    setDiconnectTimer(location.query['x-disconnect-after'], () => {
-      ws.close();
-      onEnd();
-    });
-
     ws.on('close', onEnd);
     ws.on('error', onEnd);
 
@@ -1485,6 +1480,13 @@ const startServer = async () => {
 
     if (location && location.query.stream) {
       subscribeWebsocketToChannel(session, firstParam(location.query.stream), location.query);
+    }
+
+    if (location && location.query['x-disconnect-after']) {
+      setDiconnectTimer(location.query['x-disconnect-after'], () => {
+        ws.close();
+        onEnd();
+      });
     }
   });
 
