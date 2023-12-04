@@ -2,6 +2,7 @@
 
 class StatusesIndex < Chewy::Index
   include FormattingHelper
+  include DatetimeClampingConcern
 
   settings index: index_preset(refresh_interval: '30s', number_of_shards: 5), analysis: {
     filter: {
@@ -74,6 +75,6 @@ class StatusesIndex < Chewy::Index
     field(:searchable_by, type: 'long', value: ->(status) { status.searchable_by })
     field(:language, type: 'keyword')
     field(:properties, type: 'keyword', value: ->(status) { status.searchable_properties })
-    field(:created_at, type: 'date')
+    field(:created_at, type: 'date', value: ->(status) { clamp_date(status.created_at) })
   end
 end
