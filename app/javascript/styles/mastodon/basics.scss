@@ -364,8 +364,8 @@ article {
     background-color: transparent !important;
   }
 
-  img[src*="/custom_emojis/images/"] {
-    margin: 0 0 -4px 0 !important;
+  p img {
+    vertical-align: sub;
   }
 
   .code code {
