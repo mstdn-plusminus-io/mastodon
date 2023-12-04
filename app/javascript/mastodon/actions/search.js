@@ -94,8 +94,8 @@ export function fetchSearchFail(error) {
 }
 
 function setLibraryIfNeeded(value) {
-  if (!value.includes("in:all")) {
-    value = "in:library " + value;
+  if (!value.includes("in:all") && !value.includes("in:library")) {
+    value += " in:library";
   }
   return value;
 }
@@ -108,7 +108,7 @@ export const expandSearch = type => (dispatch, getState) => {
 
   api(getState).get('/api/v2/search', {
     params: {
-      q: value,
+      q: setLibraryIfNeeded(value),
       type,
       offset,
       limit: 11,
