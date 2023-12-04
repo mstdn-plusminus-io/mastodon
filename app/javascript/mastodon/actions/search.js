@@ -1,5 +1,6 @@
 import { fromJS } from 'immutable';
 
+import { searchEnabled } from 'mastodon/initial_state';
 import { searchHistory } from 'mastodon/settings';
 
 import api from '../api';
@@ -94,7 +95,7 @@ export function fetchSearchFail(error) {
 }
 
 function setLibraryIfNeeded(value) {
-  if (!value.includes("in:all") && !value.includes("in:library")) {
+  if (searchEnabled && !value.trim().startsWith("@") && !value.trim().startsWith("#") && !value.includes("in:all") && !value.includes("in:library")) {
     value += " in:library";
   }
   return value;
