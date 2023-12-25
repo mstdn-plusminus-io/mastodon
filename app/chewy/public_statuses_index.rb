@@ -20,7 +20,12 @@ class PublicStatusesIndex < Chewy::Index
         language: 'possessive_english',
       },
     },
-
+    tokenizer: {
+      kuromoji: {
+        type: 'kuromoji_tokenizer',
+        mode: 'search',
+      },
+    },
     analyzer: {
       verbatim: {
         tokenizer: 'uax_url_email',
