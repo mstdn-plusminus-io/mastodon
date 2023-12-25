@@ -61,6 +61,10 @@ class AccountsIndex < Chewy::Index
         min_gram: 1,
         max_gram: 15,
       },
+      kuromoji: {
+        type: 'kuromoji_tokenizer',
+        mode: 'search',
+      },
     },
   }
 
