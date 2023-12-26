@@ -323,7 +323,9 @@ class MediaAttachment < ApplicationRecord
   def set_unknown_type
     if file.blank? && !type_changed?
       if ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true'
-        mime = MimeMagic.by_path(File.basename(remote_url)).type
+        mime = MimeMagic.by_path(File.basename(remote_url))
+        return self.type = :unknown if mime.nil?
+
         self.type = begin
           if VIDEO_MIME_TYPES.include?(mime)
             :video
