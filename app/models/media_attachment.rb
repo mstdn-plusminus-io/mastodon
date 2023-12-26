@@ -29,6 +29,8 @@
 #  thumbnail_remote_url        :string
 #
 
+require 'http'
+
 class MediaAttachment < ApplicationRecord
   self.inheritance_column = nil
 
@@ -321,23 +323,29 @@ class MediaAttachment < ApplicationRecord
   private
 
   def set_unknown_type
-    if file.blank? && !type_changed?
-      if ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true'
-        mime = MimeMagic.by_path(File.basename(remote_url))
-        return self.type = :unknown if mime.nil?
+    return unless file.blank? && !type_changed?
 
-        self.type = begin
-          if VIDEO_MIME_TYPES.include?(mime)
-            :video
-          elsif AUDIO_MIME_TYPES.include?(mime)
-            :audio
-          else
-            :image
-          end
-        end
-      else
-        self.type = :unknown
+    if ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true'
+      mime = MimeMagic.by_path(File.basename(remote_url))
+      if mime.nil?
+        response = HTTP.head(remote_url)
+        content_type = response.headers['Content-Type']
+        return self.type = :unknown if content_type.blank?
+
+        mime = content_type.downcase
       end
+
+      self.type = begin
+        if VIDEO_MIME_TYPES.include?(mime)
+          :video
+        elsif AUDIO_MIME_TYPES.include?(mime)
+          :audio
+        else
+          :image
+        end
+      end
+    else
+      self.type = :unknown
     end
   end
 
