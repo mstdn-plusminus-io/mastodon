@@ -51,6 +51,10 @@ class NotifyService < BaseService
     @recipient.user.settings['interactions.must_be_following'] && !following_sender?
   end
 
+  def optional_non_spammer?
+    @recipient.user.settings['interactions.must_be_human'] && @notification.from_account.followers_count < ENV.fetch('SPAMMER_FOLLOWER_THRESHOLD', 1).to_i
+  end
+
   def message?
     @notification.type == :mention
   end
@@ -120,6 +124,7 @@ class NotifyService < BaseService
     blocked ||= optional_non_follower?
     blocked ||= optional_non_following?
     blocked ||= optional_non_following_and_direct?
+    blocked ||= optional_non_spammer?
     blocked ||= conversation_muted?
     blocked ||= blocked_mention? if @notification.type == :mention
     blocked
