@@ -52,6 +52,7 @@ class UserSettings
     setting :must_be_follower, default: false
     setting :must_be_following, default: false
     setting :must_be_following_dm, default: false
+    setting :must_be_human, default: false
   end
 
   def initialize(original_hash)
