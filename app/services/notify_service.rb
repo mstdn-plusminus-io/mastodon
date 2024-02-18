@@ -15,6 +15,7 @@ class NotifyService < BaseService
     @recipient    = recipient
     @activity     = activity
     @notification = Notification.new(account: @recipient, type: type, activity: @activity)
+    @mentions     = Mention.where(status_id: activity.status_id)
 
     return if recipient.user.nil? || blocked?
 
@@ -52,7 +53,10 @@ class NotifyService < BaseService
   end
 
   def optional_non_spammer?
-    @recipient.user.settings['interactions.must_be_human'] && @notification.from_account.followers_count < ENV.fetch('SPAMMER_FOLLOWER_THRESHOLD', 1).to_i
+    @recipient.user.settings['interactions.must_be_human'] && (
+      @notification.from_account.followers_count < ENV.fetch('SPAMMER_FOLLOWER_THRESHOLD', 5).to_i ||
+      @notification.from_account.created_at > ENV.fetch('SPAMMER_CREATION_THRESHOLD', 6).to_i.day.ago
+    ) && @mentions.count > ENV.fetch('SPAMMER_MENTION_THRESHOLD', 1).to_i
   end
 
   def message?
