@@ -21,7 +21,7 @@ module Mastodon
     end
 
     def revision
-      2
+      3
     end
 
     def default_prerelease
