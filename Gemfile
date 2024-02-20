@@ -205,4 +205,6 @@ gem 'rubyzip', '~> 2.3'
 
 gem 'hcaptcha', '~> 7.1'
 
-gem "mimemagic", "~> 0.4.3"
+gem 'mimemagic', '~> 0.4.3'
+
+gem 'ruby-openai', '~> 6.3.1'
