@@ -58,6 +58,8 @@ class NotifyService < BaseService
   SPAMMER_MENTION_THRESHOLD  = ENV.fetch('SPAMMER_MENTION_THRESHOLD', 1).to_i
 
   def optional_non_spammer?
+    return false if following_sender?
+
     @recipient.user.settings['interactions.must_be_human'] && message? && (SPAM_DETECTION_METHOD == 'gpt' ? gpt_spam_detection? : simple_spam_detection?)
   end
 
@@ -77,6 +79,7 @@ class NotifyService < BaseService
 
   def gpt_spam_detection?
     return false if OPENAI_ACCESS_TOKEN.nil?
+    return false if following_sender?
     return true if @notification.from_account.followers_count < SPAMMER_FOLLOWER_THRESHOLD || @notification.from_account.created_at > SPAMMER_CREATION_THRESHOLD.day.ago
 
     gpt_result = Rails.cache.fetch("gpt_spam_detection_status_id:#{@notification.target_status.id}", expires_in: 1.minute) do
