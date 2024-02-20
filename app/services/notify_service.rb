@@ -15,7 +15,7 @@ class NotifyService < BaseService
     @recipient    = recipient
     @activity     = activity
     @notification = Notification.new(account: @recipient, type: type, activity: @activity)
-    @mentions     = Mention.where(status_id: activity.status_id)
+    @mentions     = message? ? Mention.where(status_id: @activity.status_id) : Mention.none
 
     return if recipient.user.nil? || blocked?
 
