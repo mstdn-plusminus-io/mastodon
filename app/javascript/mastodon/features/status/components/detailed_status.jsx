@@ -18,6 +18,7 @@ import { Avatar } from '../../../components/avatar';
 import { DisplayName } from '../../../components/display_name';
 import MediaGallery from '../../../components/media_gallery';
 import StatusContent from '../../../components/status_content';
+import QuoteContainer from '../../../containers/quote_container';
 import Audio from '../../audio';
 import scheduleIdleTask from '../../ui/util/schedule_idle_task';
 import Video from '../../video';
@@ -298,6 +299,8 @@ class DetailedStatus extends ImmutablePureComponent {
           {media}
 
           {expanded && hashtagBar}
+
+          <QuoteContainer id={status.get("quote_id")} />
 
           <div className='detailed-status__meta'>
             <a className='detailed-status__datetime' href={`/@${status.getIn(['account', 'acct'])}/${status.get('id')}`} target='_blank' rel='noopener noreferrer'>

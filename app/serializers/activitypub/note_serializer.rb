@@ -3,7 +3,7 @@
 class ActivityPub::NoteSerializer < ActivityPub::Serializer
   include FormattingHelper
 
-  context_extensions :atom_uri, :conversation, :sensitive, :voters_count
+  context_extensions :atom_uri, :conversation, :sensitive, :voters_count, :_misskey_quote
 
   attributes :id, :type, :summary,
              :in_reply_to, :published, :url,
@@ -27,6 +27,9 @@ class ActivityPub::NoteSerializer < ActivityPub::Serializer
   attribute :closed, if: :poll_and_expired?
 
   attribute :voters_count, if: :poll_and_voters_count?
+
+  attribute :quote_url, if: -> { quote_url }
+  attribute :misskey_quote, key: :_misskey_quote, if: -> { quote_url }
 
   def id
     ActivityPub::TagManager.instance.uri_for(object)
@@ -175,6 +178,16 @@ class ActivityPub::NoteSerializer < ActivityPub::Serializer
   def poll_and_voters_count?
     object.preloadable_poll&.voters_count
   end
+
+  def quote_url
+    quote = Rails.cache.fetch("quote:#{object.id}", expires_in: 1.minute) do
+      StatusQuotes.find(object.id.to_s) if Rails.application.config.x.dynamodb_enabled
+    rescue Dynamoid::Errors::RecordNotFound => _e # rubocop:disable Lint/SuppressedException
+    end
+    quote&.local_url
+  end
+
+  alias misskey_quote quote_url
 
   class MediaAttachmentSerializer < ActivityPub::Serializer
     context_extensions :blurhash, :focal_point

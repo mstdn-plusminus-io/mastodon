@@ -14,6 +14,7 @@ Rails.application.configure do
   config.x.use_https    = https
   config.x.use_s3       = ENV['S3_ENABLED'] == 'true'
   config.x.use_swift    = ENV['SWIFT_ENABLED'] == 'true'
+  Rails.application.config.x.dynamodb_enabled = ENV['DYNAMODB_ENABLED'] == 'true'
 
   config.x.alternate_domains = alternate_domains
 
