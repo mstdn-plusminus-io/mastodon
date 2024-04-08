@@ -48,5 +48,10 @@ class ActivityPub::Activity::Delete < ActivityPub::Activity
 
   def delete_now!
     RemoveStatusService.new.call(@status, redraft: false)
+
+    begin
+      StatusQuotes.find(@status.id.to_s).delete_all if Rails.application.config.x.dynamodb_enabled
+    rescue Dynamoid::Errors::RecordNotFound => _e # rubocop:disable Lint/SuppressedException
+    end
   end
 end

@@ -398,3 +398,54 @@ img[src*="/custom_emojis/images/"] {
     margin: 4px 0 0 0 !important;
   }
 }
+
+.status__quote {
+  position: relative;
+  border: 1px solid lighten($ui-base-color, 8%);
+  border-radius: 4px;
+  margin-top: 1em;
+  overflow: hidden;
+  color: $primary-text-color;
+  z-index: 0;
+}
+
+.status__quote__container {
+  text-decoration: none;
+}
+
+.status__quote__icon {
+  position: absolute;
+  top: -16px;
+  right: -24px;
+  font-size: 96px;
+  opacity: 0.08;
+  rotate: -18deg;
+  z-index: -1;
+}
+
+.status__quote__inner {
+  padding: 1rem;
+}
+
+.status__quote__inner__header {
+  display: flex;
+  align-items: center;
+}
+
+.status__quote__inner__header .display-name {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 0.5em;
+}
+
+.status__quote__inner__header .display-name__account,
+.status__quote__inner__footer {
+  color: $lighter-text-color;
+}
+
+.status__quote__inner__content,
+.status__quote__inner__footer {
+  margin-top: 0.5em;
+  word-break: break-word;
+}
