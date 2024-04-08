@@ -85,12 +85,31 @@ class ActivityPub::Activity::Create < ActivityPub::Activity
     ApplicationRecord.transaction do
       @status = Status.create!(@params)
       attach_tags(@status)
+      process_quote
     end
 
     resolve_thread(@status)
     fetch_replies(@status)
     distribute
     forward_for_reply
+  end
+
+  def process_quote
+    return unless Rails.application.config.x.dynamodb_enabled
+
+    quote_url = @object['quoteUri'] || @object['quoteUrl'] || @object['_misskey_quote']
+    return if quote_url.blank?
+
+    begin
+      quote_object = ActivityPub::Dereferencer.new(quote_url, permitted_origin: quote_url, signature_actor: signed_fetch_actor).object
+      quote_acct = ActivityPub::FetchRemoteAccountService.new.call(quote_object['attributedTo'])
+      quote_status = ActivityPub::FetchRemoteStatusService.new.call(quote_url)
+      quote_status_url = "#{Rails.configuration.x.use_https ? 'https' : 'http'}://#{Rails.configuration.x.web_domain}/@#{quote_status.account.acct}/#{quote_status.id}"
+
+      StatusQuotes.new(status_id: @status.id.to_s, quote_id: quote_status.id.to_s, original_url: quote_url, local_url: quote_status_url).save
+    rescue => e
+      Rails.logger.warn("Unexpected error when processing quote status: #{e}: #{JSON.generate(@json)}, #{e.backtrace}")
+    end
   end
 
   def distribute

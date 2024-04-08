@@ -326,10 +326,9 @@ class MediaAttachment < ApplicationRecord
     return unless file.blank? && !type_changed?
 
     if ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true'
-      mime = MimeMagic.by_path(File.basename(remote_url))
       if mime.nil?
         response = HTTP.head(remote_url)
-        content_type = response.headers['Content-Type']
+        content_type = response.headers['content-type']
         return self.type = :unknown if content_type.blank?
 
         mime = content_type.downcase

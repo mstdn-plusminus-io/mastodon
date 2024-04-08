@@ -32,6 +32,8 @@ module ContextHelper
       'messageFranking' => 'toot:messageFranking', 'messageType' => 'toot:messageType', 'cipherText' => 'toot:cipherText'
     },
     suspended: { 'toot' => 'http://joinmastodon.org/ns#', 'suspended' => 'toot:suspended' },
+    quoteUrl: { 'quoteUrl' => 'as:quoteUrl' },
+    _misskey_quote: { 'misskey' => 'https://misskey-hub.net/ns#', '_misskey_quote' => 'misskey:_misskey_quote' },
   }.freeze
 
   def full_context

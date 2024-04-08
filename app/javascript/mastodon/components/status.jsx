@@ -12,6 +12,7 @@ import { HotKeys } from 'react-hotkeys';
 import { Icon }  from 'mastodon/components/icon';
 import PictureInPicturePlaceholder from 'mastodon/components/picture_in_picture_placeholder';
 
+import QuoteContainer from '../containers/quote_container';
 import Card from '../features/status/components/card';
 // We use the component (and not the container) since we do not want
 // to use the progress bar to show download progress
@@ -597,6 +598,10 @@ class Status extends ImmutablePureComponent {
             {media}
 
             {expanded && hashtagBar}
+
+            {status.get("quote_id") && (
+              <QuoteContainer id={status.get("quote_id")} />
+            )}
 
             <StatusActionBar scrollKey={scrollKey} status={status} account={account} onFilter={matchedFilters ? this.handleFilterClick : null} {...other} />
           </div>
