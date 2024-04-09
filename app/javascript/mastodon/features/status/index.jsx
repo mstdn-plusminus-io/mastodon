@@ -297,6 +297,35 @@ class Status extends ImmutablePureComponent {
     }
   };
 
+  handleQuoteClick = (status) => {
+    const { askReplyConfirmation, dispatch, intl } = this.props;
+    const { signedIn } = this.context.identity;
+
+    if (signedIn) {
+      if (askReplyConfirmation) {
+        dispatch(openModal({
+          modalType: 'CONFIRM',
+          modalProps: {
+            message: intl.formatMessage(messages.replyMessage),
+            confirm: intl.formatMessage(messages.replyConfirm),
+            onConfirm: () => dispatch(replyCompose(status, this.context.router.history)),
+          },
+        }));
+      } else {
+        dispatch(replyCompose(status, this.context.router.history));
+      }
+    } else {
+      dispatch(openModal({
+        modalType: 'INTERACTION',
+        modalProps: {
+          type: 'reply',
+          accountId: status.getIn(['account', 'id']),
+          url: status.get('uri'),
+        },
+      }));
+    }
+  };
+
   handleModalReblog = (status, privacy) => {
     this.props.dispatch(reblog(status, privacy));
   };
@@ -709,6 +738,7 @@ class Status extends ImmutablePureComponent {
                   key={`action-bar-${status.get('id')}`}
                   status={status}
                   onReply={this.handleReplyClick}
+                  onQuote={this.handleQuoteClick}
                   onFavourite={this.handleFavouriteClick}
                   onReblog={this.handleReblogClick}
                   onBookmark={this.handleBookmarkClick}

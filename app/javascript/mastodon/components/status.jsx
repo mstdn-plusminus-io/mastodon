@@ -518,7 +518,7 @@ class Status extends ImmutablePureComponent {
           </Bundle>
         );
       }
-    } else if (status.get('spoiler_text').length === 0 && status.get('card') && !this.props.muted) {
+    } else if (status.get('spoiler_text').length === 0 && status.get('card') && status.getIn(['card', 'url']) !== status.get('quote_original_url') && !this.props.muted) {
       media = (
         <Card
           onOpenMedia={this.handleOpenMedia}
@@ -595,13 +595,11 @@ class Status extends ImmutablePureComponent {
               {...statusContentProps}
             />
 
+            <QuoteContainer id={status.get("quote_id")} />
+
             {media}
 
             {expanded && hashtagBar}
-
-            {status.get("quote_id") && (
-              <QuoteContainer id={status.get("quote_id")} />
-            )}
 
             <StatusActionBar scrollKey={scrollKey} status={status} account={account} onFilter={matchedFilters ? this.handleFilterClick : null} {...other} />
           </div>

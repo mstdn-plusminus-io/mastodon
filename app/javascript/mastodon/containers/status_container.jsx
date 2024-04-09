@@ -13,6 +13,7 @@ import {
   replyCompose,
   mentionCompose,
   directCompose,
+  quoteCompose,
 } from '../actions/compose';
 import {
   blockDomain,
@@ -93,6 +94,10 @@ const mapDispatchToProps = (dispatch, { intl, contextType }) => ({
         dispatch(replyCompose(status, router));
       }
     });
+  },
+
+  onQuote (status, router) {
+    dispatch(quoteCompose(status, router));
   },
 
   onModalReblog (status, privacy) {
