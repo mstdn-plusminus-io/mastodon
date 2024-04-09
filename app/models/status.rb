@@ -173,6 +173,7 @@ class Status < ApplicationRecord
   after_find :set_quote
 
   attribute :quote_id
+  attribute :quote_original_url
 
   def cache_key
     "v3:#{super}"
@@ -499,7 +500,7 @@ class Status < ApplicationRecord
 
   def set_quote
     return unless has_attribute?(:id) && has_attribute?(:text)
-    return unless text.include?('RE: ')
+    return unless text.include?('RE:') || text.include?('QT:')
 
     begin
       @status_quote = Rails.cache.fetch("quote:#{id}", expires_in: 1.minute) { StatusQuotes.find(id.to_s) if Rails.application.config.x.dynamodb_enabled }
@@ -508,6 +509,9 @@ class Status < ApplicationRecord
       # @status_quote = StatusQuotes.new(status_id: 'test', quote_id: '111988045370892038', original_url: 'test', local_url: 'test')
     end
 
-    self.quote_id = @status_quote&.quote_id if @status_quote&.quote_id != id.to_s
+    return unless !@status_quote.nil? && @status_quote&.quote_id != id.to_s
+
+    self.quote_id = @status_quote&.quote_id
+    self.quote_original_url = @status_quote&.original_url
   end
 end

@@ -31,17 +31,21 @@ class PostStatusService < BaseService
   # @option [String] :idempotency Optional idempotency key
   # @option [Boolean] :with_rate_limit
   # @option [Enumerable] :allowed_mentions Optional array of expected mentioned account IDs, raises `UnexpectedMentionsError` if unexpected accounts end up in mentions
+  # @option [String] :quote_id
   # @return [Status]
   def call(account, options = {})
     @account     = account
     @options     = options
     @text        = @options[:text] || ''
     @in_reply_to = @options[:thread]
+    @quote_id    = @options[:quote_id]
+    Rails.logger.info("call!: #{@quote_id}")
 
     return idempotency_duplicate if idempotency_given? && idempotency_duplicate?
 
     validate_media!
     preprocess_attributes!
+    preprocess_quote!
 
     if scheduled?
       schedule_status!
@@ -70,6 +74,17 @@ class PostStatusService < BaseService
     @scheduled_at = nil if scheduled_in_the_past?
   rescue ArgumentError
     raise ActiveRecord::RecordInvalid
+  end
+
+  def preprocess_quote!
+    Rails.logger.info("preprocess_quote!: #{@quote_id}")
+
+    return if @quote_id.blank?
+
+    @quote = Status.find(@quote_id)
+    @quote_id = @quote.reblog_of_id.to_s if @quote.reblog?
+    @quote_original_url = ActivityPub::TagManager.instance.url_for(@quote)
+    @text += "\n\nRE: #{@quote_original_url}"
   end
 
   def process_status!
@@ -122,6 +137,12 @@ class PostStatusService < BaseService
     DistributionWorker.perform_async(@status.id)
     ActivityPub::DistributionWorker.perform_async(@status.id)
     PollExpirationNotifyWorker.perform_at(@status.poll.expires_at, @status.poll.id) if @status.poll
+
+    @quote = Status.find(@quote_id) if @quote.reblog?
+    @quote_local_url = "#{Rails.configuration.x.use_https ? 'https' : 'http'}://#{Rails.configuration.x.web_domain}/@#{@quote.account.acct}/#{@quote.id}"
+    @quote_original_url = ActivityPub::TagManager.instance.uri_for(@quote)
+    @status.quote_original_url = @quote_original_url if @quote_id.present?
+    StatusQuotes.new(status_id: @status.id.to_s, quote_id: @status.quote_id, original_url: @quote_original_url, local_url: @quote_original_url).save
   end
 
   def validate_media!
@@ -197,6 +218,7 @@ class PostStatusService < BaseService
       language: valid_locale_cascade(@options[:language], @account.user&.preferred_posting_language, I18n.default_locale),
       application: @options[:application],
       rate_limit: @options[:with_rate_limit],
+      quote_id: @quote_id,
     }.compact
   end
 

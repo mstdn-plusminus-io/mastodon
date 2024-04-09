@@ -28,8 +28,8 @@ class ActivityPub::NoteSerializer < ActivityPub::Serializer
 
   attribute :voters_count, if: :poll_and_voters_count?
 
-  attribute :quote_url, if: -> { quote_url }
-  attribute :misskey_quote, key: :_misskey_quote, if: -> { quote_url }
+  attribute :quote_url, key: :quoteUrl, if: :quote_in_content?
+  attribute :misskey_quote, key: :_misskey_quote, if: :quote_in_content?
 
   def id
     ActivityPub::TagManager.instance.uri_for(object)
@@ -179,12 +179,23 @@ class ActivityPub::NoteSerializer < ActivityPub::Serializer
     object.preloadable_poll&.voters_count
   end
 
+  def quote_in_content?
+    return false unless Rails.application.config.x.dynamodb_enabled
+
+    content.include?('RE:')
+  end
+
   def quote_url
+    Rails.logger.info("[note serializer] content: #{content}")
+
     quote = Rails.cache.fetch("quote:#{object.id}", expires_in: 1.minute) do
       StatusQuotes.find(object.id.to_s) if Rails.application.config.x.dynamodb_enabled
     rescue Dynamoid::Errors::RecordNotFound => _e # rubocop:disable Lint/SuppressedException
     end
-    quote&.local_url
+
+    Rails.logger.info("[note serializer] quote&.original_url: #{quote&.original_url}")
+
+    quote&.original_url
   end
 
   alias misskey_quote quote_url
