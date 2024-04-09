@@ -323,28 +323,26 @@ class MediaAttachment < ApplicationRecord
   private
 
   def set_unknown_type
+    self.type = :unknown
+
     return unless file.blank? && !type_changed?
+    return if remote_url.blank?
+    return unless ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true'
 
-    if ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true'
-      if mime.nil?
-        response = HTTP.head(remote_url)
-        content_type = response.headers['content-type']
-        return self.type = :unknown if content_type.blank?
+    response = HTTP.head(remote_url)
+    content_type = response.headers['content-type']
+    return if content_type.blank?
 
-        mime = content_type.downcase
+    mime = content_type.downcase
+
+    self.type = begin
+      if VIDEO_MIME_TYPES.include?(mime)
+        :video
+      elsif AUDIO_MIME_TYPES.include?(mime)
+        :audio
+      else
+        :image
       end
-
-      self.type = begin
-        if VIDEO_MIME_TYPES.include?(mime)
-          :video
-        elsif AUDIO_MIME_TYPES.include?(mime)
-          :audio
-        else
-          :image
-        end
-      end
-    else
-      self.type = :unknown
     end
   end
 
