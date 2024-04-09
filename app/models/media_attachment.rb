@@ -323,42 +323,34 @@ class MediaAttachment < ApplicationRecord
   private
 
   def set_unknown_type
-    self.type = :unknown
+    if ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true'
+      Rails.logger.info("[set_unknown_type] file type override by remote url: #{remote_url}")
 
-    Rails.logger.info("[set_unknown_type] media_attachment.id: #{id}")
-    Rails.logger.info("[set_unknown_type] file.blank?: #{file.blank?}")
-    Rails.logger.info("[set_unknown_type] !type_changed?: #{!type_changed?}")
-    Rails.logger.info("[set_unknown_type] remote_url.blank?: #{remote_url.blank?}")
-    Rails.logger.info("[set_unknown_type] ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true': #{ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true'}")
+      response = HTTP.follow.head(remote_url)
+      content_type = response.headers['content-type']
 
-    return unless file.blank? && !type_changed?
-    return if remote_url.blank?
-    return unless ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true'
+      Rails.logger.info("[set_unknown_type] response: #{response.inspect}")
+      Rails.logger.info("[set_unknown_type] content_type: #{content_type}")
 
-    Rails.logger.info("[set_unknown_type] file type override by remote url: #{remote_url}")
+      return if content_type.blank?
 
-    response = HTTP.follow.head(remote_url)
-    content_type = response.headers['content-type']
+      mime = content_type.downcase
 
-    Rails.logger.info("[set_unknown_type] response: #{response.inspect}")
-    Rails.logger.info("[set_unknown_type] content_type: #{content_type}")
-
-    return if content_type.blank?
-
-    mime = content_type.downcase
-
-    self.type = begin
-      if VIDEO_MIME_TYPES.include?(mime)
-        :video
-      elsif AUDIO_MIME_TYPES.include?(mime)
-        :audio
-      elsif IMAGE_MIME_TYPES.include?(mime)
-        :image
-      else
-        :unknown
+      self.type = begin
+        if VIDEO_MIME_TYPES.include?(mime)
+          :video
+        elsif AUDIO_MIME_TYPES.include?(mime)
+          :audio
+        elsif IMAGE_MIME_TYPES.include?(mime)
+          :image
+        else
+          :unknown
+        end
       end
+      Rails.logger.info("[set_unknown_type] type: #{self.type}")
+    elsif file.blank? && !type_changed?
+      self.type = :unknown
     end
-    Rails.logger.info("[set_unknown_type] type: #{self.type}")
   end
 
   def set_type_and_extension
