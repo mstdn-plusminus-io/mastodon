@@ -329,7 +329,7 @@ class MediaAttachment < ApplicationRecord
     return if remote_url.blank?
     return unless ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true'
 
-    response = HTTP.head(remote_url)
+    response = HTTP.follow.head(remote_url)
     content_type = response.headers['content-type']
     return if content_type.blank?
 
