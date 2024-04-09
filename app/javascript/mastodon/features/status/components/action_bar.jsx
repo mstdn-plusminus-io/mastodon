@@ -12,7 +12,7 @@ import { PERMISSION_MANAGE_USERS, PERMISSION_MANAGE_FEDERATION } from 'mastodon/
 
 import { IconButton } from '../../../components/icon_button';
 import DropdownMenuContainer from '../../../containers/dropdown_menu_container';
-import { me } from '../../../initial_state';
+import { me, feature_quote } from '../../../initial_state';
 
 const messages = defineMessages({
   delete: { id: 'status.delete', defaultMessage: 'Delete' },
@@ -46,6 +46,7 @@ const messages = defineMessages({
   unmute: { id: 'account.unmute', defaultMessage: 'Unmute @{name}' },
   unblock: { id: 'account.unblock', defaultMessage: 'Unblock @{name}' },
   openOriginalPage: { id: 'account.open_original_page', defaultMessage: 'Open original page' },
+  quote: { id: 'status.quote', defaultMessage: 'Quote' },
 });
 
 const mapStateToProps = (state, { status }) => ({
@@ -63,6 +64,7 @@ class ActionBar extends PureComponent {
     status: ImmutablePropTypes.map.isRequired,
     relationship: ImmutablePropTypes.map,
     onReply: PropTypes.func.isRequired,
+    onQuote: PropTypes.func.isRequired,
     onReblog: PropTypes.func.isRequired,
     onFavourite: PropTypes.func.isRequired,
     onBookmark: PropTypes.func.isRequired,
@@ -89,6 +91,10 @@ class ActionBar extends PureComponent {
 
   handleReblogClick = (e) => {
     this.props.onReblog(this.props.status, e);
+  };
+
+  handleQuoteClick = () => {
+    this.props.onQuote(this.props.status);
   };
 
   handleFavouriteClick = () => {
@@ -291,6 +297,7 @@ class ActionBar extends PureComponent {
       <div className='detailed-status__action-bar'>
         <div className='detailed-status__button'><IconButton title={intl.formatMessage(messages.reply)} icon={status.get('in_reply_to_account_id') === status.getIn(['account', 'id']) ? 'reply' : replyIcon} onClick={this.handleReplyClick} /></div>
         <div className='detailed-status__button'><IconButton className={classNames({ reblogPrivate })} disabled={!publicStatus && !reblogPrivate} active={status.get('reblogged')} title={reblogTitle} icon='retweet' onClick={this.handleReblogClick} /></div>
+        {feature_quote && <div className='detailed-status__button'><IconButton title={intl.formatMessage(messages.quote)} icon='quote-right' onClick={this.handleQuoteClick} /></div> }
         <div className='detailed-status__button'><IconButton className='star-icon' animate active={status.get('favourited')} title={intl.formatMessage(messages.favourite)} icon='star' onClick={this.handleFavouriteClick} /></div>
         <div className='detailed-status__button'><IconButton className='bookmark-icon' disabled={!signedIn} active={status.get('bookmarked')} title={intl.formatMessage(messages.bookmark)} icon='bookmark' onClick={this.handleBookmarkClick} /></div>
 

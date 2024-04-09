@@ -57,6 +57,7 @@ class PostStatusService < BaseService
 
     unless scheduled?
       postprocess_status!
+      postprocess_quote!
       bump_potential_friendship!
     end
 
@@ -137,6 +138,10 @@ class PostStatusService < BaseService
     DistributionWorker.perform_async(@status.id)
     ActivityPub::DistributionWorker.perform_async(@status.id)
     PollExpirationNotifyWorker.perform_at(@status.poll.expires_at, @status.poll.id) if @status.poll
+  end
+
+  def postprocess_quote!
+    return if @quote_id.blank?
 
     @quote = Status.find(@quote_id) if @quote.reblog?
     @quote_local_url = "#{Rails.configuration.x.use_https ? 'https' : 'http'}://#{Rails.configuration.x.web_domain}/@#{@quote.account.acct}/#{@quote.id}"
