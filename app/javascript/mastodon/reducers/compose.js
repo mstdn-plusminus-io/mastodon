@@ -388,7 +388,7 @@ export default function compose(state = initialState, action) {
         map.set('id', null);
         map.set('in_reply_to', null);
         map.set('quote_id', action.status.get('id'));
-        map.set('text', statusToTextMentions(state, action.status));
+        map.set('text', action.text)
         map.set('privacy', privacyPreference(action.status.get('visibility'), state.get('default_privacy')));
         map.set('focusDate', new Date());
         map.set('caretPosition', null);
@@ -553,7 +553,6 @@ export default function compose(state = initialState, action) {
   case COMPOSE_SET_STATUS:
     return state.withMutations(map => {
       map.set('id', action.status.get('id'));
-      map.set('text', action.text);
       map.set('in_reply_to', action.status.get('in_reply_to_id'));
       map.set('privacy', action.status.get('visibility'));
       map.set('media_attachments', action.status.get('media_attachments'));
