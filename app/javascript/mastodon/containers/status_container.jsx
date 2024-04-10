@@ -61,6 +61,9 @@ const messages = defineMessages({
   editConfirm: { id: 'confirmations.edit.confirm', defaultMessage: 'Edit' },
   editMessage: { id: 'confirmations.edit.message', defaultMessage: 'Editing now will overwrite the message you are currently composing. Are you sure you want to proceed?' },
   blockDomainConfirm: { id: 'confirmations.domain_block.confirm', defaultMessage: 'Block entire domain' },
+  quoteConfirm: { id: 'confirmations.quote.confirm', defaultMessage: 'Quote' },
+  quoteMessage: { id: 'confirmations.quote.message', defaultMessage: 'Quoting now will overwrite the message you are currently composing. Are you sure you want to proceed?' },
+
 });
 
 const makeMapStateToProps = () => {
@@ -97,7 +100,21 @@ const mapDispatchToProps = (dispatch, { intl, contextType }) => ({
   },
 
   onQuote (status, router) {
-    dispatch(quoteCompose(status, router));
+    dispatch((_, getState) => {
+      let state = getState();
+
+      if (state.getIn(['compose', 'text']).trim().length !== 0) {
+        dispatch(openModal({
+          modalType: 'CONFIRM',
+          modalProps: {
+            message: intl.formatMessage(messages.quoteMessage),
+            confirm: intl.formatMessage(messages.quoteConfirm),
+            onConfirm: () => dispatch(quoteCompose(status, router)) },
+        }));
+      } else {
+        dispatch(quoteCompose(status, router));
+      }
+    });
   },
 
   onModalReblog (status, privacy) {
