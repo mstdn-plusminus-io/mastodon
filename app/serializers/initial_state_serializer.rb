@@ -35,6 +35,7 @@ class InitialStateSerializer < ActiveModel::Serializer
       trends_as_landing_page: Setting.trends_as_landing_page,
       status_page_url: Setting.status_page_url,
       sso_redirect: sso_redirect,
+      feature_quote: feature_quote
     }
 
     if object.current_account
@@ -116,5 +117,9 @@ class InitialStateSerializer < ActiveModel::Serializer
 
   def sso_redirect
     "/auth/auth/#{Devise.omniauth_providers[0]}" if ENV['ONE_CLICK_SSO_LOGIN'] == 'true' && ENV['OMNIAUTH_ONLY'] == 'true' && Devise.omniauth_providers.length == 1
+  end
+
+  def feature_quote
+    Rails.configuration.x.dynamodb_enabled
   end
 end

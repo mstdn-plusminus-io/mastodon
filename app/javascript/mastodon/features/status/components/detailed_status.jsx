@@ -196,7 +196,7 @@ class DetailedStatus extends ImmutablePureComponent {
           />
         );
       }
-    } else if (status.get('spoiler_text').length === 0) {
+    } else if (status.get('spoiler_text').length === 0 && status.getIn(['card', 'url']) !== status.get('quote_original_url')) {
       media = <Card sensitive={status.get('sensitive')} onOpenMedia={this.props.onOpenMedia} card={status.get('card', null)} />;
     }
 
@@ -296,11 +296,11 @@ class DetailedStatus extends ImmutablePureComponent {
             {...statusContentProps}
           />
 
+          <QuoteContainer id={status.get("quote_id")} />
+
           {media}
 
           {expanded && hashtagBar}
-
-          <QuoteContainer id={status.get("quote_id")} />
 
           <div className='detailed-status__meta'>
             <a className='detailed-status__datetime' href={`/@${status.getIn(['account', 'acct'])}/${status.get('id')}`} target='_blank' rel='noopener noreferrer'>

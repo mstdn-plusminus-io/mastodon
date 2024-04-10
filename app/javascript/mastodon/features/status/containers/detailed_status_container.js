@@ -9,6 +9,7 @@ import {
   replyCompose,
   mentionCompose,
   directCompose,
+  quoteCompose,
 } from '../../../actions/compose';
 import {
   reblog,
@@ -39,6 +40,8 @@ const messages = defineMessages({
   redraftMessage: { id: 'confirmations.redraft.message', defaultMessage: 'Are you sure you want to delete this status and re-draft it? Favorites and boosts will be lost, and replies to the original post will be orphaned.' },
   replyConfirm: { id: 'confirmations.reply.confirm', defaultMessage: 'Reply' },
   replyMessage: { id: 'confirmations.reply.message', defaultMessage: 'Replying now will overwrite the message you are currently composing. Are you sure you want to proceed?' },
+  quoteConfirm: { id: 'confirmations.quote.confirm', defaultMessage: 'Quote' },
+  quoteMessage: { id: 'confirmations.quote.message', defaultMessage: 'Quoting now will overwrite the message you are currently composing. Are you sure you want to proceed?' },
 });
 
 const makeMapStateToProps = () => {
@@ -70,6 +73,24 @@ const mapDispatchToProps = (dispatch, { intl }) => ({
         }));
       } else {
         dispatch(replyCompose(status, router));
+      }
+    });
+  },
+
+  onQuote (status, router) {
+    dispatch((_, getState) => {
+      let state = getState();
+      if (state.getIn(['compose', 'text']).trim().length !== 0) {
+        dispatch(openModal({
+          modalType: 'CONFIRM',
+          modalProps: {
+            message: intl.formatMessage(messages.quoteMessage),
+            confirm: intl.formatMessage(messages.quoteConfirm),
+            onConfirm: () => dispatch(quoteCompose(status, router)),
+          },
+        }));
+      } else {
+        dispatch(quoteCompose(status, router));
       }
     });
   },
