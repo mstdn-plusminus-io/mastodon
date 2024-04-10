@@ -323,7 +323,7 @@ class MediaAttachment < ApplicationRecord
   private
 
   def set_unknown_type
-    if ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true'
+    if ENV['DISABLE_REMOTE_MEDIA_CACHE'] == 'true' && file.blank?
       Rails.logger.info("[set_unknown_type] file type override by remote url: #{remote_url}")
 
       response = HTTP.follow.head(remote_url)
