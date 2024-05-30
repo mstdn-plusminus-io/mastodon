@@ -6,7 +6,7 @@ class ActivityPub::ProcessStatusUpdateService < BaseService
   include Lockable
 
   def call(status, activity_json, object_json, request_id: nil)
-    raise ArgumentError, 'Status has unsaved changes' if status.changed?
+    raise ArgumentError, "Status has unsaved changes: #{status.changes.inspect}" if status.changed?
 
     @activity_json             = activity_json
     @json                      = object_json
