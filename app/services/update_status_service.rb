@@ -27,7 +27,6 @@ class UpdateStatusService < BaseService
       create_previous_edit!
       update_media_attachments! if @options.key?(:media_ids)
       update_poll! if @options.key?(:poll)
-      update_quote!
       update_immediate_attributes!
       create_edit!
     end
@@ -115,6 +114,18 @@ class UpdateStatusService < BaseService
     @status.sensitive    = @options[:sensitive] || @options[:spoiler_text].present? if @options.key?(:sensitive) || @options.key?(:spoiler_text)
     @status.language     = valid_locale_cascade(@options[:language], @status.language, @status.account.user&.preferred_posting_language, I18n.default_locale)
 
+    if @status.quote_id.present?
+      @quote = Status.find(@status.quote_id)
+      @quote_id = @quote.reblog_of_id.to_s if @quote.reblog?
+      @quote_original_url = ActivityPub::TagManager.instance.url_for(@quote)
+
+      Rails.logger.info("@status.text: #{@status.text}")
+      Rails.logger.info("@quote_original_url: #{@quote_original_url}")
+      if @quote_original_url.present? && !@status.text.ends_with?(@quote_original_url)
+        @status.text += "\n\nRE: #{@quote_original_url}"
+      end
+    end
+
     # We raise here to rollback the entire transaction
     raise NoChangesSubmittedError unless significant_changes?
 
@@ -167,13 +178,5 @@ class UpdateStatusService < BaseService
 
   def significant_changes?
     @status.changed? || @poll_changed || @media_attachments_changed
-  end
-
-  def update_quote!
-    Rails.logger.info("update_quote!: #{@status.quote_original_url}")
-    if @status.quote_original_url.present? && !@status.text.end_with?("\n\nRE: #{@status.quote_original_url}")
-      Rails.logger.info("append quote_original_url: #{@status.quote_original_url}")
-      @status.text += "\n\nRE: #{@status.quote_original_url}"
-    end
   end
 end
