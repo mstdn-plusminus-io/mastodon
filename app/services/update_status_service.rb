@@ -27,8 +27,8 @@ class UpdateStatusService < BaseService
       create_previous_edit!
       update_media_attachments! if @options.key?(:media_ids)
       update_poll! if @options.key?(:poll)
-      update_immediate_attributes!
       update_quote!
+      update_immediate_attributes!
       create_edit!
     end
 
