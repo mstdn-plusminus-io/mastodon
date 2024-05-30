@@ -13,7 +13,7 @@ module Mastodon
     end
 
     def patch
-      8
+      9
     end
 
     def suffix
@@ -21,7 +21,7 @@ module Mastodon
     end
 
     def revision
-      4
+      1
     end
 
     def default_prerelease
