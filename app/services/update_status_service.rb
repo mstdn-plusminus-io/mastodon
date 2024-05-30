@@ -28,6 +28,7 @@ class UpdateStatusService < BaseService
       update_media_attachments! if @options.key?(:media_ids)
       update_poll! if @options.key?(:poll)
       update_immediate_attributes!
+      update_quote!
       create_edit!
     end
 
@@ -166,5 +167,12 @@ class UpdateStatusService < BaseService
 
   def significant_changes?
     @status.changed? || @poll_changed || @media_attachments_changed
+  end
+
+  def update_quote!
+    Rails.logger.info("update_quote!: #{@status.quote_original_url}")
+    return unless @status.quote_original_url.present? && @status.text.exclude?("\n\nRE: #{@status.quote_original_url}")
+
+    @status.text += "\n\nRE: #{@status.quote_original_url}"
   end
 end
