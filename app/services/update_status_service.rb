@@ -171,8 +171,9 @@ class UpdateStatusService < BaseService
 
   def update_quote!
     Rails.logger.info("update_quote!: #{@status.quote_original_url}")
-    return unless @status.quote_original_url.present? && @status.text.exclude?("\n\nRE: #{@status.quote_original_url}")
-
-    @status.text += "\n\nRE: #{@status.quote_original_url}"
+    if @status.quote_original_url.present? && !@status.text.end_with?("\n\nRE: #{@status.quote_original_url}")
+      Rails.logger.info("append quote_original_url: #{@status.quote_original_url}")
+      @status.text += "\n\nRE: #{@status.quote_original_url}"
+    end
   end
 end
