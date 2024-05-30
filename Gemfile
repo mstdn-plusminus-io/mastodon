@@ -208,3 +208,5 @@ gem 'hcaptcha', '~> 7.1'
 gem 'ruby-openai', '~> 6.3.1'
 
 gem 'dynamoid', '~> 3.10'
+
+gem 'mail', '~> 2.8'

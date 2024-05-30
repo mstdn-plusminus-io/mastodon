@@ -39,9 +39,9 @@ class QuoteIndicator extends ImmutablePureComponent {
   };
 
   render () {
-    const { status, intl } = this.props;
+    const { status, intl, editing } = this.props;
 
-    if (!status) {
+    if (!status || editing) {
       return null;
     }
 
