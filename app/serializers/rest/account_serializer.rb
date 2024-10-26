@@ -4,9 +4,11 @@ class REST::AccountSerializer < ActiveModel::Serializer
   include RoutingHelper
   include FormattingHelper
 
-  attributes :id, :username, :acct, :display_name, :locked, :bot, :discoverable, :group, :created_at,
+  # Please update `app/javascript/mastodon/api_types/accounts.ts` when making changes to the attributes
+
+  attributes :id, :username, :acct, :display_name, :locked, :bot, :discoverable, :indexable, :group, :created_at,
              :note, :url, :uri, :avatar, :avatar_static, :header, :header_static,
-             :followers_count, :following_count, :statuses_count, :last_status_at
+             :followers_count, :following_count, :statuses_count, :last_status_at, :hide_collections
 
   has_one :moved_to_account, key: :moved, serializer: REST::AccountSerializer, if: :moved_and_not_nested?
 
@@ -59,7 +61,7 @@ class REST::AccountSerializer < ActiveModel::Serializer
   end
 
   def note
-    object.suspended? ? '' : account_bio_format(object)
+    object.unavailable? ? '' : account_bio_format(object)
   end
 
   def url
@@ -111,35 +113,39 @@ class REST::AccountSerializer < ActiveModel::Serializer
   end
 
   def display_name
-    object.suspended? ? '' : object.display_name
+    object.unavailable? ? '' : object.display_name
   end
 
   def locked
-    object.suspended? ? false : object.locked
+    object.unavailable? ? false : object.locked
   end
 
   def bot
-    object.suspended? ? false : object.bot
+    object.unavailable? ? false : object.bot
   end
 
   def discoverable
-    object.suspended? ? false : object.discoverable
+    object.unavailable? ? false : object.discoverable
+  end
+
+  def indexable
+    object.unavailable? ? false : object.indexable
   end
 
   def moved_to_account
-    object.suspended? ? nil : AccountDecorator.new(object.moved_to_account)
+    object.unavailable? ? nil : AccountDecorator.new(object.moved_to_account)
   end
 
   def emojis
-    object.suspended? ? [] : object.emojis
+    object.unavailable? ? [] : object.emojis
   end
 
   def fields
-    object.suspended? ? [] : object.fields
+    object.unavailable? ? [] : object.fields
   end
 
   def suspended
-    object.suspended?
+    object.unavailable?
   end
 
   def silenced
@@ -151,7 +157,7 @@ class REST::AccountSerializer < ActiveModel::Serializer
   end
 
   def roles
-    if object.suspended? || object.user.nil?
+    if object.unavailable? || object.user.nil?
       []
     else
       [object.user.role].compact.filter(&:highlighted?)

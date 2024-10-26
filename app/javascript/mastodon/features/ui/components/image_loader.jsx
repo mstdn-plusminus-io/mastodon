@@ -142,7 +142,7 @@ export default class ImageLoader extends PureComponent {
   }
 
   render () {
-    const { alt, lang, src, width, height, onClick } = this.props;
+    const { alt, lang, src, width, height, onClick, zoomedIn } = this.props;
     const { loading } = this.state;
 
     const className = classNames('image-loader', {

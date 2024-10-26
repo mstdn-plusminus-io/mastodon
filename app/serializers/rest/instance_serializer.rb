@@ -7,11 +7,12 @@ class REST::InstanceSerializer < ActiveModel::Serializer
     has_one :account, serializer: REST::AccountSerializer
   end
 
+  include InstanceHelper
   include RoutingHelper
 
   attributes :domain, :title, :version, :source_url, :description,
-             :usage, :thumbnail, :languages, :configuration,
-             :registrations, :feature_quote
+             :usage, :thumbnail, :icon, :languages, :configuration,
+             :registrations, :api_versions
 
   has_one :contact, serializer: ContactSerializer
   has_many :rules, serializer: REST::RuleSerializer
@@ -28,7 +29,19 @@ class REST::InstanceSerializer < ActiveModel::Serializer
       }
     else
       {
-        url: full_pack_url('media/images/preview.png'),
+        url: frontend_asset_url('images/preview.png'),
+      }
+    end
+  end
+
+  def icon
+    SiteUpload::ANDROID_ICON_SIZES.map do |size|
+      src = app_icon_path(size.to_i)
+      src = URI.join(root_url, src).to_s if src.present?
+
+      {
+        src: src || frontend_asset_url("icons/android-chrome-#{size}x#{size}.png"),
+        size: "#{size}x#{size}",
       }
     end
   end
@@ -48,18 +61,23 @@ class REST::InstanceSerializer < ActiveModel::Serializer
         status: object.status_page_url,
       },
 
+      vapid: {
+        public_key: Rails.configuration.x.vapid_public_key,
+      },
+
       accounts: {
         max_featured_tags: FeaturedTag::LIMIT,
+        max_pinned_statuses: StatusPinValidator::PIN_LIMIT,
       },
 
       statuses: {
         max_characters: StatusLengthValidator::MAX_CHARS,
-        max_media_attachments: ENV.fetch('MAX_MEDIA_ATTACHMENTS', 4).to_i,
+        max_media_attachments: Status::MEDIA_ATTACHMENTS_LIMIT,
         characters_reserved_per_url: StatusLengthValidator::URL_PLACEHOLDER_CHARS,
       },
 
       media_attachments: {
-        supported_mime_types: MediaAttachment::IMAGE_MIME_TYPES + MediaAttachment::VIDEO_MIME_TYPES + MediaAttachment::AUDIO_MIME_TYPES,
+        supported_mime_types: MediaAttachment.supported_mime_types,
         image_size_limit: MediaAttachment::IMAGE_LIMIT,
         image_matrix_limit: Attachmentable::MAX_MATRIX_LIMIT,
         video_size_limit: MediaAttachment::VIDEO_LIMIT,
@@ -89,8 +107,8 @@ class REST::InstanceSerializer < ActiveModel::Serializer
     }
   end
 
-  def feature_quote
-    Rails.configuration.x.dynamodb_enabled
+  def api_versions
+    Mastodon::Version.api_versions
   end
 
   private

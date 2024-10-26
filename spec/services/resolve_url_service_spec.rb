@@ -2,13 +2,13 @@
 
 require 'rails_helper'
 
-describe ResolveURLService, type: :service do
+RSpec.describe ResolveURLService do
   subject { described_class.new }
 
   describe '#call' do
     it 'returns nil when there is no resource url' do
-      url           = 'http://example.com/missing-resource'
-      known_account = Fabricate(:account, uri: url, domain: 'example.com')
+      url = 'http://example.com/missing-resource'
+      Fabricate(:account, uri: url, domain: 'example.com')
       service = instance_double(FetchResourceService)
 
       allow(FetchResourceService).to receive(:new).and_return service

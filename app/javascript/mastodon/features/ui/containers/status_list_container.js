@@ -1,6 +1,6 @@
+import { createSelector } from '@reduxjs/toolkit';
 import { Map as ImmutableMap, List as ImmutableList } from 'immutable';
 import { connect } from 'react-redux';
-import { createSelector } from 'reselect';
 
 import { debounce } from 'lodash';
 
@@ -15,7 +15,7 @@ const makeGetStatusIds = (pending = false) => createSelector([
   (_, props) => props,
 ], (columnSettings, statusIds, statuses, props) => {
   return statusIds.filter(id => {
-    if (id === null) return true;
+    if (id === null || id === 'inline-follow-suggestions') return true;
 
     const statusForId = statuses.get(id);
     let showStatus    = true;
