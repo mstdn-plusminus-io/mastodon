@@ -463,7 +463,7 @@ GEM
       uri
     net-http-persistent (4.0.2)
       connection_pool (~> 2.2)
-    net-imap (0.3.7)
+    net-imap (0.3.8)
       date
       net-protocol
     net-ldap (0.18.0)
@@ -477,7 +477,7 @@ GEM
       net-protocol
     net-ssh (7.1.0)
     nio4r (2.7.4)
-    nokogiri (1.16.8)
+    nokogiri (1.17.2)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     nsa (0.3.0)
@@ -541,7 +541,7 @@ GEM
       activesupport (>= 3.0.0)
     raabro (1.4.0)
     racc (1.8.1)
-    rack (2.2.10)
+    rack (2.2.11)
     rack-attack (6.7.0)
       rack (>= 1.0, < 4)
     rack-cors (2.0.2)
@@ -781,7 +781,7 @@ GEM
       unf_ext
     unf_ext (0.0.8.2)
     unicode-display_width (2.4.2)
-    uri (0.12.2)
+    uri (0.12.4)
     validate_email (0.1.6)
       activemodel (>= 3.0)
       mail (>= 2.2.5)
@@ -891,7 +891,7 @@ DEPENDENCIES
   mime-types (~> 3.5.0)
   net-http (~> 0.3.2)
   net-ldap (~> 0.18)
-  nokogiri (~> 1.15)
+  nokogiri (~> 1.17)
   nsa
   oj (~> 3.14)
   omniauth (~> 2.0)
