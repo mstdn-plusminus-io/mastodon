@@ -9,7 +9,7 @@ RUN \
   set -xe && \
   apt-get update && \
   apt-get install -y --no-install-recommends curl && \
-  curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+  curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
   apt-get install -y nodejs && \
   rm -rf /share/doc && \
   apt-get -y --auto-remove purge curl && \
