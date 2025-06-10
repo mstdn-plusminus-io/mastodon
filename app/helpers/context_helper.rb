@@ -32,6 +32,13 @@ module ContextHelper
       'messageFranking' => 'toot:messageFranking', 'messageType' => 'toot:messageType', 'cipherText' => 'toot:cipherText'
     },
     suspended: { 'toot' => 'http://joinmastodon.org/ns#', 'suspended' => 'toot:suspended' },
+    interaction_policies: {
+      'gts' => 'https://gotosocial.org/ns#',
+      'interactionPolicy' => { '@id' => 'gts:interactionPolicy', '@type' => '@id' },
+      'canQuote' => { '@id' => 'gts:canQuote', '@type' => '@id' },
+      'automaticApproval' => { '@id' => 'gts:automaticApproval', '@type' => '@id' },
+      'manualApproval' => { '@id' => 'gts:manualApproval', '@type' => '@id' },
+    },
     quoteUrl: { 'quoteUrl' => 'as:quoteUrl' },
     _misskey_quote: { 'misskey' => 'https://misskey-hub.net/ns#', '_misskey_quote' => 'misskey:_misskey_quote' },
   }.freeze
