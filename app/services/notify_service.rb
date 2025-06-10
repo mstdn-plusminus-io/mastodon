@@ -70,7 +70,7 @@ class NotifyService < BaseService
     ) && @mentions.count > SPAMMER_MENTION_THRESHOLD
   end
 
-  SPAM_FILTER_OPENAI_MODEL           = ENV.fetch('OPENAI_SPAM_FILTER_MODEL', 'gpt-3.5-turbo-0125')
+  SPAM_FILTER_OPENAI_MODEL           = ENV.fetch('OPENAI_SPAM_FILTER_MODEL', 'gpt-4.1')
   SPAM_FILTER_OPENAI_SYSTEM_MESSAGE  = ENV.fetch('SPAM_FILTER_OPENAI_SYSTEM_MESSAGE',
                                                  'You are a specialist in spam determination. ' \
                                                  'Please respond with a brief `TRUE` or `FALSE` response as to whether or not the given sentences are spam or not. ' \
