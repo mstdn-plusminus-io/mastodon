@@ -68,6 +68,11 @@ export function updateNotifications(notification, intlMessages, intlLocale) {
 
     let filtered = false;
 
+    const notificationDenyList = JSON.parse(localStorage.getItem('plusminus_config_notification_deny_list') || '[]') || [];
+    if (notificationDenyList.includes(`@${notification.account.acct}`)) {
+      filtered = true;
+    }
+
     if (['mention', 'status'].includes(notification.type) && notification.status.filtered) {
       const filters = notification.status.filtered.filter(result => result.filter.context.includes('notifications'));
 
