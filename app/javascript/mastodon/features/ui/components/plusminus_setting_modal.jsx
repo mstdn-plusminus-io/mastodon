@@ -122,6 +122,77 @@ const styles = {
 
 const localStorageKeyPrefix = 'plusminus_config_';
 
+// IndexedDB functions for plusminus settings
+const readPlusminusSettings = (key) => {
+  const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+  if (!indexedDB) return Promise.reject(new Error('IndexedDB not available'));
+
+  return new Promise(function(resolve, reject) {
+      const open = indexedDB.open('plusminus', 1);
+
+      open.onerror = function() {
+          reject(open.error);
+      };
+
+      open.onupgradeneeded = function() {
+          const db = open.result;
+          if (!db.objectStoreNames.contains('settings')) {
+            db.createObjectStore('settings');
+          }
+      };
+
+      open.onsuccess = function() {
+          const db = open.result;
+          const tx = db.transaction('settings', 'readonly');
+          const store = tx.objectStore('settings');
+          const getRequest = store.get(key);
+
+          getRequest.onsuccess = function() {
+              resolve(getRequest.result || []);
+          };
+
+          getRequest.onerror = function() {
+              reject(getRequest.error);
+          };
+      };
+  });
+};
+
+const writePlusminusSettings = (key, value) => {
+  const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+  if (!indexedDB) return Promise.reject(new Error('IndexedDB not available'));
+
+  return new Promise(function(resolve, reject) {
+      const open = indexedDB.open('plusminus', 1);
+
+      open.onerror = function() {
+          reject(open.error);
+      };
+
+      open.onupgradeneeded = function() {
+          const db = open.result;
+          if (!db.objectStoreNames.contains('settings')) {
+            db.createObjectStore('settings');
+          }
+      };
+
+      open.onsuccess = function() {
+          const db = open.result;
+          const tx = db.transaction('settings', 'readwrite');
+          const store = tx.objectStore('settings');
+          const putRequest = store.put(value, key);
+
+          putRequest.onsuccess = function() {
+              resolve();
+          };
+
+          putRequest.onerror = function() {
+              reject(putRequest.error);
+          };
+      };
+  });
+};
+
 class PlusMinusSettingModalLoader extends React.Component {
 
   constructor() {
@@ -172,6 +243,7 @@ class PlusMinusSettingModal extends React.Component {
 
   UNSAFE_componentWillMount() {
     this.parseConfig(localStorage);
+    this.loadNotificationSettings();
   }
 
   parseConfig(baseObj) {
@@ -203,6 +275,7 @@ class PlusMinusSettingModal extends React.Component {
 
   state = {
     developerModeButtonClicked: 0,
+    notificationDenyList: [],
     config: {
       timestamp: 'relative',
       content: 'plain',
@@ -237,6 +310,10 @@ class PlusMinusSettingModal extends React.Component {
     this.setState({ config: { ...this.state.config, [key]: value } });
   }
 
+  updateNotificationDenyList = (newList) => {
+    this.setState({ notificationDenyList: newList });
+  };
+
   onClickDeveloperModeButton = () => {
     if (this.state.config.developer_mode === 'enabled') {
       return;
@@ -251,6 +328,20 @@ class PlusMinusSettingModal extends React.Component {
         location.reload();
       }
     });
+  };
+
+  loadNotificationSettings = async () => {
+    try {
+      const notificationDenyList = await readPlusminusSettings('notificationDenyList');
+      this.setState({
+        notificationDenyList: Array.isArray(notificationDenyList) ? notificationDenyList : [],
+      });
+    } catch (error) {
+      console.warn('Failed to load notification settings from IndexedDB:', error);
+      this.setState({
+        notificationDenyList: [],
+      });
+    }
   };
 
   render() {
@@ -470,6 +561,59 @@ class PlusMinusSettingModal extends React.Component {
                 />
                 %
               </label>
+            </div>
+
+            <div style={styles.section}>
+              <h2>通知</h2>
+            </div>
+
+            <div style={styles.config}>
+              <label>
+                通知を表示しないアカウント
+              </label>
+              <p style={styles.description}>
+                指定したアカウントからのブラウザ通知を表示しません。<br />
+                通知タイムラインには表示されます。<br />
+                アカウント名は @username@example.com の形式で入力してください。
+              </p>
+
+              <div style={styles.customCwInputs}>
+                {this.state.notificationDenyList?.map((acct, index) => (
+                  <div key={`${index}_${this.state.notificationDenyList.length}`} style={styles.customCwInput}>
+                    <input
+                      style={styles.customCwInputTextArea}
+                      type='text'
+                      placeholder='@username@example.com'
+                      value={acct}
+                      onChange={(e) => {
+                        const newList = [...this.state.notificationDenyList];
+                        newList[index] = e.target.value;
+                        this.updateNotificationDenyList(newList);
+                      }}
+                    />
+                    <button
+                      style={styles.customCwInputButton}
+                      onClick={() => {
+                        const newList = [...this.state.notificationDenyList];
+                        newList.splice(index, 1);
+                        this.updateNotificationDenyList(newList);
+                      }}
+                    >
+                      -
+                    </button>
+                  </div>
+                ))}
+                <button
+                  style={styles.customCwInputAddButton}
+                  onClick={() => {
+                    const newList = [...this.state.notificationDenyList];
+                    newList.push('');
+                    this.updateNotificationDenyList(newList);
+                  }}
+                >
+                  +
+                </button>
+              </div>
             </div>
 
             <div style={styles.section}>
@@ -730,7 +874,7 @@ class PlusMinusSettingModal extends React.Component {
     download(`mastodon-plusminus-settings-${new Date().getTime()}.json`, config);
   };
 
-  handleSave = () => {
+  handleSave = async () => {
     Object.keys(this.state.config).forEach((key) =>
       localStorage[`${localStorageKeyPrefix}${key}`] = typeof this.state.config[key] === 'object' ? JSON.stringify(this.state.config[key]) : this.state.config[key],
     );
@@ -738,6 +882,16 @@ class PlusMinusSettingModal extends React.Component {
     if (this.state.config.live_mode_button === 'hidden') {
       // NOTE: 実況モードボタンが無効化されているので、実況モードも無効化する
       localStorage[`${localStorageKeyPrefix}live_mode`] = 'disabled';
+    }
+
+    // Save notification settings to IndexedDB
+    try {
+      await writePlusminusSettings('notificationDenyList', this.state.notificationDenyList.filter(acct => acct.trim() !== ''));
+      localStorage[`${localStorageKeyPrefix}notification_deny_list`] = JSON.stringify(this.state.notificationDenyList.filter(acct => acct.trim() !== ''));
+    } catch (error) {
+      console.error('Failed to save notification settings to IndexedDB:', error);
+      alert('通知設定の保存に失敗しました。');
+      return;
     }
 
     location.reload();
