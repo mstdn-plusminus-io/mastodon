@@ -9559,36 +9559,463 @@ noscript {
   }
 }
 
-.plusminus-config__root {
+.plusminus-settings__root {
   position: fixed;
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
   background: darken($ui-base-color, 4%);
-  z-index: 99999;
+  z-index: 100010; // Base layer for content
   display: flex;
-  flex-direction: column;
   font-size: initial;
   color: $primary-text-color;
-  overflow: auto;
+  overflow: hidden;
+}
 
-  a.link {
-    color: $highlight-text-color;
+.plusminus-settings__header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  background: $ui-base-color;
+  border-bottom: 1px solid lighten($ui-base-color, 8%);
+  padding: 1rem;
+  z-index: 100030; // Top bar layer
+}
+
+.plusminus-settings__hamburger {
+  background: $ui-button-background-color;
+  border: 1px solid lighten($ui-base-color, 8%);
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+  color: $primary-text-color;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-right: 1rem;
+  flex-shrink: 0;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 100060; // Hamburger menu button layer
+
+  &:hover {
+    background: lighten($ui-button-background-color, 4%);
   }
 
-  @media screen and (max-width: $no-gap-breakpoint) {
-    .custom-cw-input__wrapper {
-      input,
-      select {
-        flex: auto !important;
-        width: 100%;
+  &:focus {
+    outline: 0;
+    box-shadow: 0 0 0 2px rgba($highlight-text-color, 0.5);
+  }
+}
+
+.plusminus-settings__sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100040; // Sidebar overlay layer
+}
+
+.plusminus-settings__sidebar {
+  background: $ui-base-color;
+  border-right: 1px solid lighten($ui-base-color, 8%);
+  width: 280px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+
+  @media screen and (max-width: 895px) {
+    width: 240px;
+  }
+
+  &--mobile {
+    position: fixed;
+    left: -240px;
+    top: 0;
+    bottom: 0;
+    z-index: 100050; // Sidebar menu layer
+    transition: left 0.3s ease-in-out;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+    width: 240px; // Force 240px width on mobile
+  }
+
+  &--open {
+    left: 0;
+  }
+}
+
+.plusminus-settings__sidebar-nav {
+  padding: 20px 0;
+  
+  @media screen and (max-width: 895px) {
+    padding-top: 60px; // Add padding for mobile to avoid overlap with hamburger button
+  }
+}
+
+.plusminus-settings__sidebar-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 15px 20px;
+  background: transparent;
+  border: none;
+  color: $secondary-text-color;
+  text-align: left;
+  font-size: 15px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+    
+    &.fa-mobile {
+      font-size: 1.3em; // Make mobile icon larger based on width
+    }
+  }
+
+  &:hover {
+    background: lighten($ui-base-color, 4%);
+    color: $primary-text-color;
+  }
+
+  &--active {
+    background: $ui-highlight-color;
+    color: $primary-text-color;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: $highlight-text-color;
+    }
+  }
+}
+
+.plusminus-settings__container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 20px 0 0 20px; // Top, right, bottom (0 for desktop), left
+
+  @media screen and (max-width: 895px) {
+    padding: 80px 0 80px; // Increased top padding for fixed header, bottom for action buttons
+  }
+}
+
+.plusminus-settings__title {
+  font-size: 24px;
+  line-height: 36px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  display: inline-block;
+
+  &--mobile {
+    margin-bottom: 0;
+    flex: 1;
+    font-size: 20px;
+    line-height: 28px;
+    display: inline-block;
+    padding-left: calc(2.75rem + 1rem); // Button width (2.75rem) + spacing (1rem)
+    padding-top: 0.25rem;
+  }
+}
+
+.plusminus-settings__developer-mode-button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font-size: inherit;
+  cursor: text;
+}
+
+// Button container removed - Import/Export moved to dedicated section
+
+.plusminus-settings__import-button {
+  // Styles inherited from Button component
+}
+
+.plusminus-settings__import-export-button {
+  margin-left: 26px;
+  margin-top: 0.5rem;
+}
+
+.plusminus-settings__main {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 10px;
+  padding-bottom: 80px; // Add padding to prevent content from being hidden behind action buttons
+
+  @media screen and (max-width: 895px) {
+    padding-bottom: 120px; // Extra padding for mobile to account for action buttons
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px solid lighten($ui-base-color, 4%);
+    margin: 0 0 20px 0;
+  }
+}
+
+.plusminus-settings__hint {
+  color: $dark-text-color;
+  font-size: 14px;
+  margin: 0 0 1rem 0;
+  padding: 0;
+
+  @media screen and (max-width: 895px) {
+    padding-left: 1rem;
+  }
+}
+
+.plusminus-settings__content,
+.plusminus-settings__mobile-content {
+  max-width: 800px;
+  padding-bottom: 80px; // Add padding to prevent content from being hidden behind action buttons
+}
+
+.plusminus-settings__section {
+  margin-bottom: 40px;
+  scroll-margin-top: 20px;
+}
+
+.plusminus-settings__section-title {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: $primary-text-color;
+
+  @media screen and (max-width: 895px) {
+    padding: 0 1rem;
+  }
+}
+
+.plusminus-settings__config {
+  margin-bottom: 25px;
+  font-size: 15px;
+  line-height: 20px;
+
+  @media screen and (max-width: 895px) {
+    padding: 0 1rem;
+  }
+
+  h2 {
+    font-size: 18px;
+    line-height: 24px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: $primary-text-color;
+  }
+
+  label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: $primary-text-color;
+    line-break: anywhere;
+
+    input[type='checkbox'] {
+      margin-right: 10px;
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    input[type='number'] {
+      background: $ui-base-color;
+      border: 1px solid lighten($ui-base-color, 8%);
+      border-radius: 4px;
+      padding: 7px;
+      color: $primary-text-color;
+      font-size: 14px;
+      margin: 0 5px;
+      width: 80px;
+
+      &:focus {
+        border-color: $highlight-text-color;
+        outline: 0;
       }
     }
-    .custom-cw-input-button__wrapper,
-    .custom-cw-input-button__wrapper-order-button {
-      flex: 0;
-    }
+  }
+
+  &--child {
+    margin-left: 26px;
+    margin-top: 10px;
+  }
+}
+
+.plusminus-settings__description {
+  color: $dark-text-color;
+  font-size: 14px;
+  line-height: 20px;
+  margin-top: 8px;
+  margin-left: 26px;
+
+  code {
+    background: lighten($ui-base-color, 4%);
+    border-radius: 3px;
+    padding: 0.2em 0.4em;
+    font-size: 0.85em;
+  }
+}
+
+.plusminus-settings__link {
+  color: $highlight-text-color;
+  text-decoration: underline;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.plusminus-settings__input-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 15px;
+  margin-left: 26px;
+  max-width: 640px;
+}
+
+.plusminus-settings__input-item {
+  display: flex;
+  margin-bottom: 10px;
+  gap: 10px;
+  width: 100%;
+}
+
+.plusminus-settings__input-wrapper {
+  display: flex;
+  flex: 1;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.plusminus-settings__input-text {
+  flex: 2;
+  min-width: 200px;
+  background: $ui-base-color;
+  border: 1px solid lighten($ui-base-color, 8%);
+  border-radius: 4px;
+  padding: 8px 12px;
+  color: $primary-text-color;
+  font-size: 14px;
+
+  &:focus {
+    border-color: $highlight-text-color;
+    outline: 0;
+  }
+}
+
+.plusminus-settings__input-select {
+  flex: 1;
+  min-width: 150px;
+  background: $ui-base-color;
+  border: 1px solid lighten($ui-base-color, 8%);
+  border-radius: 4px;
+  padding: 8px 12px;
+  color: $primary-text-color;
+  font-size: 14px;
+
+  &:focus {
+    border-color: $highlight-text-color;
+    outline: 0;
+  }
+}
+
+.plusminus-settings__input-button-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.plusminus-settings__input-order-buttons {
+  display: flex;
+  gap: 5px;
+}
+
+.plusminus-settings__input-button,
+.plusminus-settings__input-add-button {
+  background: $ui-button-background-color;
+  border: 1px solid lighten($ui-base-color, 8%);
+  border-radius: 4px;
+  color: $primary-text-color;
+  font-size: 16px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover:not(:disabled) {
+    background: lighten($ui-button-background-color, 4%);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:focus {
+    outline: 0;
+    box-shadow: 0 0 0 2px rgba($highlight-text-color, 0.5);
+  }
+}
+
+.plusminus-settings__action-bar {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  z-index: 100020; // Action buttons layer
+}
+
+.plusminus-settings__cancel-button {
+  // Styles inherited from Button component
+}
+
+@media screen and (max-width: 895px) {
+  .plusminus-settings__container {
+    width: 100%;
+  }
+
+  .plusminus-settings__input-wrapper {
+    flex-direction: column;
+  }
+
+  .plusminus-settings__input-button-wrapper {
+    flex-direction: row;
+  }
+
+  .plusminus-settings__title {
+    font-size: 20px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .plusminus-settings__button-container {
+    width: 100%;
+    justify-content: flex-end;
   }
 }
 

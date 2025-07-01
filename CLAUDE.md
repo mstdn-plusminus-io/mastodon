@@ -39,6 +39,39 @@ rails db:migrate
 yarn dynamo:create
 ```
 
+## トラブルシューティング
+
+### charlock_holmes gemのビルドエラー
+
+macOSでcharlock_holmes gemのインストールに失敗する場合：
+
+1. **症状**: C++17互換性エラーでビルドが失敗
+   ```
+   error: no template named 'is_same_v' in namespace 'std'
+   error: 'auto' not allowed in template parameter until C++17
+   ```
+
+2. **原因**: icu4c@77がC++17を要求するが、charlock_holmes 0.7.7はC++14までしかサポートしない
+
+3. **解決方法**:
+   ```bash
+   # icu4c@77をアンインストール
+   brew uninstall --ignore-dependencies icu4c@77
+   
+   # icu4c@75をインストールしてリンク
+   brew install icu4c@75
+   brew link --force icu4c@75
+   
+   # Gemfileを編集してcharlock_holmes 0.7.9+を使用
+   # gem 'charlock_holmes', '~> 0.7.9'
+   
+   # 環境変数を設定してインストール
+   export PKG_CONFIG_PATH="/opt/homebrew/opt/icu4c@75/lib/pkgconfig:${PKG_CONFIG_PATH}"
+   export LDFLAGS="-L/opt/homebrew/opt/icu4c@75/lib ${LDFLAGS}"
+   export CPPFLAGS="-I/opt/homebrew/opt/icu4c@75/include ${CPPFLAGS}"
+   bundle install
+   ```
+
 ## よく使うコマンド
 
 ### 開発サーバーの起動
