@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep:*)",
+      "Bash(cp:*)",
+      "Bash(bundle install)",
+      "Bash(chmod:*)",
+      "Bash(brew list:*)",
+      "Bash(brew search:*)",
+      "Bash(ls:*)",
+      "Bash(brew info:*)",
+      "Bash(awk:*)",
+      "Bash(sed:*)"
+    ],
+    "deny": []
+  }
+}
